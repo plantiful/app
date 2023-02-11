@@ -3,7 +3,7 @@
 ## Setup
 
 ```bash
-./setup.sh
+./setup-<platform>.sh
 ```
 
 ## Start
