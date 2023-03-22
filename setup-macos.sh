@@ -1,17 +1,30 @@
-#!/bin/sh
-# Usage:
-# ./setup.sh
+#!/bin/bash
+# ./setup-macos.sh
 #
 
-# Install homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Check if brew is installed if not install it
+if ! command -v brew &> /dev/null
+then
+    echo "brew could not be found"
+    echo "Installing brew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    echo "brew is already installed"
+    brew update
+fi
 
-brew update
+# Check whether node is installed if not install LTS version
+if ! command -v node &> /dev/null
+then
+    echo "node could not be found"
+    echo "Installing node..."
+    brew install node
+else
+    echo "node is already installed"
+fi
 
-# Install dependencies with homebrew
-brew install node watchman
+# Other dependencies
+brew install watchman yarn
 
-# Install dependencies with npm
-npm install expo @expo/webpack-config@^0.17.2
-npm fund
-npm audit fix --force
+# Install dependencies using yarn
+yarn global add expo-cli
