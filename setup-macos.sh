@@ -27,4 +27,4 @@ fi
 brew install watchman yarn
 
 # Install dependencies using yarn
-yarn global add expo-cli
+yarn global add expo-cli expo
