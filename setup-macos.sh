@@ -1,30 +1,26 @@
-#!/bin/bash
+#!/bin/sh
+# Usage:
 # ./setup-macos.sh
 #
 
 # Check if brew is installed if not install it
 if ! command -v brew &> /dev/null
 then
-    echo "brew could not be found"
     echo "Installing brew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
-    echo "brew is already installed"
     brew update
 fi
 
-# Check whether node is installed if not install LTS version
-if ! command -v node &> /dev/null
-then
-    echo "node could not be found"
-    echo "Installing node..."
-    brew install node
-else
-    echo "node is already installed"
-fi
-
-# Other dependencies
-brew install watchman yarn
-
-# Install dependencies using yarn
+# Install Node.js, Yarn, Watchman, and Expo CLI
+brew install node yarn watchman
 yarn global add expo-cli expo
+
+# If something goes wrong, try running this command:
+# rm -rf node_modules && yarn cache clean && yarn install
+
+# In case they're some issues with watchman, try running these commands:
+# brew uninstall watchman
+# brew install watchman
+# watchman shutdown-server
+# watchman watch-del-all

@@ -11,5 +11,5 @@
 ## Start
 
 ```bash
-npx expo start
+expo start
 ```
