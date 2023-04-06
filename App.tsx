@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
+import React, { ElementType, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
-import PlantPodScreen from './src/screens/PlantsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
-import { Ionicons } from '@expo/vector-icons';
 import { loadFonts } from './src/utils/loadFonts';
-import * as SplashScreen from 'expo-splash-screen';
 import { colors } from './src/utils/colors';
 import PlantsScreen from './src/screens/PlantsScreen';
-import { View } from 'react-native';
+
+// SVG icons
+import Home from './assets/bottom-bar/home.svg';
+import HomeOutline from './assets/bottom-bar/home-outline.svg';
+import Search from './assets/bottom-bar/search.svg';
+import SearchOutline from './assets/bottom-bar/search-outline.svg';
+import Pot from './assets/bottom-bar/pot.svg';
+import PotOutline from './assets/bottom-bar/pot-outline.svg';
+import Profile from './assets/bottom-bar/profile.svg';
+import ProfileOutline from './assets/bottom-bar/profile-outline.svg';
 
 const Tab = createBottomTabNavigator();
 
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  SplashScreen.preventAutoHideAsync().catch(() => {});
-
   if (!fontsLoaded) {
     loadFonts()
       .then(() => {
         setFontsLoaded(true);
-        SplashScreen.hideAsync();
       })
       .catch(console.warn);
     return null;
@@ -33,29 +36,22 @@ const App = () => {
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+          tabBarIcon: ({ focused, size }) => {
+            let Icon: any;
 
             if (route.name === 'Home') {
-              iconName = focused ? 'home' : 'home-outline';
+              Icon = focused ? HomeOutline : Home;
             } else if (route.name === 'Search') {
-              iconName = focused ? 'search' : 'search-outline';
+              Icon = focused ? SearchOutline : Search;
             } else if (route.name === 'Plants') {
-              iconName = focused ? 'leaf' : 'leaf-outline';
+              Icon = focused ? PotOutline : Pot;
             } else if (route.name === 'Profile') {
-              iconName = focused ? 'person' : 'person-outline';
+              Icon = focused ? ProfileOutline : Profile;
             }
 
-            return (
-              <View style={{ paddingTop: 6 }}>
-                <Ionicons name={iconName} size={size} color={color} />
-              </View>
-            );
+            return <Icon width={size} height={size} />;
           },
-          tabBarActiveTintColor: colors.textBlack,
-          tabBarInactiveTintColor: colors.textLight,
-          tabBarStyle: [{ display: 'flex' }],
-          tabBarLabel: '',
+          tabBarLabelStyle: { display: 'none' },
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
