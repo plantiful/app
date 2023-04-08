@@ -9,14 +9,14 @@ import { colors } from './src/utils/colors';
 import PlantsScreen from './src/screens/PlantsScreen';
 
 // SVG icons
-import Home from './assets/bottom-bar/home.svg';
-import HomeOutline from './assets/bottom-bar/home-outline.svg';
-import Search from './assets/bottom-bar/search.svg';
-import SearchOutline from './assets/bottom-bar/search-outline.svg';
-import Pot from './assets/bottom-bar/pot.svg';
-import PotOutline from './assets/bottom-bar/pot-outline.svg';
-import Profile from './assets/bottom-bar/profile.svg';
-import ProfileOutline from './assets/bottom-bar/profile-outline.svg';
+import Home from './assets/images/bottom-bar/home.svg';
+import HomeOutline from './assets/images/bottom-bar/home-outline.svg';
+import Search from './assets/images/bottom-bar/search.svg';
+import SearchOutline from './assets/images/bottom-bar/search-outline.svg';
+import Pot from './assets/images/bottom-bar/pot.svg';
+import PotOutline from './assets/images/bottom-bar/pot-outline.svg';
+import Profile from './assets/images/bottom-bar/profile.svg';
+import ProfileOutline from './assets/images/bottom-bar/profile-outline.svg';
 
 const Tab = createBottomTabNavigator();
 
