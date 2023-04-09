@@ -1,5 +1,7 @@
 # Plantiful
 
+[Expo Documentation](https://docs.expo.dev/)
+
 ## Setup
 
 ```bash
