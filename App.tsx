@@ -4,29 +4,28 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged } from 'firebase/auth';
 
+import { auth } from './firebaseConfig';
+import { loadFonts } from './src/utils/loadFonts';
+
+// Screens
 import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import PlantsScreen from './src/screens/PlantsScreen';
-import { loadFonts } from './src/utils/loadFonts';
 
 import AuthScreen from './src/screens/AuthScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 
-import { auth } from './firebaseConfig';
-import { I18nextProvider } from "react-i18next";
-import i18n from "./translations/i18n";
-
 // SVG icons
-import Home from './assets/images/bottom-bar/home.svg';
-import HomeOutline from './assets/images/bottom-bar/home-outline.svg';
-import Search from './assets/images/bottom-bar/search.svg';
-import SearchOutline from './assets/images/bottom-bar/search-outline.svg';
-import Pot from './assets/images/bottom-bar/pot.svg';
-import PotOutline from './assets/images/bottom-bar/pot-outline.svg';
-import Profile from './assets/images/bottom-bar/profile.svg';
-import ProfileOutline from './assets/images/bottom-bar/profile-outline.svg';
+import Home from './assets/images/TabNavigator/Home.svg';
+import HomeOutline from './assets/images/TabNavigator/HomeOutline.svg';
+import Search from './assets/images/TabNavigator/Search.svg';
+import SearchOutline from './assets/images/TabNavigator/SearchOutline.svg';
+import Pot from './assets/images/TabNavigator/Pot.svg';
+import PotOutline from './assets/images/TabNavigator/PotOutline.svg';
+import Profile from './assets/images/TabNavigator/Profile.svg';
+import ProfileOutline from './assets/images/TabNavigator/ProfileOutline.svg';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -100,16 +99,12 @@ const App = () => {
             component={AuthScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Login"
-            component={props => <LoginScreen {...props} onAuthChange={onAuthChange} />}
-            options={{ title: 'Login' }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={props => <RegisterScreen {...props} onAuthChange={onAuthChange} />}
-            options={{ title: 'Register' }}
-          />
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {props => <LoginScreen {...props} onAuthChange={onAuthChange} />}
+          </Stack.Screen>
+          <Stack.Screen name="Register" options={{ headerShown: false }}>
+            {props => <RegisterScreen {...props} onAuthChange={onAuthChange} />}
+          </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     );

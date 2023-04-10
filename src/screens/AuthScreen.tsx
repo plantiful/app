@@ -1,18 +1,26 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { SVGAttributes } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-import Apple from '../../assets/images/auth-screen/apple.svg';
-import Google from '../../assets/images/auth-screen/google.svg';
-import Facebook from '../../assets/images/auth-screen/facebook.svg';
-import TopRight from '../../assets/images/auth-screen/top-right.svg';
-import BottomLeft from '../../assets/images/auth-screen/bottom-left.svg';
 import { colors, fonts, fontSizes } from '../utils/colors';
 import i18n from './../../translations/i18n';
+import { RootStackParamList } from '../utils/types';
+
+// SVG icons
+import Apple from '../../assets/images/AuthScreen/Apple.svg';
+import Google from '../../assets/images/AuthScreen/Google.svg';
+import Facebook from '../../assets/images/AuthScreen/Facebook.svg';
+import TopRight from '../../assets/images/AuthScreen/TopRight.svg';
+import BottomLeft from '../../assets/images/AuthScreen/BottomLeft.svg';
 
 const AuthScreen = () => {
   const { t } = i18n;
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const navigateToRegister = () => {
     navigation.navigate('Register');
@@ -22,37 +30,50 @@ const AuthScreen = () => {
     navigation.navigate('Login');
   };
 
-  const renderButton = (Icon, text, onPress, bgColor, paddingRight = 10, style = {}) => (
-    <TouchableOpacity style={[styles.button, { backgroundColor: bgColor }, style]} onPress={onPress}>
-      {Icon && <Icon width={24} height={24} style={{ marginRight: paddingRight }} />}
-      <Text style={[styles.buttonText, bgColor === colors.primary ? styles.whiteText : {}]}>{text}</Text>
-    </TouchableOpacity>
+  const renderButton = (
+    Icon: React.FunctionComponent<SVGAttributes<SVGElement>> | null,
+    text: React.ReactNode,
+    onPress: (() => void) | null = null,
+    bgColor: string,
+    paddingRight: number = 10,
+    style: object = {}
+  ) => (
+    <TouchableOpacity
+    style={[styles.button, { backgroundColor: bgColor }, style]}
+    onPress={onPress || (() => {})}
+  >
+    {Icon && (
+      <Icon
+        width={24}
+        height={24}
+        style={{ marginRight: paddingRight }}
+      />
+    )}
+    <Text style={[styles.buttonText, bgColor === colors.primary ? styles.whiteText : {}]}>
+      {text}
+    </Text>
+  </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
       <View style={styles.container}>
         <TopRight width={275} height={550} style={styles.topRight} />
         <BottomLeft width={350} height={700} style={styles.bottomLeft} />
-        {renderButton(Apple, t("AuthScreen_apple_button"), null, colors.background)}
-        {renderButton(Google, t("AuthScreen_google_button"), null, colors.background)}
-        {renderButton(Facebook, t("AuthScreen_facebook_button"), null, colors.background, 5)}
-        {renderButton(null, t("AuthScreen_email_button"), navigateToRegister, colors.primary, 10, { borderTopRightRadius: 0 })}
+        {renderButton(Apple, <Text>{t("AuthScreen_apple_button")}</Text>, null, colors.background)}
+        {renderButton(Google, <Text>{t("AuthScreen_google_button")}</Text>, null, colors.background)}
+        {renderButton(Facebook, <Text>{t("AuthScreen_facebook_button")}</Text>, null, colors.background, 5)}
+        {renderButton(null, <Text>{t("AuthScreen_email_button")}</Text>, navigateToRegister, colors.primary, 10, { borderTopRightRadius: 0 })}
+
 
         <View style={styles.line} />
         <TouchableOpacity onPress={navigateToLogin}>
           <Text style={styles.textButton}>{t("AuthScreen_login_button")}</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-    safeAreaContainer: {
-        flex: 1,
-        backgroundColor: colors.background,
-        },
     container: {
       flex: 1,
       justifyContent: 'center',

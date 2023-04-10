@@ -1,43 +1,87 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { auth } from '../../firebaseConfig';
+import React, { useRef } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const RegisterScreen = ({ onAuthChange }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+import { colors, fonts, fontSizes } from '../utils/colors';
+import { RootStackParamList } from '../utils/types';
+import i18n from './../../translations/i18n';
 
-  const handleRegister = async () => {
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      onAuthChange(true);
-    } catch (e) {
-      setError(e.message);
-    }
+// SVG icons
+import BackArrow from '../../assets/images/RegisterScreen/BackArrow.svg';
+import Plant from '../../assets/images/RegisterScreen/Plant.svg';
+
+const RegisterScreen = () => {
+  const { t } = i18n;
+  const windowHeight = useWindowDimensions().height;
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const emailRef = useRef<TextInput>(null!);
+  const passwordRef = useRef<TextInput>(null!);
+  const confirmPasswordRef = useRef<TextInput>(null!);  
+
+  const goBack = () => {
+    navigation.goBack();
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
+    <View style={[styles.container, { minHeight: Math.round(windowHeight) }]}>
+      <View style={styles.topContainer}>
+        <TouchableOpacity onPress={goBack} style={styles.backButton}>
+          <BackArrow width={30} height={30} />
+          <Text style={styles.backButtonText}>
+            {t('RegisterScreen_back_button')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder={t('RegisterScreen_name_input') as string}
+          placeholderTextColor={colors.textBlack + '66'}
+          returnKeyType="next"
+          onSubmitEditing={() => emailRef.current.focus()}
+        />
+        <TextInput
+          ref={emailRef}
+          style={styles.input}
+          placeholder={t('RegisterScreen_email_input') as string}
+          placeholderTextColor={colors.textBlack + '66'}
+          returnKeyType="next"
+          onSubmitEditing={() => passwordRef.current.focus()}
+        />
+        <TextInput
+          ref={passwordRef}
+          style={styles.input}
+          secureTextEntry
+          placeholder={t('RegisterScreen_password_input') as string}
+          placeholderTextColor={colors.textBlack + '66'}
+          returnKeyType="next"
+          onSubmitEditing={() => confirmPasswordRef.current.focus()}
+        />
+        <TextInput
+          ref={confirmPasswordRef}
+          style={styles.input}
+          secureTextEntry
+          placeholder={t('RegisterScreen_password_repeat_input') as string}
+          placeholderTextColor={colors.textBlack + '66'}
+        />
+      </View>
+        <View style={styles.bottomContainer}>
+          <Plant width={100} height={100} style={styles.plant} />
+          <TouchableOpacity style={[styles.registerButton, styles.authButton]}>
+            <Text style={styles.registerButtonText}>
+              {t('RegisterScreen_register_button')}
+            </Text>
+          </TouchableOpacity>
+        </View>
     </View>
   );
 };
@@ -45,35 +89,61 @@ const RegisterScreen = ({ onAuthChange }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 32,
+  topContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 25,
+    marginTop: -75,
+  },
+  backButtonText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.medium,
+    marginLeft: 10,
+  },
+  inputContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
   input: {
-    width: '80%',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    marginVertical: 8,
+    width: 280,
+    height: 40,
+    borderBottomWidth: 1,
+    borderColor: colors.textBlack + '4D',
+    marginBottom: 20,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.large,
+    color: colors.textBlack,
   },
-  button: {
-    backgroundColor: '#46b5d1',
-    padding: 16,
-    borderRadius: 8,
-    marginVertical: 8,
+  bottomContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
+  plant: {
+    marginBottom: -10,
   },
-  error: {
-    color: 'red',
-    marginBottom: 16,
+  authButton: {
+    borderTopRightRadius: 0,
+  },
+  registerButton: {
+    width: 280,
+    height: 50,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    marginBottom: 20,
+  },
+  registerButtonText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.large,
+    color: colors.textWhite,
   },
 });
 
