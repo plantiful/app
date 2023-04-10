@@ -1,80 +1,163 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { auth } from '../../firebaseConfig';
+import React, { useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  useWindowDimensions,
+  Alert,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const LoginScreen = ({ onAuthChange }) => {
+import { colors, fonts, fontSizes } from '../utils/colors';
+import { RootStackParamList } from '../utils/types';
+import i18n from './../../translations/i18n';
+import { auth } from './../../firebaseConfig';
+
+// SVG icons
+import BackArrow from '../../assets/images/RegisterScreen/BackArrow.svg';
+import Plant from '../../assets/images/RegisterScreen/Plant.svg';
+
+
+const LoginScreen = () => {
+  const { t } = i18n;
+  const windowHeight = useWindowDimensions().height;
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const emailRef = useRef<TextInput>(null!);
+  const passwordRef = useRef<TextInput>(null!);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleLogin = async () => {
     try {
       await auth.signInWithEmailAndPassword(email, password);
-      onAuthChange(true);
-    } catch (e) {
-      setError(e.message);
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
     }
   };
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
+  const navigateToForgotPassword = () => {
+    // navigation.navigate('ForgotPasswordScreen');
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Password"
-        secureTextEntry
-      />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+    <View style={[styles.container, { minHeight: Math.round(windowHeight) }]}>
+      <View style={styles.topContainer}>
+        <TouchableOpacity onPress={goBack} style={styles.backButton}>
+          <BackArrow width={30} height={30} />
+          <Text style={styles.backButtonText}>
+            {t('LoginScreen_back_button')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.inputContainer}>
+        <TextInput
+          ref={emailRef}
+          style={styles.input}
+          placeholder={t('LoginScreen_email_input') as string}
+          placeholderTextColor={colors.textBlack + '66'}
+          returnKeyType="next"
+          onSubmitEditing={() => passwordRef.current.focus()}
+          onChangeText={text => setEmail(text)}
+        />
+        <TextInput
+          ref={passwordRef}
+          style={styles.input}
+          secureTextEntry
+          placeholder={t('LoginScreen_password_input') as string}
+          placeholderTextColor={colors.textBlack + '66'}
+          onChangeText={text => setPassword(text)}
+        />
+        <TouchableOpacity onPress={navigateToForgotPassword}>
+          <Text style={styles.forgotPasswordText}>
+            {t('LoginScreen_forgot_password_button')}
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.bottomContainer}>
+        <Plant width={100} height={100} style={styles.plant} />
+        <TouchableOpacity onPress={handleLogin} style={[styles.loginButton, styles.authButton]}>
+          <Text style={styles.loginButtonText}>
+            {t('LoginScreen_login_button')}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
-    },
-    title: {
-      fontSize: 24,
-      marginBottom: 32,
-    },
-    input: {
-      width: '80%',
-      borderColor: '#ccc',
-      borderWidth: 1,
-      borderRadius: 8,
-      padding: 12,
-      marginVertical: 8,
-    },
-    button: {
-      backgroundColor: '#46b5d1',
-      padding: 16,
-      borderRadius: 8,
-      marginVertical: 8,
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 18,
-    },
-    error: {
-      color: 'red',
-      marginBottom: 16,
-    },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  topContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 25,
+    marginTop: -75,
+  },
+  backButtonText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.medium,
+    marginLeft: 10,
+  },
+  inputContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  input: {
+    width: 280,
+    height: 40,
+    borderBottomWidth: 1,
+    borderColor: colors.textBlack + '4D',
+    marginBottom: 20,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.large,
+    color: colors.textBlack,
+  },
+  bottomContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  plant: {
+    marginBottom: -10,
+  },
+  authButton: {
+    borderTopRightRadius: 0,
+  },
+  loginButton: {
+    width: 280,
+    height: 50,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    marginBottom: 10,
+  },
+  loginButtonText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.large,
+    color: colors.textWhite,
+  },
+  forgotPasswordText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.medium,
+    color: colors.textBlack,
+  },
+});
+
 export default LoginScreen;

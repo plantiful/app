@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   useWindowDimensions,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -13,6 +14,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fonts, fontSizes } from '../utils/colors';
 import { RootStackParamList } from '../utils/types';
 import i18n from './../../translations/i18n';
+import { auth } from './../../firebaseConfig';
 
 // SVG icons
 import BackArrow from '../../assets/images/RegisterScreen/BackArrow.svg';
@@ -25,7 +27,25 @@ const RegisterScreen = () => {
 
   const emailRef = useRef<TextInput>(null!);
   const passwordRef = useRef<TextInput>(null!);
-  const confirmPasswordRef = useRef<TextInput>(null!);  
+  const confirmPasswordRef = useRef<TextInput>(null!);
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match.');
+      return;
+    }
+
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+    } catch (error: any) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   const goBack = () => {
     navigation.goBack();
@@ -48,6 +68,7 @@ const RegisterScreen = () => {
           placeholderTextColor={colors.textBlack + '66'}
           returnKeyType="next"
           onSubmitEditing={() => emailRef.current.focus()}
+          onChangeText={text => setName(text)}
         />
         <TextInput
           ref={emailRef}
@@ -56,6 +77,7 @@ const RegisterScreen = () => {
           placeholderTextColor={colors.textBlack + '66'}
           returnKeyType="next"
           onSubmitEditing={() => passwordRef.current.focus()}
+          onChangeText={text => setEmail(text)}
         />
         <TextInput
           ref={passwordRef}
@@ -65,6 +87,7 @@ const RegisterScreen = () => {
           placeholderTextColor={colors.textBlack + '66'}
           returnKeyType="next"
           onSubmitEditing={() => confirmPasswordRef.current.focus()}
+          onChangeText={text => setPassword(text)}
         />
         <TextInput
           ref={confirmPasswordRef}
@@ -72,11 +95,12 @@ const RegisterScreen = () => {
           secureTextEntry
           placeholder={t('RegisterScreen_password_repeat_input') as string}
           placeholderTextColor={colors.textBlack + '66'}
+          onChangeText={text => setConfirmPassword(text)}
         />
       </View>
         <View style={styles.bottomContainer}>
           <Plant width={100} height={100} style={styles.plant} />
-          <TouchableOpacity style={[styles.registerButton, styles.authButton]}>
+          <TouchableOpacity onPress={handleRegister} style={[styles.registerButton, styles.authButton]}>
             <Text style={styles.registerButtonText}>
               {t('RegisterScreen_register_button')}
             </Text>

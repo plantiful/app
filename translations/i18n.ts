@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { getLocales } from 'react-native-localize';
+import * as Localization from 'expo-localization';
 
 import en from './en';
 import cs from './cs';
@@ -15,17 +15,15 @@ const resources = {
 };
 
 const getDefaultLanguage = () => {
-  const locales = getLocales();
-  if (Array.isArray(locales)) {
-    const defaultLocale = locales[0].languageCode;
-    if (resources.hasOwnProperty(defaultLocale)) {
-      return defaultLocale;
-    }
+  const defaultLocale = Localization.locale.split('-')[0];
+  if (resources.hasOwnProperty(defaultLocale)) {
+    return defaultLocale;
   }
   return 'en';
 };
 
 i18n.use(initReactI18next).init({
+  compatibilityJSON: 'v3',
   resources,
   lng: getDefaultLanguage(),
   keySeparator: false,
