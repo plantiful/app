@@ -10,6 +10,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fonts, fontSizes } from '../utils/colors';
 import i18n from './../../translations/i18n';
 import { RootStackParamList } from '../utils/types';
+import LanguageSelector from '../components/LanguageSelector';
 
 // SVG icons
 import Apple from '../../assets/images/AuthScreen/Apple.svg';
@@ -57,6 +58,8 @@ const AuthScreen = () => {
 
   return (
       <View style={styles.container}>
+      <LanguageSelector />
+
         <TopRight width={275} height={550} style={styles.topRight} />
         <BottomLeft width={350} height={700} style={styles.bottomLeft} />
         {renderButton(Apple, <Text>{t("AuthScreen_apple_button")}</Text>, null, colors.background)}
