@@ -1,4 +1,5 @@
-import React, { SVGAttributes } from 'react';
+import React, { useEffect, useState, SVGAttributes } from 'react';
+
 import {
   View,
   Text,
@@ -6,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, fonts, fontSizes } from '../utils/colors';
 import i18n from './../../translations/i18n';
@@ -22,6 +24,21 @@ import BottomLeft from '../../assets/images/AuthScreen/BottomLeft.svg';
 const AuthScreen = () => {
   const { t } = i18n;
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+
+  useEffect(() => {
+    const changeLanguageListener = () => {
+      setCurrentLanguage(i18n.language);
+    };
+
+    i18n.on('languageChanged', changeLanguageListener);
+    return () => {
+      i18n.off('languageChanged', changeLanguageListener);
+    };
+  }, []);
+
+  const insets = useSafeAreaInsets();
 
   const navigateToRegister = () => {
     navigation.navigate('Register');
@@ -57,22 +74,31 @@ const AuthScreen = () => {
   );
 
   return (
-      <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: insets.top,
+        }}
+      >
       <LanguageSelector />
 
         <TopRight width={275} height={550} style={styles.topRight} />
         <BottomLeft width={350} height={700} style={styles.bottomLeft} />
+
         {renderButton(Apple, <Text>{t("AuthScreen_apple_button")}</Text>, null, colors.background)}
         {renderButton(Google, <Text>{t("AuthScreen_google_button")}</Text>, null, colors.background)}
         {renderButton(Facebook, <Text>{t("AuthScreen_facebook_button")}</Text>, null, colors.background, 5)}
         {renderButton(null, <Text>{t("AuthScreen_email_button")}</Text>, navigateToRegister, colors.primary, 10, { borderTopRightRadius: 0 })}
-
 
         <View style={styles.line} />
         <TouchableOpacity onPress={navigateToLogin}>
           <Text style={styles.textButton}>{t("AuthScreen_login_button")}</Text>
         </TouchableOpacity>
       </View>
+    </SafeAreaView>
   );
 };
 
@@ -124,7 +150,7 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: -75,
       left: -75,
-    },
+    },  
   });
 
 export default AuthScreen;

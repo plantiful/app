@@ -1,8 +1,9 @@
-// i18n.ts
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import en from "./en";
-import cs from "./cs";
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import { getLocales } from 'react-native-localize';
+
+import en from './en';
+import cs from './cs';
 
 const resources = {
   en: {
@@ -13,16 +14,24 @@ const resources = {
   },
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    compatibilityJSON: 'v3',
-    resources,
-    lng: "cs",
-    fallbackLng: "en",
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+const getDefaultLanguage = () => {
+  const locales = getLocales();
+  if (Array.isArray(locales)) {
+    const defaultLocale = locales[0].languageCode;
+    if (resources.hasOwnProperty(defaultLocale)) {
+      return defaultLocale;
+    }
+  }
+  return 'en';
+};
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: getDefaultLanguage(),
+  keySeparator: false,
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 export default i18n;

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+} from 'react-native';
 
 import i18n from '../../translations/i18n';
 
@@ -9,41 +13,54 @@ import CZFlag from './../../assets/images/Flags/cz.svg';
 
 const LanguageSelector = () => {
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const changeLanguage = (value: string) => {
     setSelectedLanguage(value);
     i18n.changeLanguage(value);
+    setDropdownVisible(false);
   };
 
   const LanguageItem = ({
-    label,
     value,
     flag: Flag,
   }: {
-    label: string;
     value: string;
     flag: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   }) => (
-    <Picker.Item
-      label={label}
-      value={value}
-      key={value}
-      color="black"
+    <TouchableOpacity
       style={styles.languageItem}
-    />
+      onPress={() => changeLanguage(value)}
+    >
+      <Flag width={60} height={25} />
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.languageSelector}>
-      <Picker
-        selectedValue={selectedLanguage}
-        onValueChange={changeLanguage}
-        dropdownIconColor="black"
-        style={styles.picker}
+      <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)}>
+        {selectedLanguage === 'en' ? (
+          <USFlag width={60} height={25} />
+        ) : (
+          <CZFlag width={60} height={25} />
+        )}
+      </TouchableOpacity>
+      <Modal
+        visible={dropdownVisible}
+        transparent
+        onRequestClose={() => setDropdownVisible(false)}
       >
-        <LanguageItem label="English" value="en" flag={USFlag} />
-        <LanguageItem label="Čeština" value="cs" flag={CZFlag} />
-      </Picker>
+        <TouchableOpacity
+          style={styles.modalBackground}
+          onPress={() => setDropdownVisible(false)}
+          activeOpacity={1}
+        >
+          <View style={styles.dropdownMenu}>
+            <LanguageItem value="en" flag={USFlag} />
+            <LanguageItem value="cs" flag={CZFlag} />
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 };
@@ -51,18 +68,30 @@ const LanguageSelector = () => {
 const styles = StyleSheet.create({
   languageSelector: {
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: 5,
+    left: 25,
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: 8,
   },
-  picker: {
-    width: 150,
-    height: 40,
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  dropdownMenu: {
+    position: 'absolute',
+    top: 5,
+    left: 25,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.3)',
   },
   languageItem: {
     flexDirection: 'row',
+    alignItems: 'center',
+    padding: 5,
   },
 });
 

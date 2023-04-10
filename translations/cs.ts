@@ -2,6 +2,7 @@ export default {
     // FileName_description: 'translation',
 
     // AuthScreen
+    AuthScreen_language_button: 'Jazyk',
     AuthScreen_apple_button: 'Pokračovat pomocí účtu Apple',
     AuthScreen_google_button: 'Pokračovat pomocí účtu Google',
     AuthScreen_facebook_button: 'Pokračovat pomocí účtu Facebook',

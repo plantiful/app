@@ -2,6 +2,7 @@ export default {
     // FileName_description: 'translation',
 
     // AuthScreen
+    AuthScreen_language_button: 'Language',
     AuthScreen_apple_button: 'Continue using Apple account',
     AuthScreen_google_button: 'Continue using Google account',
     AuthScreen_facebook_button: 'Continue using Facebook account',
@@ -18,7 +19,6 @@ export default {
 
     // LoginScreen
     LoginScreen_back_button: 'Back',
-    LoginScreen_title: 'Login',
     LoginScreen_email_input: 'E-mail',
     LoginScreen_password_input: 'Password',
     LoginScreen_login_button: 'Login',
