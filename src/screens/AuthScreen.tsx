@@ -8,8 +8,10 @@ import Facebook from '../../assets/images/auth-screen/facebook.svg';
 import TopRight from '../../assets/images/auth-screen/top-right.svg';
 import BottomLeft from '../../assets/images/auth-screen/bottom-left.svg';
 import { colors, fonts, fontSizes } from '../utils/colors';
+import i18n from './../../translations/i18n';
 
 const AuthScreen = () => {
+  const { t } = i18n;
   const navigation = useNavigation();
 
   const navigateToRegister = () => {
@@ -29,20 +31,19 @@ const AuthScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-        <View style={styles.container}>
+      <View style={styles.container}>
         <TopRight width={275} height={550} style={styles.topRight} />
         <BottomLeft width={350} height={700} style={styles.bottomLeft} />
-
-        {renderButton(Apple, 'Pokračovat pomocí účtu Apple', null, colors.background)}
-        {renderButton(Google, 'Pokračovat pomocí účtu Google', null, colors.background)}
-        {renderButton(Facebook, 'Pokračovat pomocí účtu Facebook', null, colors.background, 5)}
-        {renderButton(null, 'Registrovat se pomocí emailu', navigateToRegister, colors.primary, 10, { borderTopRightRadius: 0 })}
+        {renderButton(Apple, t("AuthScreen_apple_button"), null, colors.background)}
+        {renderButton(Google, t("AuthScreen_google_button"), null, colors.background)}
+        {renderButton(Facebook, t("AuthScreen_facebook_button"), null, colors.background, 5)}
+        {renderButton(null, t("AuthScreen_email_button"), navigateToRegister, colors.primary, 10, { borderTopRightRadius: 0 })}
 
         <View style={styles.line} />
         <TouchableOpacity onPress={navigateToLogin}>
-            <Text style={styles.textButton}>Přihlásit se</Text>
+          <Text style={styles.textButton}>{t("AuthScreen_login_button")}</Text>
         </TouchableOpacity>
-        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     bottomLeft: {
       position: 'absolute',
       bottom: -75,
-      left: -50,
+      left: -75,
     },
   });
 

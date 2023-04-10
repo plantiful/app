@@ -15,6 +15,8 @@ import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 
 import { auth } from './firebaseConfig';
+import { I18nextProvider } from "react-i18next";
+import i18n from "./translations/i18n";
 
 // SVG icons
 import Home from './assets/images/bottom-bar/home.svg';
