@@ -16,6 +16,8 @@ fi
 brew install node yarn watchman
 yarn global add expo-cli expo
 
+yarn install
+
 # If something goes wrong, try running this command:
 # rm -rf node_modules && yarn cache clean && yarn install
 
