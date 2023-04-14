@@ -4,15 +4,26 @@ import * as Localization from 'expo-localization';
 
 import en from './en';
 import cs from './cs';
+import al from './al';
+import sk from './sk';
 
-const resources = {
-  en: {
-    translation: en,
-  },
-  cs: {
-    translation: cs,
-  },
+type Translations = {
+  [key: string]: Record<string, string>;
 };
+
+const translations: Translations = {
+  en,
+  cs,
+  al,
+  sk,
+};
+
+const resources = Object.keys(translations).reduce((acc, lang) => {
+  acc[lang] = {
+    translation: translations[lang],
+  };
+  return acc;
+}, {} as Record<string, { translation: Record<string, string> }>);
 
 const getDefaultLanguage = () => {
   const defaultLocale = Localization.locale.split('-')[0];
