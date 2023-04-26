@@ -39,13 +39,13 @@ const TabNavigator = () => (
         let IconComponent;
 
         if (route.name === 'Home') {
-          IconComponent = focused ? Home : HomeOutline;
+          IconComponent = focused ? HomeOutline : Home;
         } else if (route.name === 'Search') {
-          IconComponent = focused ? Search : SearchOutline;
+          IconComponent = focused ? SearchOutline : Search;
         } else if (route.name === 'Plants') {
-          IconComponent = focused ? Pot : PotOutline;
+          IconComponent = focused ? PotOutline : Pot;
         } else if (route.name === 'Profile') {
-          IconComponent = focused ? Profile : ProfileOutline;
+          IconComponent = focused ? ProfileOutline : Profile;
         }
 
         if (IconComponent) {
