@@ -4,7 +4,7 @@ export const colors = {
     textBlack: '#000000',
     textWhite: '#ffffff',
     textLight: '#4D0000',
-    
+    lightGrey: '#f0f0f0',
     primary: '#205950',
 };
 

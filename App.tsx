@@ -6,12 +6,14 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 import { auth } from './firebaseConfig';
 import { loadFonts } from './src/utils/loadFonts';
+import { TouchableOpacity } from 'react-native';
 
 // Screens
 import HomeScreen from './src/screens/HomeScreen';
 import SearchScreen from './src/screens/SearchScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import PlantsScreen from './src/screens/PlantsScreen';
+import CameraScreen from './src/screens/CameraScreen';
 
 import AuthScreen from './src/screens/AuthScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -34,19 +36,23 @@ const TabNavigator = () => (
   <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, size }) => {
-        let Icon: any;
+        let IconComponent;
 
         if (route.name === 'Home') {
-          Icon = focused ? HomeOutline : Home;
+          IconComponent = focused ? Home : HomeOutline;
         } else if (route.name === 'Search') {
-          Icon = focused ? SearchOutline : Search;
+          IconComponent = focused ? Search : SearchOutline;
         } else if (route.name === 'Plants') {
-          Icon = focused ? PotOutline : Pot;
+          IconComponent = focused ? Pot : PotOutline;
         } else if (route.name === 'Profile') {
-          Icon = focused ? ProfileOutline : Profile;
+          IconComponent = focused ? Profile : ProfileOutline;
         }
 
-        return <Icon width={size} height={size} />;
+        if (IconComponent) {
+          return <IconComponent width={size} height={size} />;
+        }
+
+        return null;
       },
       tabBarLabelStyle: { display: 'none' },
     })}
@@ -55,8 +61,10 @@ const TabNavigator = () => (
     <Tab.Screen name="Search" component={SearchScreen} />
     <Tab.Screen name="Plants" component={PlantsScreen} />
     <Tab.Screen name="Profile" component={ProfileScreen} />
+    <Tab.Screen name="Camera" component={CameraScreen} options={{ tabBarLabel: () => null }} />
   </Tab.Navigator>
 );
+
 
 const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -90,25 +98,35 @@ const App = () => {
     return null;
   }
 
-  if (!loggedIn) {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Auth"
-            component={AuthScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="Login" options={{ headerShown: false }}>
-            {props => <LoginScreen {...props} onAuthChange={onAuthChange} />}
-          </Stack.Screen>
-          <Stack.Screen name="Register" options={{ headerShown: false }}>
-            {props => <RegisterScreen {...props} onAuthChange={onAuthChange} />}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
+if (!loggedIn) {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Auth"
+          component={AuthScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Login" options={{ headerShown: false }}>
+          {(props) => (
+            <LoginScreen
+              {...props}
+              onAuthChange={onAuthChange}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Register" options={{ headerShown: false }}>
+          {(props) => (
+            <RegisterScreen
+              {...props}
+              onAuthChange={onAuthChange}
+            />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
   return (
     <NavigationContainer>
