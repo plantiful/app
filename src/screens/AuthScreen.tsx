@@ -5,12 +5,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-} from 'react-native';import { useNavigation } from '@react-navigation/native';
+} from 'react-native'; import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { colors, fonts, fontSizes } from '../utils/colors';
-import i18n from './../../translations/i18n';
+import i18n from '../../assets/translations/i18n';
 import { RootStackParamList } from '../utils/types';
 import LanguageSelector from '../components/LanguageSelector';
 
@@ -57,20 +57,20 @@ const AuthScreen = () => {
     style: object = {}
   ) => (
     <TouchableOpacity
-    style={[styles.button, { backgroundColor: bgColor }, style]}
-    onPress={onPress || (() => {})}
-  >
-    {Icon && (
-      <Icon
-        width={24}
-        height={24}
-        style={{ marginRight: paddingRight }}
-      />
-    )}
-    <Text style={[styles.buttonText, bgColor === colors.primary ? styles.whiteText : {}]}>
-      {text}
-    </Text>
-  </TouchableOpacity>
+      style={[styles.button, { backgroundColor: bgColor }, style]}
+      onPress={onPress || (() => { })}
+    >
+      {Icon && (
+        <Icon
+          width={24}
+          height={24}
+          style={{ marginRight: paddingRight }}
+        />
+      )}
+      <Text style={[styles.buttonText, bgColor === colors.primary ? styles.whiteText : {}]}>
+        {text}
+      </Text>
+    </TouchableOpacity>
   );
 
   return (
@@ -83,7 +83,7 @@ const AuthScreen = () => {
           marginTop: insets.top,
         }}
       >
-      <LanguageSelector />
+        <LanguageSelector />
 
         <TopRight width={275} height={550} style={styles.topRight} />
         <BottomLeft width={350} height={700} style={styles.bottomLeft} />
@@ -103,54 +103,54 @@ const AuthScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: colors.background,
-    },
-    button: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: 280,
-      height: 50,
-      borderRadius: 15,
-      marginBottom: 20,
-      shadowColor: '#000',
-      shadowOpacity: 0.20,
-      elevation: 3,
-    },
-    buttonText: {
-      fontFamily: fonts.regular,
-      fontSize: fontSizes.medium,
-    },
-    whiteText: {
-      color: colors.textWhite,
-    },
-    line: {
-      width: 280,
-      height: 1,
-      borderRadius: 1,
-      backgroundColor: colors.textBlack,
-      opacity: 0.3,
-      marginVertical: 5,
-    },
-    textButton: {
-      color: colors.textBlack,
-      fontFamily: fonts.regular,
-      fontSize: fontSizes.medium,
-    },
-    topRight: {
-      position: 'absolute',
-      top: -50,
-      right: -50,
-    },
-    bottomLeft: {
-      position: 'absolute',
-      bottom: -75,
-      left: -75,
-    },  
-  });
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 280,
+    height: 50,
+    borderRadius: 15,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.20,
+    elevation: 3,
+  },
+  buttonText: {
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.medium,
+  },
+  whiteText: {
+    color: colors.textWhite,
+  },
+  line: {
+    width: 280,
+    height: 1,
+    borderRadius: 1,
+    backgroundColor: colors.textBlack,
+    opacity: 0.3,
+    marginVertical: 5,
+  },
+  textButton: {
+    color: colors.textBlack,
+    fontFamily: fonts.regular,
+    fontSize: fontSizes.medium,
+  },
+  topRight: {
+    position: 'absolute',
+    top: -50,
+    right: -50,
+  },
+  bottomLeft: {
+    position: 'absolute',
+    bottom: -75,
+    left: -75,
+  },
+});
 
 export default AuthScreen;

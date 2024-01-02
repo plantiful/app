@@ -13,13 +13,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { colors, fonts, fontSizes } from '../utils/colors';
 import { RootStackParamList } from '../utils/types';
-import i18n from './../../translations/i18n';
-import { auth } from './../../firebaseConfig';
+import i18n from '../../assets/translations/i18n';
+import { auth } from '../firebaseConfig';
 
 // SVG icons
 import BackArrow from '../../assets/images/RegisterScreen/BackArrow.svg';
 import Plant from '../../assets/images/RegisterScreen/Plant.svg';
-
 
 const LoginScreen = () => {
   const { t } = i18n;

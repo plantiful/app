@@ -13,8 +13,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { colors, fonts, fontSizes } from '../utils/colors';
 import { RootStackParamList } from '../utils/types';
-import i18n from './../../translations/i18n';
-import { auth } from './../../firebaseConfig';
+import i18n from '../../assets/translations/i18n';
+import { auth } from '../firebaseConfig';
 
 // SVG icons
 import BackArrow from '../../assets/images/RegisterScreen/BackArrow.svg';
@@ -98,14 +98,14 @@ const RegisterScreen = () => {
           onChangeText={text => setConfirmPassword(text)}
         />
       </View>
-        <View style={styles.bottomContainer}>
-          <Plant width={100} height={100} style={styles.plant} />
-          <TouchableOpacity onPress={handleRegister} style={[styles.registerButton, styles.authButton]}>
-            <Text style={styles.registerButtonText}>
-              {t('RegisterScreen_register_button')}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.bottomContainer}>
+        <Plant width={100} height={100} style={styles.plant} />
+        <TouchableOpacity onPress={handleRegister} style={[styles.registerButton, styles.authButton]}>
+          <Text style={styles.registerButtonText}>
+            {t('RegisterScreen_register_button')}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

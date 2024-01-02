@@ -39,7 +39,6 @@
     "react-i18next": "^12.2.0",
     "react-native": "0.71.6",
     "react-native-camera": "^4.2.1",
-    "react-native-dotenv": "^3.4.8",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-permissions": "^3.8.0",
     "react-native-picker-select": "^8.0.4",

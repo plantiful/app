@@ -8,7 +8,7 @@ import {
   Text,
 } from 'react-native';
 
-import i18n from '../../translations/i18n';
+import i18n from '../../assets/translations/i18n';
 
 // SVG icons
 import ArrowDown from './../../assets/images/AuthScreen/ArrowDown.svg';
