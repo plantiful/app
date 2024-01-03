@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -6,36 +6,36 @@ import {
   Modal,
   FlatList,
   Text,
-} from 'react-native';
+} from "react-native";
 
-import i18n from '../../assets/translations/i18n';
+import i18n from "../../assets/translations/i18n";
 
 // SVG icons
-import ArrowDown from './../../assets/images/AuthScreen/ArrowDown.svg';
+import ArrowDown from "./../../assets/images/AuthScreen/ArrowDown.svg";
 
 // Flags
-import USFlag from './../../assets/images/Flags/us.svg';
-import CZFlag from './../../assets/images/Flags/cz.svg';
-import SKFlag from './../../assets/images/Flags/sk.svg';
-import ALFlag from './../../assets/images/Flags/al.svg';
+import USFlag from "./../../assets/images/Flags/us.svg";
+import CZFlag from "./../../assets/images/Flags/cz.svg";
+import SKFlag from "./../../assets/images/Flags/sk.svg";
+import ALFlag from "./../../assets/images/Flags/al.svg";
 
 const languages = [
   {
-    code: 'en',
+    code: "en",
     flag: USFlag,
   },
   {
-    code: 'cs',
+    code: "cs",
     flag: CZFlag,
   },
   {
-    code: 'sk',
+    code: "sk",
     flag: SKFlag,
   },
   {
-    code: 'al',
+    code: "al",
     flag: ALFlag,
-  }
+  },
 ];
 
 const LanguageSelector = () => {
@@ -64,7 +64,7 @@ const LanguageSelector = () => {
     </TouchableOpacity>
   );
 
-  const renderLanguageItem = ({ item }: { item: typeof languages[0] }) => (
+  const renderLanguageItem = ({ item }: { item: (typeof languages)[0] }) => (
     <LanguageItem value={item.code} flag={item.flag} />
   );
 
@@ -72,13 +72,13 @@ const LanguageSelector = () => {
     <View style={styles.languageSelector}>
       <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)}>
         <View style={styles.innerSelector}>
-          {
-            languages.find((lang) => lang.code === selectedLanguage)?.flag({
+          {languages
+            .find((lang) => lang.code === selectedLanguage)
+            ?.flag({
               width: 20,
               height: 15,
               style: styles.flag,
-            }) || null
-          }
+            }) || null}
           <Text style={styles.languageCode}>
             {selectedLanguage.toUpperCase()}
           </Text>
@@ -100,7 +100,7 @@ const LanguageSelector = () => {
             renderItem={renderLanguageItem}
             keyExtractor={(item) => item.code}
             style={styles.dropdownMenu}
-            contentContainerStyle={{ alignItems: 'center' }}
+            contentContainerStyle={{ alignItems: "center" }}
           />
         </TouchableOpacity>
       </Modal>
@@ -110,25 +110,25 @@ const LanguageSelector = () => {
 
 const styles = StyleSheet.create({
   languageSelector: {
-    position: 'absolute',
+    position: "absolute",
     top: 5,
     left: 35,
     width: 72,
     height: 30,
     borderRadius: 18,
-    backgroundColor: 'white',
-    shadowColor: '#000',
+    backgroundColor: "white",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
   innerSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "100%",
   },
   flag: {
     marginLeft: 8,
@@ -142,27 +142,27 @@ const styles = StyleSheet.create({
   },
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
   },
   dropdownMenu: {
-    position: 'absolute',
+    position: "absolute",
     top: 40,
     left: 35,
     width: 100,
     height: 130,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.3)',
+    borderColor: "rgba(0, 0, 0, 0.3)",
     paddingTop: 5,
   },
   languageItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: 5,
-    marginLeft: -5
+    marginLeft: -5,
   },
 });
 

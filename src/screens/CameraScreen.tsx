@@ -1,62 +1,63 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, View, TouchableOpacity, Alert, Text } from 'react-native';
-import { Camera } from 'expo-camera';
+import React, { useState, useRef, useEffect } from "react";
+import { StyleSheet, View, TouchableOpacity, Alert, Text } from "react-native";
+import { Camera, CameraType, FlashMode } from "expo-camera";
 
-import TakePictureButton from '../../assets/images/CameraScreen/TakePictureButton.svg';
-import FlashlightButton from '../../assets/images/CameraScreen/FlashLightButton.svg';
+import TakePictureButton from "../../assets/images/CameraScreen/TakePictureButton.svg";
+import FlashlightButton from "../../assets/images/CameraScreen/FlashLightButton.svg";
 
-const CameraScreen = () => {
-  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
-  const cameraRef = useRef<Camera | null>(null);
-  const [hasCameraPermission, setHasCameraPermission] = useState(false);
+export const CameraScreen = () => {
+  const [type, setType] = useState(CameraType.back);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [flash, setFlash] = useState(FlashMode.off);
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<any>(null);
 
-  useEffect(() => {
-    const requestCameraPermission = async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasCameraPermission(status === 'granted');
-    };
+  let camera: Camera;
 
-    requestCameraPermission();
-  }, []);
+  if (!permission) {
+    requestPermission().then((permission) => {
+      if (!permission) {
+        Alert.alert("Permission to access camera is required!");
+      }
+    });
+    return null;
+  }
 
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      const options = { quality: 0.5, base64: true };
-      const data = await cameraRef.current.takePictureAsync(options);
-      console.log(data.uri);
-    }
-  };
+  if (!permission.granted) {
+    Alert.alert("Permission to access camera is required!");
+    return null;
+  }
 
-  const toggleFlash = () => {
-    setFlashMode(
-      flashMode === Camera.Constants.FlashMode.off
-        ? Camera.Constants.FlashMode.torch
-        : Camera.Constants.FlashMode.off
+  function toggleCameraType() {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back
     );
-  };
+  }
 
-  if (!hasCameraPermission) {
-    return (
-      <View style={styles.container}>
-        <Text style={{ color: 'white', textAlign: 'center' }}>No access to camera</Text>
-      </View>
+  function toggleFlash() {
+    setFlash((current) =>
+      current === FlashMode.off ? FlashMode.on : FlashMode.off
     );
-  }  
+  }
+
+  async function takePicture() {
+    if (!camera) return;
+    const photo = await camera.takePictureAsync();
+    console.log(photo);
+    setPreviewVisible(true);
+    setCapturedImage(photo);
+  }
 
   return (
     <View style={styles.container}>
-      <Camera
-        ref={cameraRef}
-        style={styles.preview}
-        type={Camera.Constants.Type.back}
-        flashMode={flashMode}
-      >
+      <Camera style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={toggleFlash} style={styles.flashButton}>
-            <FlashlightButton width={48} height={48} />
+          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
+            <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={takePicture} style={styles.captureButton}>
-            <TakePictureButton width={72} height={72} />
+
+          <TouchableOpacity style={styles.button} onPress={toggleFlash}>
+            <Text style={styles.text}>Flash</Text>
           </TouchableOpacity>
         </View>
       </Camera>
@@ -67,27 +68,24 @@ const CameraScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
   },
-  preview: {
+  camera: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 32,
+    flex: 1,
+    backgroundColor: "transparent",
+    flexDirection: "row",
+    margin: 20,
   },
-  captureButton: {
-    paddingHorizontal: 24,
+  button: {
+    flex: 0.1,
+    alignSelf: "flex-end",
+    alignItems: "center",
   },
-  flashButton: {
-    position: 'absolute',
-    right:160,
-    bottom: 15,
+  text: {
+    fontSize: 18,
+    color: "white",
   },
 });
 

@@ -1,14 +1,14 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
-} from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { colors, fonts, fontSizes } from '../utils/colors';
-import SvgIcon from '../../assets/images/SearchScreen/CameraSearch.svg';
+} from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { colors, fonts, fontSizes } from "../utils/colors";
+import SvgIcon from "../../assets/images/SearchScreen/CameraSearch.svg";
 
 // Add a type for the StackParamList
 type StackParamList = {
@@ -16,14 +16,14 @@ type StackParamList = {
 };
 
 // Define the navigation prop type
-type SearchScreenNavigationProp = StackNavigationProp<StackParamList, 'Camera'>;
+type SearchScreenNavigationProp = StackNavigationProp<StackParamList, "Camera">;
 
-// Update the component definition to receive the 'navigation' prop with the correct type
+// Update the component definition to receive the "navigation" prop with the correct type
 interface SearchScreenProps {
   navigation: SearchScreenNavigationProp;
 }
 
-const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
+export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.searchBarContainer}>
@@ -33,7 +33,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           placeholderTextColor={colors.textBlack}
         />
         {/* Update the TouchableOpacity onPress handler */}
-        <TouchableOpacity onPress={() => navigation.navigate('Camera')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
           <SvgIcon width={24} height={24} />
         </TouchableOpacity>
       </View>
@@ -42,8 +42,6 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   );
 };
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -51,9 +49,10 @@ const styles = StyleSheet.create({
     paddingTop: 20, // Adjust this value as needed
   },
   searchBarContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 30,
     paddingHorizontal: 16,
   },
   searchBar: {
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.large,
     fontFamily: fonts.medium,
     color: colors.textBlack,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 16,
   },
 });

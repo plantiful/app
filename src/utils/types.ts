@@ -1,4 +1,4 @@
-import { ParamListBase } from '@react-navigation/native';
+import { ParamListBase } from "@react-navigation/native";
 
 export type RootStackParamList = {
   Auth: undefined;
