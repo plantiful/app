@@ -31,3 +31,4 @@ yarn add <package-name>
 - [ ] Move login and register button up when keyboard is displayed (better UX)
 - [x] Move search bar on search screen down
 - [ ] Implement forgot password
+- [ ] Fix screen navigation
