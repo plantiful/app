@@ -9,37 +9,28 @@ import {
 } from "react-native";
 
 import i18n from "../../assets/translations/i18n";
-
-// SVG icons
 import ArrowDown from "./../../assets/images/AuthScreen/ArrowDown.svg";
 
-// Flags
-import USFlag from "./../../assets/images/Flags/us.svg";
-import CZFlag from "./../../assets/images/Flags/cz.svg";
-import SKFlag from "./../../assets/images/Flags/sk.svg";
-import ALFlag from "./../../assets/images/Flags/al.svg";
+import { colors, fonts, fontSizes } from "../utils/colors";
 
-const languages = [
-  {
-    code: "en",
-    flag: USFlag,
-  },
-  {
-    code: "cs",
-    flag: CZFlag,
-  },
-  {
-    code: "sk",
-    flag: SKFlag,
-  },
-  {
-    code: "al",
-    flag: ALFlag,
-  },
-];
+// Define the type for the language data
+type LanguageType = {
+  code: string;
+  flag: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+};
 
-const LanguageSelector = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+type LanguageSelectorProps = {
+  languages: LanguageType[];
+  initialLanguage?: string;
+  style?: object;
+};
+
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({
+  languages,
+  initialLanguage = i18n.language,
+  style = {},
+}) => {
+  const [selectedLanguage, setSelectedLanguage] = useState(initialLanguage);
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const changeLanguage = (value: string) => {
@@ -64,12 +55,12 @@ const LanguageSelector = () => {
     </TouchableOpacity>
   );
 
-  const renderLanguageItem = ({ item }: { item: (typeof languages)[0] }) => (
+  const renderLanguageItem = ({ item }: { item: LanguageType }) => (
     <LanguageItem value={item.code} flag={item.flag} />
   );
 
   return (
-    <View style={styles.languageSelector}>
+    <View style={[styles.languageSelector, style]}>
       <TouchableOpacity onPress={() => setDropdownVisible(!dropdownVisible)}>
         <View style={styles.innerSelector}>
           {languages
@@ -111,17 +102,15 @@ const LanguageSelector = () => {
 const styles = StyleSheet.create({
   languageSelector: {
     position: "absolute",
-    top: 5,
-    left: 35,
     width: 72,
     height: 30,
     borderRadius: 18,
-    backgroundColor: "white",
+    backgroundColor: colors.background,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
   },
   innerSelector: {
     flexDirection: "row",

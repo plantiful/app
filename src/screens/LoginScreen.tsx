@@ -9,18 +9,17 @@ import {
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 
 import { colors, fonts, fontSizes } from "../utils/colors";
-import { RootStackParamList } from "../utils/types";
 import i18n from "../../assets/translations/i18n";
 
 // Firebase
 import { auth } from "../firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
+import { Ionicons } from "@expo/vector-icons";
+
 // SVG icons
-import BackArrow from "../../assets/images/RegisterScreen/BackArrow.svg";
 import Plant from "../../assets/images/RegisterScreen/Plant.svg";
 
 export const LoginScreen = ({ onAuthChange }) => {
@@ -33,6 +32,11 @@ export const LoginScreen = ({ onAuthChange }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   async function handleLogin() {
     try {
@@ -55,12 +59,13 @@ export const LoginScreen = ({ onAuthChange }) => {
     <View style={[styles.container, { minHeight: Math.round(windowHeight) }]}>
       <View style={styles.topContainer}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <BackArrow width={30} height={30} />
+          <Ionicons name="arrow-back" size={24} color="black" />
           <Text style={styles.backButtonText}>
             {t("LoginScreen_back_button")}
           </Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.inputContainer}>
         <TextInput
           ref={emailRef}
@@ -71,26 +76,37 @@ export const LoginScreen = ({ onAuthChange }) => {
           onSubmitEditing={() => passwordRef.current.focus()}
           onChangeText={(text) => setEmail(text)}
         />
-        <TextInput
-          ref={passwordRef}
-          style={styles.input}
-          secureTextEntry
-          placeholder={t("LoginScreen_password_input") as string}
-          placeholderTextColor={colors.textBlack + "66"}
-          onChangeText={(text) => setPassword(text)}
-        />
+        <View style={styles.input}>
+          <TextInput
+            ref={passwordRef}
+            placeholder={t("LoginScreen_password_input") as string}
+            placeholderTextColor={colors.textBlack + "66"}
+            returnKeyType="go"
+            secureTextEntry={showPassword}
+            onSubmitEditing={handleLogin}
+            onChangeText={(text) => setPassword(text)}
+          />
+          <View style={styles.showPasswordIcon}>
+            <TouchableOpacity onPress={toggleShowPassword}>
+              {showPassword ? (
+                <Ionicons name="eye-off" size={24} color={colors.textBlack} />
+              ) : (
+                <Ionicons name="eye" size={24} color={colors.textBlack} />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <TouchableOpacity onPress={navigateToForgotPassword}>
           <Text style={styles.forgotPasswordText}>
             {t("LoginScreen_forgot_password_button")}
           </Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.bottomContainer}>
         <Plant width={100} height={100} style={styles.plant} />
-        <TouchableOpacity
-          onPress={handleLogin}
-          style={[styles.loginButton, styles.authButton]}
-        >
+        <TouchableOpacity onPress={handleLogin} style={[styles.loginButton]}>
           <Text style={styles.loginButtonText}>
             {t("LoginScreen_login_button")}
           </Text>
@@ -106,14 +122,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   topContainer: {
-    flex: 1,
+    flex: 0.7,
     justifyContent: "center",
   },
   backButton: {
     flexDirection: "row",
     alignItems: "center",
     marginLeft: 25,
-    marginTop: -75,
+    marginTop: "5%",
   },
   backButtonText: {
     fontFamily: fonts.medium,
@@ -121,11 +137,13 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   inputContainer: {
-    flex: 1,
+    flex: 1.1,
+    justifyContent: "center",
     alignItems: "center",
+    marginTop: "10%",
   },
   input: {
-    width: 280,
+    width: "80%",
     height: 40,
     borderBottomWidth: 1,
     borderColor: colors.textBlack + "4D",
@@ -134,24 +152,27 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.large,
     color: colors.textBlack,
   },
+  showPasswordIcon: {
+    position: "absolute",
+    right: 0,
+    top: 0,
+  },
   bottomContainer: {
-    flex: 1,
+    flex: 1.2,
     justifyContent: "center",
     alignItems: "center",
   },
   plant: {
     marginBottom: -10,
   },
-  authButton: {
-    borderTopRightRadius: 0,
-  },
   loginButton: {
-    width: 280,
+    width: "80%",
     height: 50,
     backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
+    borderTopRightRadius: 0,
     marginBottom: 20,
   },
   loginButtonText: {
