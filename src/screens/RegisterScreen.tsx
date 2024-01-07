@@ -35,11 +35,29 @@ export const RegisterScreen = ({ onAuthChange }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+
+  const renderShowPasswordIcon = (isFocused) => {
+    if (!isFocused) return null;
+    return (
+      <TouchableOpacity onPress={toggleShowPassword}>
+        {showPassword ? (
+          <Ionicons name="eye-off" size={24} color={colors.textBlack} />
+        ) : (
+          <Ionicons name="eye" size={24} color={colors.textBlack} />
+        )}
+      </TouchableOpacity>
+    );
+  };
+
+
 
   const handleRegister = async () => {
     if (password !== confirmPassword) {
@@ -87,47 +105,39 @@ export const RegisterScreen = ({ onAuthChange }) => {
           onSubmitEditing={() => passwordRef.current.focus()}
           onChangeText={(text) => setEmail(text)}
         />
-        <View style={styles.input}>
-          <TextInput
-            ref={passwordRef}
-            secureTextEntry={showPassword}
-            placeholder={t("RegisterScreen_password_input") as string}
-            placeholderTextColor={colors.textBlack + "66"}
-            returnKeyType="next"
-            onSubmitEditing={() => confirmPasswordRef.current.focus()}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <View style={styles.showPasswordIcon}>
-            <TouchableOpacity onPress={toggleShowPassword}>
-              {showPassword ? (
-                <Ionicons name="eye-off" size={24} color={colors.textBlack} />
-              ) : (
-                <Ionicons name="eye" size={24} color={colors.textBlack} />
-              )}
-            </TouchableOpacity>
+          <View style={styles.input}>
+            <TextInput
+              ref={passwordRef}
+              secureTextEntry={showPassword}
+              placeholder={t("RegisterScreen_password_input") as string}
+              placeholderTextColor={colors.textBlack + "66"}
+              returnKeyType="next"
+              onFocus={() => setIsPasswordFocused(true)}
+              onBlur={() => setIsPasswordFocused(false)}
+              onSubmitEditing={() => confirmPasswordRef.current.focus()}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <View style={styles.showPasswordIcon}>
+              {renderShowPasswordIcon(isPasswordFocused)}
+            </View>
           </View>
-        </View>
 
-        <View style={styles.input}>
-          <TextInput
-            ref={confirmPasswordRef}
-            secureTextEntry={showPassword}
-            placeholder={t("RegisterScreen_password_repeat_input") as string}
-            placeholderTextColor={colors.textBlack + "66"}
-            returnKeyType="go"
-            onSubmitEditing={handleRegister}
-            onChangeText={(text) => setConfirmPassword(text)}
-          />
-          <View style={styles.showPasswordIcon}>
-            <TouchableOpacity onPress={toggleShowPassword}>
-              {showPassword ? (
-                <Ionicons name="eye-off" size={24} color={colors.textBlack} />
-              ) : (
-                <Ionicons name="eye" size={24} color={colors.textBlack} />
-              )}
-            </TouchableOpacity>
+          <View style={styles.input}>
+            <TextInput
+              ref={confirmPasswordRef}
+              secureTextEntry={showPassword}
+              placeholder={t("RegisterScreen_password_repeat_input") as string}
+              placeholderTextColor={colors.textBlack + "66"}
+              returnKeyType="go"
+              onFocus={() => setIsConfirmPasswordFocused(true)}
+              onBlur={() => setIsConfirmPasswordFocused(false)}
+              onSubmitEditing={handleRegister}
+              onChangeText={(text) => setConfirmPassword(text)}
+            />
+            <View style={styles.showPasswordIcon}>
+              {renderShowPasswordIcon(isConfirmPasswordFocused)}
+            </View>
           </View>
-        </View>
       </View>
 
       <View style={styles.bottomContainer}>
