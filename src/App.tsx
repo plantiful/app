@@ -15,6 +15,7 @@ import { PlantsScreen } from "./screens/PlantsScreen";
 import { AuthScreen } from "./screens/AuthScreen";
 import { LoginScreen } from "./screens/LoginScreen";
 import { RegisterScreen } from "./screens/RegisterScreen";
+import { CameraScreen } from "./screens/CameraScreen";
 
 import HomeIcon from "./../assets/images/TabNavigator/Home.svg";
 import HomeOutlinedIcon from "./../assets/images/TabNavigator/HomeOutline.svg";
@@ -27,6 +28,16 @@ import ProfileOutlinedIcon from "./../assets/images/TabNavigator/ProfileOutline.
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+const SearchStack = createStackNavigator();
+const SearchStackNavigator = () => {
+  return (
+    <SearchStack.Navigator>
+      <SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
+      <SearchStack.Screen name="Camera" component={CameraScreen} options={{ headerShown: false }} />
+    </SearchStack.Navigator>
+  );
+};
 
 export const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -118,7 +129,7 @@ export const App = () => {
           />
           <Tab.Screen
             name="Search"
-            component={SearchScreen}
+            component={SearchStackNavigator}
             options={{ headerShown: false }}
           />
           <Tab.Screen

@@ -32,7 +32,6 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           placeholder="Search..."
           placeholderTextColor={colors.textBlack}
         />
-        {/* Update the TouchableOpacity onPress handler */}
         <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
           <SvgIcon width={24} height={24} />
         </TouchableOpacity>
