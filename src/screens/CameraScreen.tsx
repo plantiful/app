@@ -2,8 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Alert, Text } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 
+import { Ionicons } from "@expo/vector-icons";
+import i18n from "../../assets/translations/i18n";
+
 import TakePictureButton from "../../assets/images/CameraScreen/TakePictureButton.svg";
 import FlashlightButton from "../../assets/images/CameraScreen/FlashLightButton.svg";
+import { useNavigation } from "@react-navigation/native";
+import { fontSizes, fonts } from "../utils/colors";
 
 export const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -11,6 +16,8 @@ export const CameraScreen = () => {
   const [flash, setFlash] = useState(FlashMode.off);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [capturedImage, setCapturedImage] = useState<any>(null);
+  const navigation = useNavigation();
+  const { t } = i18n;
 
   let camera: Camera;
 
@@ -48,10 +55,17 @@ export const CameraScreen = () => {
     setCapturedImage(photo);
   }
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={goBack} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
             <Text style={styles.text}>Flip Camera</Text>
           </TouchableOpacity>
@@ -71,6 +85,17 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: 'baseline',
+    marginLeft: 2,
+    marginTop: "15%",
+  },
+  backButtonText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSizes.medium,
+    marginLeft: 10,
   },
   buttonContainer: {
     flex: 1,

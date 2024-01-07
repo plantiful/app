@@ -32,3 +32,4 @@ yarn add <package-name>
 - [x] Move search bar on search screen down
 - [ ] Implement forgot password
 - [x] Fix opening camera from search screen
+
