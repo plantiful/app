@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Alert, Text } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
-
+import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import i18n from "../../assets/translations/i18n";
 
@@ -19,7 +19,7 @@ export const CameraScreen = () => {
   const navigation = useNavigation();
   const { t } = i18n;
 
-  let camera: Camera;
+  const cameraRef = useRef<Camera>(null);
 
   if (!permission) {
     requestPermission().then((permission) => {
@@ -35,6 +35,19 @@ export const CameraScreen = () => {
     return null;
   }
 
+  const handleSavePhoto = () => {
+    // Implement logic to save the photo
+    console.log("Save the photo", capturedImage);
+    setPreviewVisible(false);
+    setCapturedImage(null);
+  };
+
+  const handleDiscardPhoto = () => {
+    // Simply discard the photo and hide the preview
+    setPreviewVisible(false);
+    setCapturedImage(null);
+  };
+
   function toggleCameraType() {
     setType((current) =>
       current === CameraType.back ? CameraType.front : CameraType.back
@@ -48,30 +61,59 @@ export const CameraScreen = () => {
   }
 
   async function takePicture() {
-    if (!camera) return;
-    const photo = await camera.takePictureAsync();
-    console.log(photo);
-    setPreviewVisible(true);
-    setCapturedImage(photo);
+    if (cameraRef.current) {
+      const photo = await cameraRef.current.takePictureAsync();
+      console.log(photo);
+      setPreviewVisible(true);
+      setCapturedImage(photo);
+    } else {
+      console.log("Camera ref is not set");
+    }
   }
+  
 
   const goBack = () => {
     navigation.goBack();
   };
 
+  if (previewVisible && capturedImage) {
+    return (
+      <View style={styles.previewContainer}>
+        <Image source={{ uri: capturedImage.uri }} style={styles.previewImage} />
+        <View style={styles.previewButtonContainer}>
+          <TouchableOpacity onPress={handleDiscardPhoto}>
+            <Ionicons name="close-circle" size={50} color="red" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleSavePhoto}>
+            <Ionicons name="checkmark-circle" size={50} color="green" />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  // Otherwise, show the camera view
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} type={type}>
-        <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
+      <Camera style={styles.camera} type={type} flashMode={flash} ref={cameraRef}>
+        {/* Top Button Container for Flip and Flashlight */}
+        <View style={styles.topButtonContainer}>
+          <TouchableOpacity style={styles.topButton} onPress={toggleFlash}>
+            {/* Flashlight Icon */}
+            <Ionicons name="flash" size={24} color="white" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={toggleFlash}>
-            <Text style={styles.text}>Flash</Text>
+          <TouchableOpacity style={styles.topButton} onPress={toggleCameraType}>
+            {/* Flip Camera Icon */}
+            <Ionicons name="camera-reverse" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Bottom Button Container for Taking Picture */}
+        <View style={styles.bottomButtonContainer}>
+          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
+            {/* Take Picture Icon */}
+            <Ionicons name="camera" size={50} color="white" />
           </TouchableOpacity>
         </View>
       </Camera>
@@ -111,6 +153,48 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 18,
     color: "white",
+  },
+  topButtonContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    flexDirection: 'row',
+  },
+  bottomButtonContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  topButton: {
+    margin: 10,
+    padding: 10,
+    // Add more styling as needed
+  },
+  captureButton: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Add more styling as needed
+  },
+  previewContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  previewImage: {
+    width: '100%',
+    height: '80%',
+  },
+  previewButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    padding: 20,
   },
 });
 
