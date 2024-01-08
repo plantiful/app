@@ -24,7 +24,8 @@ yarn add <package-name>
 
 ## TODO
 
-- [ ] Finish CameraScreen - [tutorial](https://www.freecodecamp.org/news/how-to-create-a-camera-app-with-expo-and-react-native/), [code](https://github.com/hayanisaid/expo-camera-tutorial/blob/master/App.tsx)
+- [x] Finish CameraScreen - [tutorial](https://www.freecodecamp.org/news/how-to-create-a-camera-app-with-expo-and-react-native/), [code](https://github.com/hayanisaid/expo-camera-tutorial/blob/master/App.tsx)
+- [ ] Fix CameraScreen screenratio
 - [x] Add show password on both login and register screen
 - [x] Only show password on register screen on focus
 - [ ] Replace all SVG icons with [@expo/vector-icons](https://icons.expo.fyi)
