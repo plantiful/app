@@ -1,12 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert, Text } from "react-native";
+import React, { useState, useRef } from "react";
+import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import i18n from "../../assets/translations/i18n";
 
-import TakePictureButton from "../../assets/images/CameraScreen/TakePictureButton.svg";
-import FlashlightButton from "../../assets/images/CameraScreen/FlashLightButton.svg";
 import { useNavigation } from "@react-navigation/native";
 import { fontSizes, fonts } from "../utils/colors";
 
@@ -48,13 +46,13 @@ export const CameraScreen = () => {
     setCapturedImage(null);
   };
 
-  function toggleCameraType() {
+  async function toggleCameraType() {
     setType((current) =>
       current === CameraType.back ? CameraType.front : CameraType.back
     );
   }
 
-  function toggleFlash() {
+  async function toggleFlash() {
     setFlash((current) =>
       current === FlashMode.off ? FlashMode.on : FlashMode.off
     );
@@ -70,7 +68,6 @@ export const CameraScreen = () => {
       console.log("Camera ref is not set");
     }
   }
-  
 
   const goBack = () => {
     navigation.goBack();
@@ -79,7 +76,10 @@ export const CameraScreen = () => {
   if (previewVisible && capturedImage) {
     return (
       <View style={styles.previewContainer}>
-        <Image source={{ uri: capturedImage.uri }} style={styles.previewImage} />
+        <Image
+          source={{ uri: capturedImage.uri }}
+          style={styles.previewImage}
+        />
         <View style={styles.previewButtonContainer}>
           <TouchableOpacity onPress={handleDiscardPhoto}>
             <Ionicons name="close-circle" size={50} color="red" />
@@ -92,108 +92,81 @@ export const CameraScreen = () => {
     );
   }
 
-  // Otherwise, show the camera view
   return (
-    <View style={styles.container}>
-      <Camera style={styles.camera} type={type} flashMode={flash} ref={cameraRef}>
-        {/* Top Button Container for Flip and Flashlight */}
-        <View style={styles.topButtonContainer}>
-          <TouchableOpacity style={styles.topButton} onPress={toggleFlash}>
-            {/* Flashlight Icon */}
-            <Ionicons name="flash" size={24} color="white" />
-          </TouchableOpacity>
+    <Camera style={styles.camera} type={type} flashMode={flash} ref={cameraRef}>
+      <View style={styles.topContainer}>
+        <TouchableOpacity style={styles.backButton} onPress={goBack}>
+          <Ionicons name="arrow-back" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
 
-          <TouchableOpacity style={styles.topButton} onPress={toggleCameraType}>
-            {/* Flip Camera Icon */}
-            <Ionicons name="camera-reverse" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.bottonContainer}>
+        <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
+          <Ionicons name="flash" size={24} color="white" />
+        </TouchableOpacity>
 
-        {/* Bottom Button Container for Taking Picture */}
-        <View style={styles.bottomButtonContainer}>
-          <TouchableOpacity style={styles.captureButton} onPress={takePicture}>
-            {/* Take Picture Icon */}
-            <Ionicons name="camera" size={50} color="white" />
-          </TouchableOpacity>
-        </View>
-      </Camera>
-    </View>
+        <TouchableOpacity
+          style={styles.flipCameraButton}
+          onPress={toggleCameraType}
+        >
+          <Ionicons name="camera-reverse" size={24} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.captureButton} onPress={takePicture} />
+      </View>
+    </Camera>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   camera: {
     flex: 1,
   },
-  backButton: {
-    flexDirection: "row",
-    alignItems: 'baseline',
-    marginLeft: 2,
-    marginTop: "15%",
-  },
-  backButtonText: {
-    fontFamily: fonts.medium,
-    fontSize: fontSizes.medium,
-    marginLeft: 10,
-  },
-  buttonContainer: {
+  topContainer: {
     flex: 1,
     backgroundColor: "transparent",
     flexDirection: "row",
     margin: 20,
   },
-  button: {
-    flex: 0.1,
-    alignSelf: "flex-end",
+  backButton: {
+    marginLeft: 2,
+    marginTop: "15%",
+    left: 10,
+  },
+  bottonContainer: {
+    flex: 0,
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
   },
-  text: {
-    fontSize: 18,
-    color: "white",
-  },
-  topButtonContainer: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    flexDirection: 'row',
-  },
-  bottomButtonContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  topButton: {
-    margin: 10,
+  flashButton: {
+    marginLeft: 10,
     padding: 10,
-    // Add more styling as needed
   },
   captureButton: {
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // Add more styling as needed
+    backgroundColor: "#fff",
+  },
+  flipCameraButton: {
+    margin: 10,
+    padding: 10,
   },
   previewContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
   },
   previewImage: {
-    width: '100%',
-    height: '80%',
+    width: "100%",
+    height: "80%",
   },
   previewButtonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
     padding: 20,
   },
 });
