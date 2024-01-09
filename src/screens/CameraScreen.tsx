@@ -1,23 +1,21 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, TouchableOpacity, Alert, Text, Image } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
-import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import i18n from "../../assets/translations/i18n";
-
+import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
-import { fontSizes, fonts } from "../utils/colors";
+import * as FileSystem from 'expo-file-system';
+
 
 export const CameraScreen = () => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [flash, setFlash] = useState(FlashMode.off);
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [capturedImage, setCapturedImage] = useState<any>(null);
+  const [capturedImage, setCapturedImage] = useState(null);
+  const [identifiedPlant, setIdentifiedPlant] = useState('');
   const navigation = useNavigation();
-  const { t } = i18n;
-
-  const cameraRef = useRef<Camera>(null);
+  const cameraRef = useRef(null);
 
   if (!permission) {
     requestPermission().then((permission) => {
@@ -37,8 +35,14 @@ export const CameraScreen = () => {
     // Implement logic to save the photo
     console.log("Save the photo", capturedImage);
     setPreviewVisible(false);
+  
+    if (capturedImage) {
+      identifyPlant(capturedImage);
+    }
+  
     setCapturedImage(null);
   };
+  
 
   const handleDiscardPhoto = () => {
     // Simply discard the photo and hide the preview
@@ -46,28 +50,92 @@ export const CameraScreen = () => {
     setCapturedImage(null);
   };
 
-  async function toggleCameraType() {
-    setType((current) =>
-      current === CameraType.back ? CameraType.front : CameraType.back
-    );
-  }
-
   async function toggleFlash() {
     setFlash((current) =>
       current === FlashMode.off ? FlashMode.on : FlashMode.off
     );
   }
 
-  async function takePicture() {
+  async function toggleCameraType() {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back
+    );
+  }
+
+  const identifyPlant = async (capturedImg) => {
+    if (!capturedImg || !capturedImg.uri) {
+      console.log("No image captured");
+      return;
+    }
+  
+    // Convert the image to a base64 string
+    const base64 = await FileSystem.readAsStringAsync(capturedImg.uri, { encoding: FileSystem.EncodingType.Base64 });
+  
+    try {
+      const payload = {
+        images: [base64], // The API expects a list of base64 strings
+        // include any other required fields according to the API documentation
+      };
+  
+      const apiResponse = await axios.post('https://api.plant.id/v2/identify', payload, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Api-Key': 'gnIHsLsak4YTHqvM9BHF5MIsx5mSzwIItY2KkeLAZJBJYl87wh',
+        },
+      });
+  
+      console.log("API Response:", apiResponse.data);
+  
+      const suggestions = apiResponse.data.suggestions;
+      const isPlant = apiResponse.data.is_plant;
+
+      if (isPlant === false) {
+
+        setIdentifiedPlant('No plant identified');
+        Alert.alert('No plant identified');
+
+       } else{      
+  
+        if (suggestions && suggestions.length > 0) {
+          const topSuggestion = suggestions[0];
+          const plantName = topSuggestion.plant_name;
+          const probability = topSuggestion.probability;
+    
+          setIdentifiedPlant(plantName);
+    
+          Alert.alert('Plant Identified', `Name: ${plantName}, Probability: ${(probability * 100).toFixed(2)}%`);
+        } else {
+          setIdentifiedPlant('No plant identified');
+          Alert.alert('No plant identified');
+        }
+      }
+  
+    } catch (error) {
+      if (error.response) {
+        console.log("Error Response Data:", error.response.data);
+        console.log("Error Response Status:", error.response.status);
+        console.log("Error Response Headers:", error.response.headers);
+        Alert.alert('API Error', `Error: ${error.response.data.message || 'Failed to identify the plant.'}`);
+      } else if (error.request) {
+        console.log("Error Request:", error.request);
+        Alert.alert('API Error', 'No response received from the API.');
+      } else {
+        console.log('Error', error.message);
+        Alert.alert('API Error', `Error: ${error.message}`);
+      }
+    }
+  };
+  
+  
+  const takePicture = async () => {
     if (cameraRef.current) {
       const photo = await cameraRef.current.takePictureAsync();
-      console.log(photo);
       setPreviewVisible(true);
       setCapturedImage(photo);
     } else {
       console.log("Camera ref is not set");
     }
-  }
+  };
 
   const goBack = () => {
     navigation.goBack();
@@ -91,7 +159,6 @@ export const CameraScreen = () => {
       </View>
     );
   }
-
   return (
     <Camera style={styles.camera} type={type} flashMode={flash} ref={cameraRef}>
       <View style={styles.topContainer}>
@@ -100,19 +167,16 @@ export const CameraScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.bottonContainer}>
+      <View style={styles.bottomContainer}>
         <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
           <Ionicons name="flash" size={24} color="white" />
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.flipCameraButton}
-          onPress={toggleCameraType}
-        >
+        <TouchableOpacity style={styles.captureButton} onPress={takePicture} />
+
+        <TouchableOpacity style={styles.flipCameraButton} onPress={toggleCameraType}>
           <Ionicons name="camera-reverse" size={24} color="white" />
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.captureButton} onPress={takePicture} />
       </View>
     </Camera>
   );
@@ -133,7 +197,7 @@ const styles = StyleSheet.create({
     marginTop: "15%",
     left: 10,
   },
-  bottonContainer: {
+  bottomContainer: {
     flex: 0,
     flexDirection: "row",
     justifyContent: "center",
