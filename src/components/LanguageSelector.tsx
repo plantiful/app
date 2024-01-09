@@ -9,11 +9,10 @@ import {
 } from "react-native";
 
 import i18n from "../../assets/translations/i18n";
-import ArrowDown from "./../../assets/images/AuthScreen/ArrowDown.svg";
+import { MaterialIcons } from "@expo/vector-icons";
 
-import { colors, fonts, fontSizes } from "../utils/colors";
+import { colors } from "../utils/colors";
 
-// Define the type for the language data
 type LanguageType = {
   code: string;
   flag: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -73,7 +72,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           <Text style={styles.languageCode}>
             {selectedLanguage.toUpperCase()}
           </Text>
-          <ArrowDown width={12} height={8} style={styles.arrow} />
+          <MaterialIcons name="keyboard-arrow-down" size={12} color="black" />
         </View>
       </TouchableOpacity>
       <Modal

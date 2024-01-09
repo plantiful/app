@@ -33,8 +33,16 @@ const SearchStack = createStackNavigator();
 const SearchStackNavigator = () => {
   return (
     <SearchStack.Navigator>
-      <SearchStack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
-      <SearchStack.Screen name="Camera" component={CameraScreen} options={{ headerShown: false }} />
+      <SearchStack.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{ headerShown: false }}
+      />
+      <SearchStack.Screen
+        name="Camera"
+        component={CameraScreen}
+        options={{ headerShown: false }}
+      />
     </SearchStack.Navigator>
   );
 };

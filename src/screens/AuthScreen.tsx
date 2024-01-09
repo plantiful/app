@@ -9,9 +9,6 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 
 // SVG icons
-import Apple from "../../assets/images/AuthScreen/Apple.svg";
-import Google from "../../assets/images/AuthScreen/Google.svg";
-import Facebook from "../../assets/images/AuthScreen/Facebook.svg";
 import TopRight from "../../assets/images/AuthScreen/TopRight.svg";
 import BottomLeft from "../../assets/images/AuthScreen/BottomLeft.svg";
 
@@ -78,22 +75,23 @@ export const AuthScreen = () => {
         <BottomLeft width={350} height={700} style={styles.bottomLeft} />
 
         <RoundedButtonWithIcon
-          Icon={Apple}
+          Icon={"apple"}
           text={<Text>{t("AuthScreen_apple_button")}</Text>}
           onPress={null}
           bgColor={colors.background}
         />
         <RoundedButtonWithIcon
-          Icon={Google}
+          Icon={"google"}
           text={<Text>{t("AuthScreen_google_button")}</Text>}
           onPress={null}
           bgColor={colors.background}
         />
         <RoundedButtonWithIcon
-          Icon={Facebook}
+          Icon={"facebook"}
           text={<Text>{t("AuthScreen_facebook_button")}</Text>}
           onPress={null}
           bgColor={colors.background}
+          style={{ paddingLeft: 15 }}
         />
         <RoundedButtonWithIcon
           text={<Text>{t("AuthScreen_email_button")}</Text>}

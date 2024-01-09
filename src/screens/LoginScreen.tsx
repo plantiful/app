@@ -32,7 +32,7 @@ export const LoginScreen = ({ onAuthChange }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true); // True because we want to hide the password by default
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -59,7 +59,7 @@ export const LoginScreen = ({ onAuthChange }) => {
     <View style={[styles.container, { minHeight: Math.round(windowHeight) }]}>
       <View style={styles.topContainer}>
         <TouchableOpacity onPress={goBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="black" />
+          <Ionicons name="arrow-back" size={24} color={colors.textBlack} />
           <Text style={styles.backButtonText}>
             {t("LoginScreen_back_button")}
           </Text>
@@ -79,10 +79,10 @@ export const LoginScreen = ({ onAuthChange }) => {
         <View style={styles.input}>
           <TextInput
             ref={passwordRef}
+            secureTextEntry={showPassword}
             placeholder={t("LoginScreen_password_input") as string}
             placeholderTextColor={colors.textBlack + "66"}
             returnKeyType="go"
-            secureTextEntry={showPassword}
             onSubmitEditing={handleLogin}
             onChangeText={(text) => setPassword(text)}
           />

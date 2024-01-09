@@ -1,11 +1,27 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { colors, fonts, fontSizes } from "../utils/colors";
 
-export const ProfileScreen = () => {
+// Firebase
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
+
+export const ProfileScreen = (onAuthChange) => {
+  async function handleSignOut() {
+    try {
+      await signOut(auth);
+      onAuthChange(false);
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Profile Screen</Text>
+      <Text style={styles.text} onPress={handleSignOut}>
+        Sign Out
+      </Text>
     </View>
   );
 };

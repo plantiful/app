@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { colors, fonts, fontSizes } from "../utils/colors";
-import SvgIcon from "../../assets/images/SearchScreen/CameraSearch.svg";
+import PlantScanSVG from "../../assets/images/SearchScreen/PlantScan.svg";
 
 // Add a type for the StackParamList
 type StackParamList = {
@@ -33,7 +33,7 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
           placeholderTextColor={colors.textBlack}
         />
         <TouchableOpacity onPress={() => navigation.navigate("Camera")}>
-          <SvgIcon width={24} height={24} />
+          <PlantScanSVG width={24} height={24} />
         </TouchableOpacity>
       </View>
       <Text style={styles.text}>Search Screen</Text>

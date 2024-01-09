@@ -8,8 +8,11 @@ import {
 } from "react-native";
 import { colors, fonts, fontSizes } from "../utils/colors";
 
+import { FontAwesome } from "@expo/vector-icons";
+
 type RoundedButtonWithIconProps = {
-  Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  Icon?: keyof typeof FontAwesome.glyphMap;
+  IconColor?: string;
   text: React.ReactNode;
   onPress?: () => void;
   bgColor: string;
@@ -20,10 +23,11 @@ type RoundedButtonWithIconProps = {
 
 const RoundedButtonWithIcon: React.FC<RoundedButtonWithIconProps> = ({
   Icon,
+  IconColor,
   text,
   onPress = () => {},
   bgColor,
-  paddingRight = 10,
+  paddingRight = 20,
   style = {},
   textStyle = {},
 }) => (
@@ -32,7 +36,12 @@ const RoundedButtonWithIcon: React.FC<RoundedButtonWithIconProps> = ({
     onPress={onPress}
   >
     {Icon && (
-      <Icon width={24} height={24} style={{ marginRight: paddingRight }} />
+      <FontAwesome
+        name={Icon}
+        size={24}
+        color={IconColor}
+        style={{ paddingRight }}
+      />
     )}
     <Text
       style={[
