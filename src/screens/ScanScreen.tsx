@@ -1,19 +1,12 @@
 import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Alert,
-  Text,
-  Image,
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Alert, Image } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 
-export const CameraScreen = () => {
+export const ScanScreen = () => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [flash, setFlash] = useState(FlashMode.off);
@@ -29,11 +22,6 @@ export const CameraScreen = () => {
         Alert.alert("Permission to access camera is required!");
       }
     });
-    return null;
-  }
-
-  if (!permission.granted) {
-    Alert.alert("Permission to access camera is required!");
     return null;
   }
 
@@ -255,4 +243,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CameraScreen;
+export default ScanScreen;

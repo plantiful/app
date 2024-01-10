@@ -15,37 +15,31 @@ import { PlantsScreen } from "./screens/PlantsScreen";
 import { AuthScreen } from "./screens/AuthScreen";
 import { LoginScreen } from "./screens/LoginScreen";
 import { RegisterScreen } from "./screens/RegisterScreen";
-import { CameraScreen } from "./screens/CameraScreen";
+import { ScanScreen } from "./screens/ScanScreen";
 
-import HomeIcon from "./../assets/images/TabNavigator/Home.svg";
-import HomeOutlinedIcon from "./../assets/images/TabNavigator/HomeOutline.svg";
-import SearchIcon from "./../assets/images/TabNavigator/Search.svg";
-import SearchOutlinedIcon from "./../assets/images/TabNavigator/SearchOutline.svg";
-import PotIcon from "./../assets/images/TabNavigator/Pot.svg";
-import PotOutlinedIcon from "./../assets/images/TabNavigator/PotOutline.svg";
-import ProfileIcon from "./../assets/images/TabNavigator/Profile.svg";
-import ProfileOutlinedIcon from "./../assets/images/TabNavigator/ProfileOutline.svg";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const SearchStack = createStackNavigator();
-const SearchStackNavigator = () => {
-  return (
-    <SearchStack.Navigator>
-      <SearchStack.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{ headerShown: false }}
-      />
-      <SearchStack.Screen
-        name="Camera"
-        component={CameraScreen}
-        options={{ headerShown: false }}
-      />
-    </SearchStack.Navigator>
-  );
-};
+// Remake this for home screen (profile and search)
+// const SearchStack = createStackNavigator();
+// const SearchStackNavigator = () => {
+//   return (
+//     <SearchStack.Navigator>
+//       <SearchStack.Screen
+//         name="Search"
+//         component={SearchScreen}
+//         options={{ headerShown: false }}
+//       />
+//       <SearchStack.Screen
+//         name="Camera"
+//         component={CameraScreen}
+//         options={{ headerShown: false }}
+//       />
+//     </SearchStack.Navigator>
+//   );
+// };
 
 export const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -76,6 +70,12 @@ export const App = () => {
     return null;
   }
 
+  // This way we dont pass an inline function to the component
+  const RegisterScreenWrapper = () => (
+    <RegisterScreen onAuthChange={onAuthChange} />
+  );
+  const LoginScreenWrapper = () => <LoginScreen onAuthChange={onAuthChange} />;
+
   if (!loggedIn) {
     return (
       <NavigationContainer>
@@ -87,16 +87,12 @@ export const App = () => {
           />
           <Stack.Screen
             name="Login"
-            component={(
-              props: JSX.IntrinsicAttributes & { onAuthChange: any }
-            ) => <LoginScreen {...props} onAuthChange={onAuthChange} />}
+            component={LoginScreenWrapper}
             options={{ headerShown: false }}
           />
           <Stack.Screen
             name="Register"
-            component={(
-              props: JSX.IntrinsicAttributes & { onAuthChange: any }
-            ) => <RegisterScreen {...props} onAuthChange={onAuthChange} />}
+            component={RegisterScreenWrapper}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
@@ -107,27 +103,22 @@ export const App = () => {
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, size }) => {
-              let IconComponent;
+            tabBarIcon: ({ size, color }) => {
+              let iconName;
 
               if (route.name === "Home") {
-                IconComponent = focused ? HomeOutlinedIcon : HomeIcon;
-              } else if (route.name === "Search") {
-                IconComponent = focused ? SearchOutlinedIcon : SearchIcon;
+                iconName = "home-outline";
+              } else if (route.name === "Scan") {
+                iconName = "scan";
               } else if (route.name === "Plants") {
-                IconComponent = focused ? PotOutlinedIcon : PotIcon;
-              } else if (route.name === "Profile") {
-                IconComponent = focused ? ProfileOutlinedIcon : ProfileIcon;
+                iconName = "leaf-outline";
               }
 
-              if (IconComponent) {
-                return <IconComponent width={size} height={size} />;
-              }
-
-              return null;
+              return <Ionicons name={iconName} size={size} color={color} />;
             },
-            // Do not display text under the icons
-            tabBarLabelStyle: { display: "none" },
+            tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
+            tabBarActiveTintColor: "black",
+            tabBarInactiveTintColor: "gray",
           })}
         >
           <Tab.Screen
@@ -136,18 +127,13 @@ export const App = () => {
             options={{ headerShown: false }}
           />
           <Tab.Screen
-            name="Search"
-            component={SearchStackNavigator}
+            name="Scan"
+            component={ScanScreen}
             options={{ headerShown: false }}
           />
           <Tab.Screen
             name="Plants"
             component={PlantsScreen}
-            options={{ headerShown: false }}
-          />
-          <Tab.Screen
-            name="Profile"
-            component={ProfileScreen}
             options={{ headerShown: false }}
           />
         </Tab.Navigator>
