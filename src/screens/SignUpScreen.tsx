@@ -49,6 +49,11 @@ export const SignUpScreen = ({ onAuthChange }) => {
   };
 
   const handleSignUp = async () => {
+    if (!isAgreenmentChecked) {
+      Alert.alert("Error", "Please agree to the terms and privacy policy");
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(auth.currentUser, {
@@ -56,7 +61,8 @@ export const SignUpScreen = ({ onAuthChange }) => {
       });
       onAuthChange(true);
     } catch (error: any) {
-      Alert.alert("Error", error.message);
+      Alert.alert("Firebase error", error.message);
+      return;
     }
   };
 
@@ -153,9 +159,19 @@ export const SignUpScreen = ({ onAuthChange }) => {
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={handleSignUp}
-        style={[styles.signUpButton]}
+        style={[
+          styles.signUpButton,
+          { opacity: isAgreenmentChecked ? 1 : 0.6 },
+        ]}
       >
-        <Text style={styles.signUpButtonText}>{t("sign_up_button")}</Text>
+        <Text
+          style={[
+            styles.signUpButtonText,
+            { opacity: isAgreenmentChecked ? 1 : 0.6 },
+          ]}
+        >
+          {t("sign_up_button")}
+        </Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -280,12 +296,10 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   agreenmentTextButton: {
-    fontFamily: fonts.semiBold,
+    fontFamily: fonts.extraBold,
     fontSize: fontSize.medium,
     color: colors.primary,
     borderBottomColor: colors.primary,
-    textDecorationLine: "underline",
-    textDecorationColor: colors.primary,
   },
   signUpButton: {
     alignItems: "center",
