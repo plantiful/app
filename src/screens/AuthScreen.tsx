@@ -5,12 +5,12 @@ import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import i18n from "../../assets/translations/i18n";
+import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
+
 // SVG icons
 import P_SVG from "../../assets/images/AuthScreen/p.svg";
 import F_SVG from "../../assets/images/AuthScreen/F.svg";
-
-import i18n from "../../assets/translations/i18n";
-import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
 
 type RootStackParamList = {
   Auth: undefined;
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   signInButton: {
-    alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.primary,
@@ -130,3 +129,5 @@ const styles = StyleSheet.create({
     left: 0,
   },
 });
+
+export default AuthScreen;

@@ -39,5 +39,6 @@ yarn add <package-name>
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen)
 - [ ] Fix auth screen svg icons (they are not properly exported)
+- [ ] Fix login screen social icons (they are just off)
 
 Na auth screen mi prijde, ze neni uplne jasne, ze v login screen se da prihlasit pomoci googlu, atd.

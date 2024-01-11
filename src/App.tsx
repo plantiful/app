@@ -5,9 +5,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "./firebase";
 import { loadFonts } from "./utils/loadFonts";
 
+// Firebase
+import { auth } from "./firebase";
+
+// Screens
 import { HomeScreen } from "./screens/HomeScreen";
 import { PlantsScreen } from "./screens/PlantsScreen";
 import { AuthScreen } from "./screens/AuthScreen";
@@ -15,6 +18,7 @@ import { LoginScreen } from "./screens/LoginScreen";
 import { RegisterScreen } from "./screens/RegisterScreen";
 import { ScanScreen } from "./screens/ScanScreen";
 
+// Icons
 import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
