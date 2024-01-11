@@ -27,6 +27,7 @@
     "expo": "~48.0.10",
     "expo-app-loading": "^2.1.1",
     "expo-camera": "^13.2.1",
+    "expo-checkbox": "^2.5.0",
     "expo-file-system": "~15.2.2",
     "expo-font": "^11.1.1",
     "expo-localization": "~14.1.1",

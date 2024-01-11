@@ -14,20 +14,20 @@ import F_SVG from "../../assets/images/AuthScreen/F.svg";
 
 type RootStackParamList = {
   Auth: undefined;
-  Register: undefined;
-  Login: undefined;
+  SignUp: undefined;
+  SignIn: undefined;
 } & ParamListBase;
 
 export const AuthScreen = () => {
   const { t } = i18n;
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-  const navigateToRegister = () => {
-    navigation.navigate("Register");
+  const navigateToSignUp = () => {
+    navigation.navigate("SignUp");
   };
 
-  const navigateToLogin = () => {
-    navigation.navigate("Login");
+  const navigateToSignIn = () => {
+    navigation.navigate("SignIn");
   };
 
   return (
@@ -42,7 +42,7 @@ export const AuthScreen = () => {
       <TouchableOpacity
         activeOpacity={0.6}
         style={styles.signInButton}
-        onPress={navigateToLogin}
+        onPress={navigateToSignIn}
       >
         <Text style={styles.signInButtonText}>
           {t("AuthScreen_sign_in_button")}
@@ -53,7 +53,7 @@ export const AuthScreen = () => {
         <Text style={styles.signUpHeader}>
           {t("AuthScreen_sign_up_header")}
         </Text>
-        <TouchableOpacity activeOpacity={0.6} onPress={navigateToRegister}>
+        <TouchableOpacity activeOpacity={0.6} onPress={navigateToSignUp}>
           <Text style={styles.signUpTextButton}>
             {t("AuthScreen_sign_up_text_button")}
           </Text>

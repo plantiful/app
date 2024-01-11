@@ -14,8 +14,8 @@ import { auth } from "./firebase";
 import { HomeScreen } from "./screens/HomeScreen";
 import { PlantsScreen } from "./screens/PlantsScreen";
 import { AuthScreen } from "./screens/AuthScreen";
-import { LoginScreen } from "./screens/LoginScreen";
-import { RegisterScreen } from "./screens/RegisterScreen";
+import { SignInScreen } from "./screens/SignInScreen";
+import { SignUpScreen } from "./screens/SignUpScreen";
 import { ScanScreen } from "./screens/ScanScreen";
 
 // Icons
@@ -54,10 +54,12 @@ export const App = () => {
   }
 
   // This way we dont pass an inline function to the component
-  const RegisterScreenWrapper = () => (
-    <RegisterScreen onAuthChange={onAuthChange} />
+  const SignUpScreenWrapper = () => (
+    <SignUpScreen onAuthChange={onAuthChange} />
   );
-  const LoginScreenWrapper = () => <LoginScreen onAuthChange={onAuthChange} />;
+  const SignInScreenWrapper = () => (
+    <SignInScreen onAuthChange={onAuthChange} />
+  );
 
   if (!loggedIn) {
     return (
@@ -69,13 +71,13 @@ export const App = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="Login"
-            component={LoginScreenWrapper}
+            name="SignIn"
+            component={SignInScreenWrapper}
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="Register"
-            component={RegisterScreenWrapper}
+            name="SignUp"
+            component={SignUpScreenWrapper}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

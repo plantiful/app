@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  useWindowDimensions,
   Alert,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -23,9 +22,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
-export const LoginScreen = ({ onAuthChange }) => {
+export const SignInScreen = ({ onAuthChange }) => {
   const { t } = i18n;
-  const windowHeight = useWindowDimensions().height;
   const navigation = useNavigation();
 
   const emailRef = useRef<TextInput>(null!);
@@ -39,7 +37,7 @@ export const LoginScreen = ({ onAuthChange }) => {
     setShowPassword(!showPassword);
   };
 
-  async function handleLogin() {
+  async function handleSignIn() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       onAuthChange(true);
@@ -64,20 +62,14 @@ export const LoginScreen = ({ onAuthChange }) => {
         onPress={goBack}
       >
         <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
-        <Text style={styles.backButtonText}>
-          {t("LoginScreen_back_button")}
-        </Text>
+        <Text style={styles.backButtonText}>{t("back_button")}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.signInText}>{t("LoginScreen_sign_in_text")}</Text>
-      <Text style={styles.signInDescription}>
-        {t("LoginScreen_sign_in_description")}
-      </Text>
+      <Text style={styles.signInText}>{t("sign_in_text")}</Text>
+      <Text style={styles.signInDescription}>{t("sign_in_description")}</Text>
 
       <View style={styles.emailContainer}>
-        <Text style={styles.emailInputTitle}>
-          {t("LoginScreen_email_input_title")}
-        </Text>
+        <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
 
         <TextInput
           ref={emailRef}
@@ -91,9 +83,7 @@ export const LoginScreen = ({ onAuthChange }) => {
       </View>
 
       <View style={styles.passwordContainer}>
-        <Text style={styles.emailInputTitle}>
-          {t("LoginScreen_password_input_title")}
-        </Text>
+        <Text style={styles.emailInputTitle}>{t("password_input_title")}</Text>
 
         <TextInput
           ref={passwordRef}
@@ -101,11 +91,11 @@ export const LoginScreen = ({ onAuthChange }) => {
           returnKeyType="done"
           returnKeyLabel="Login"
           secureTextEntry={showPassword}
-          onSubmitEditing={handleLogin}
+          onSubmitEditing={handleSignIn}
           onChangeText={(text) => setPassword(text)}
         />
         <View style={styles.showPasswordIcon}>
-          <TouchableOpacity onPress={toggleShowPassword}>
+          <TouchableOpacity activeOpacity={0.6} onPress={toggleShowPassword}>
             {showPassword ? (
               <Ionicons name="eye-off" size={24} color={colors.primary} />
             ) : (
@@ -114,42 +104,44 @@ export const LoginScreen = ({ onAuthChange }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={navigateToForgotPassword}>
+      <TouchableOpacity activeOpacity={0.6} onPress={navigateToForgotPassword}>
         <Text style={styles.forgotPasswordTextButton}>
-          {t("LoginScreen_forgot_password_text_button")}
+          {t("forgot_password_text_button")}
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleLogin} style={[styles.signInButton]}>
-        <Text style={styles.signInButtonText}>
-          {t("LoginScreen_signin_button")}
-        </Text>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        onPress={handleSignIn}
+        style={[styles.signInButton]}
+      >
+        <Text style={styles.signInButtonText}>{t("sign_in_button_text")}</Text>
       </TouchableOpacity>
 
       <View style={styles.socialsContainer}>
         <View style={{ paddingBottom: 15 }}>
-          <TouchableOpacity style={styles.googleButton}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.googleButton}>
             <FontAwesome name="google" size={24} color="black" />
             <Text style={styles.googleButtonText}>
-              {t("LoginScreen_google_button")}
+              {t("google_sign_in_button")}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={{ paddingBottom: 15 }}>
-          <TouchableOpacity style={styles.facebookButton}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.facebookButton}>
             <FontAwesome name="facebook" size={24} color="black" />
             <Text style={styles.facebookButtonText}>
-              {t("LoginScreen_facebook_button")}
+              {t("facebook_sign_in_button")}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={{ paddingBottom: 15 }}>
-          <TouchableOpacity style={styles.appleButton}>
+          <TouchableOpacity activeOpacity={0.6} style={styles.appleButton}>
             <FontAwesome name="apple" size={24} color="black" />
             <Text style={styles.appleButtonText}>
-              {t("LoginScreen_apple_button")}
+              {t("apple_sign_in_button")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -200,7 +192,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: defaultStyles.paddingLeft,
     backgroundColor: "#F5F5F5",
-    borderColor: "#E1E1E1",
+    borderColor: colors.border,
     borderWidth: 1,
     width: "100%",
     height: 50,
@@ -223,7 +215,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: defaultStyles.paddingLeft,
     backgroundColor: "#F5F5F5",
-    borderColor: "#E1E1E1",
+    borderColor: colors.border,
     borderWidth: 1,
     width: "100%",
     height: 50,
@@ -241,9 +233,9 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     fontFamily: fonts.medium,
     fontSize: fontSize.medium,
-    color: colors.textBlack,
-    paddingTop: 15,
-    paddingBottom: 15,
+    color: colors.primary,
+    paddingTop: 5,
+    paddingBottom: 20,
   },
   signInButton: {
     alignItems: "center",
@@ -266,7 +258,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.background,
     borderColor: colors.primary,
     borderWidth: 1,
     width: "100%",
@@ -287,7 +279,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.background,
     borderColor: colors.primary,
     borderWidth: 1,
     width: "100%",
@@ -308,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.background,
     borderColor: colors.primary,
     borderWidth: 1,
     width: "100%",
@@ -326,4 +318,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignInScreen;

@@ -6,6 +6,7 @@ export const defaultStyles = {
 export const colors = {
   primary: "#205950",
   background: "#ffffff",
+  border: "#E1E1E1",
 
   textBlack: "#000000",
   textGrey: "#2C2C2C",

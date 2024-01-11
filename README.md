@@ -35,10 +35,11 @@ yarn add <package-name>
 - [x] Fix opening camera from search screen
 - [x] Make the flash icon change based on the toggle
 - [ ] Add progress bar for plant recognition
-- [ ] Add all translations
+- [ ] Add all translations (now it is only in english)
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen)
 - [ ] Fix auth screen svg icons (they are not properly exported)
-- [ ] Fix login screen social icons (they are just off)
+- [ ] Add custom SVG icons on login screen for socials
+- [ ] Add terms and privacy policy links on sign up screen
 
 Na auth screen mi prijde, ze neni uplne jasne, ze v login screen se da prihlasit pomoci googlu, atd.
