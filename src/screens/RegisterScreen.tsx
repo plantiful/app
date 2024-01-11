@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import { colors, fonts, fontSizes } from "../utils/colors";
+import { colors, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 
 // Firebase
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   backButtonText: {
     fontFamily: fonts.medium,
-    fontSize: fontSizes.medium,
+    fontSize: fontSize.medium,
     marginLeft: 10,
   },
   inputContainer: {
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     borderColor: colors.textBlack + "4D",
     marginBottom: 20,
     fontFamily: fonts.regular,
-    fontSize: fontSizes.large,
+    fontSize: fontSize.large,
     color: colors.textBlack,
   },
   bottomContainer: {
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   },
   registerButtonText: {
     fontFamily: fonts.medium,
-    fontSize: fontSizes.large,
+    fontSize: fontSize.large,
     color: colors.textWhite,
   },
   showPasswordIcon: {

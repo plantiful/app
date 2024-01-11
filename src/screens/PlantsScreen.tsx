@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { colors, fonts, fontSizes } from "../utils/colors";
+import { colors, fonts, fontSize } from "../utils/colors";
 
 export const PlantsScreen = () => {
   return (
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   text: {
-    fontSize: fontSizes.large,
+    fontSize: fontSize.large,
     fontFamily: fonts.medium,
     color: colors.textBlack,
   },

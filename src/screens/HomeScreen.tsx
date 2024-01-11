@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { colors, fonts, fontSizes } from "../utils/colors";
+import { colors, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 import { auth } from "../firebase";
 
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   welcomeText: {
-    fontSize: fontSizes.large,
+    fontSize: fontSize.large,
     color: colors.textBlack,
     fontFamily: fonts.regular,
   },
   welcomeName: {
-    fontSize: fontSizes.large,
+    fontSize: fontSize.large,
     color: colors.textBlack,
     fontFamily: fonts.bold,
   },

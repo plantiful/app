@@ -7,11 +7,7 @@ import cs from "./cs";
 import al from "./al";
 import sk from "./sk";
 
-type Translations = {
-  [key: string]: Record<string, string>;
-};
-
-const translations: Translations = {
+const translations = {
   en,
   cs,
   al,

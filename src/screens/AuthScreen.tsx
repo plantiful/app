@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 // SVG icons
-import TopRight from "../../assets/images/AuthScreen/TopRight.svg";
-import BottomLeft from "../../assets/images/AuthScreen/BottomLeft.svg";
+import P_SVG from "../../assets/images/AuthScreen/p.svg";
+import F_SVG from "../../assets/images/AuthScreen/F.svg";
 
-import USFlag from "./../../assets/images/Flags/us.svg";
-import CZFlag from "./../../assets/images/Flags/cz.svg";
-import SKFlag from "./../../assets/images/Flags/sk.svg";
-import ALFlag from "./../../assets/images/Flags/al.svg";
-
-import LanguageSelector from "../components/LanguageSelector";
-import RoundedButtonWithIcon from "../components/RoundedButtonWithIcon";
 import i18n from "../../assets/translations/i18n";
-import { colors, fonts, fontSizes } from "../utils/colors";
+import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
 
 type RootStackParamList = {
   Auth: undefined;
@@ -30,27 +20,7 @@ type RootStackParamList = {
 
 export const AuthScreen = () => {
   const { t } = i18n;
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
-  const insets = useSafeAreaInsets();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-  const languages = [
-    { code: "en", flag: USFlag },
-    { code: "cs", flag: CZFlag },
-    { code: "sk", flag: SKFlag },
-    { code: "al", flag: ALFlag },
-  ];
-
-  useEffect(() => {
-    const changeLanguageListener = () => {
-      setCurrentLanguage(i18n.language);
-    };
-
-    i18n.on("languageChanged", changeLanguageListener);
-    return () => {
-      i18n.off("languageChanged", changeLanguageListener);
-    };
-  }, []);
 
   const navigateToRegister = () => {
     navigation.navigate("Register");
@@ -61,53 +31,32 @@ export const AuthScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: insets.top,
-        }}
+    <SafeAreaView style={styles.container}>
+      <F_SVG style={styles.fLetter} />
+      <P_SVG style={styles.pLetter} />
+
+      <Text style={styles.welcome}>{t("AuthScreen_welcome_text")}</Text>
+      <Text style={styles.moto}>{t("AuthScreen_moto_text")}</Text>
+
+      <Text style={styles.signInHeader}>{t("AuthScreen_sign_in_header")}</Text>
+      <TouchableOpacity
+        activeOpacity={0.6}
+        style={styles.signInButton}
+        onPress={navigateToLogin}
       >
-        <LanguageSelector
-          languages={languages}
-          initialLanguage="en"
-          style={{ top: 5, left: 35 }}
-        />
+        <Text style={styles.signInButtonText}>
+          {t("AuthScreen_sign_in_button")}
+        </Text>
+      </TouchableOpacity>
 
-        <TopRight width={275} height={550} style={styles.topRight} />
-        <BottomLeft width={350} height={700} style={styles.bottomLeft} />
-
-        <RoundedButtonWithIcon
-          Icon={"apple"}
-          text={<Text>{t("AuthScreen_apple_button")}</Text>}
-          onPress={null}
-          bgColor={colors.background}
-        />
-        <RoundedButtonWithIcon
-          Icon={"google"}
-          text={<Text>{t("AuthScreen_google_button")}</Text>}
-          onPress={null}
-          bgColor={colors.background}
-        />
-        <RoundedButtonWithIcon
-          Icon={"facebook"}
-          text={<Text>{t("AuthScreen_facebook_button")}</Text>}
-          onPress={null}
-          bgColor={colors.background}
-          style={{ paddingLeft: 15 }}
-        />
-        <RoundedButtonWithIcon
-          text={<Text>{t("AuthScreen_email_button")}</Text>}
-          onPress={navigateToRegister}
-          bgColor={colors.primary}
-          style={{ borderTopRightRadius: 0 }}
-        />
-
-        <View style={styles.line} />
-        <TouchableOpacity onPress={navigateToLogin}>
-          <Text style={styles.loginButton}>{t("AuthScreen_login_button")}</Text>
+      <View style={styles.signUpContainer}>
+        <Text style={styles.signUpHeader}>
+          {t("AuthScreen_sign_up_header")}
+        </Text>
+        <TouchableOpacity activeOpacity={0.6} onPress={navigateToRegister}>
+          <Text style={styles.signUpTextButton}>
+            {t("AuthScreen_sign_up_text_button")}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -115,28 +64,69 @@ export const AuthScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  line: {
-    width: 280,
-    height: 1,
-    borderRadius: 1,
-    backgroundColor: colors.textBlack,
-    opacity: 0.3,
-    top: -7.5,
-    marginVertical: 5,
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    paddingHorizontal: defaultStyles.paddingLeft,
   },
-  loginButton: {
-    color: colors.textBlack,
-    fontFamily: fonts.regular,
-    fontSize: fontSizes.medium,
+  welcome: {
+    fontFamily: fonts.bold,
+    fontSize: 42,
+    color: colors.primary,
+    paddingTop: 60,
   },
-  topRight: {
+  moto: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+    color: colors.textGrey,
+    paddingTop: 10,
+  },
+  signInHeader: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+    color: colors.textGrey,
+    paddingTop: 240,
+    paddingBottom: 10,
+  },
+  signInButton: {
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+    width: "100%",
+    height: 50,
+    borderRadius: 8,
+  },
+  signInButtonText: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+    color: colors.textWhite,
+  },
+  signUpContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  signUpHeader: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+    color: colors.textGrey,
+    paddingTop: 15,
+    paddingRight: 5,
+  },
+  signUpTextButton: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+    color: colors.primary,
+    paddingTop: 15,
+  },
+  fLetter: {
     position: "absolute",
-    top: -50,
+    top: -0,
     right: -50,
   },
-  bottomLeft: {
+  pLetter: {
     position: "absolute",
-    bottom: -100,
-    left: -95,
+    bottom: 0,
+    left: 0,
   },
 });

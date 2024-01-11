@@ -1,7 +1,12 @@
 export default {
-  // FileName_description: "translation",
-
   // AuthScreen
+  AuthScreen_welcome_text: "Welcome",
+  AuthScreen_moto_text: "Lets grow with us",
+  AuthScreen_sign_in_header: "Existing customer / Get started",
+  AuthScreen_sign_in_button: "Sign in",
+  AuthScreen_sign_up_header: "New customer?",
+  AuthScreen_sign_up_text_button: "Create new account",
+
   AuthScreen_language_button: "Language",
   AuthScreen_apple_button: "Continue using Apple account",
   AuthScreen_google_button: "Continue using Google account",

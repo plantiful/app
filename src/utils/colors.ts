@@ -1,11 +1,15 @@
+export const defaultStyles = {
+  paddingTop: 20,
+  paddingLeft: 24,
+};
+
 export const colors = {
   primary: "#205950",
   background: "#ffffff",
 
   textBlack: "#000000",
+  textGrey: "#2C2C2C",
   textWhite: "#ffffff",
-  textLight: "#4D0000",
-  lightGrey: "#f0f0f0",
 };
 
 export const fonts = {
@@ -23,10 +27,9 @@ export const fonts = {
   semiBoldItalic: "OpenSans-SemiBoldItalic",
 };
 
-export const fontSizes = {
+export const fontSize = {
   small: 12,
   medium: 14,
   large: 16,
-  largePlus: 20,
-  extraLarge: 24,
+  largePlus: 18,
 };
