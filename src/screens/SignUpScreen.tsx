@@ -6,6 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +16,7 @@ import Checkbox from "expo-checkbox";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 // Firebase
 import { auth } from "../firebase";
@@ -36,6 +40,9 @@ export const SignUpScreen = ({ onAuthChange }) => {
   const [hidePassword, setHidePassword] = useState(true); // True because we want to hide the password by default
   const [isAgreenmentChecked, setAgreenmentChecked] = useState(false);
 
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const toggleShowPassword = () => {
     setHidePassword(!hidePassword);
   };
@@ -49,8 +56,15 @@ export const SignUpScreen = ({ onAuthChange }) => {
   };
 
   const handleSignUp = async () => {
+    if (!name || !email || !password) {
+      setErrorMessage(t("error_fill_all_fields"));
+      setShowError(true);
+      return;
+    }
+
     if (!isAgreenmentChecked) {
-      Alert.alert("Error", "Please agree to the terms and privacy policy");
+      setErrorMessage(t("error_agree_terms"));
+      setShowError(true);
       return;
     }
 
@@ -61,7 +75,18 @@ export const SignUpScreen = ({ onAuthChange }) => {
       });
       onAuthChange(true);
     } catch (error: any) {
-      Alert.alert("Firebase error", error.message);
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMessage(t("error_email_already_in_use"));
+        setShowError(true);
+        return;
+      } else if (error.code === "auth/invalid-email") {
+        setErrorMessage(t("error_invalid_email"));
+        setShowError(true);
+        return;
+      }
+
+      setErrorMessage(error.code);
+      setShowError(true);
       return;
     }
   };
@@ -72,107 +97,126 @@ export const SignUpScreen = ({ onAuthChange }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={styles.backButtonContainer}
-        onPress={goBack}
-      >
-        <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
-        <Text style={styles.backButtonText}>{t("back_button")}</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.signUpText}>{t("sign_up_text")}</Text>
-      <Text style={styles.signUpDescription}>{t("sign_up_description")}</Text>
-
-      <View style={styles.nameContainer}>
-        <Text style={styles.emailInputTitle}>{t("name_input_title")}</Text>
-
-        <TextInput
-          ref={nameRef}
-          style={styles.nameInput}
-          returnKeyType="next"
-          returnKeyLabel="Next"
-          onSubmitEditing={() => emailRef.current.focus()}
-          onChangeText={(text) => setEmail(text)}
-        />
-      </View>
-
-      <View style={styles.emailContainer}>
-        <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
-
-        <TextInput
-          ref={emailRef}
-          style={styles.emailInput}
-          keyboardType="email-address"
-          returnKeyType="next"
-          returnKeyLabel="Next"
-          onSubmitEditing={() => passwordRef.current.focus()}
-          onChangeText={(text) => setEmail(text)}
-        />
-      </View>
-
-      <View style={styles.passwordContainer}>
-        <Text style={styles.emailInputTitle}>{t("password_input_title")}</Text>
-
-        <TextInput
-          ref={passwordRef}
-          style={styles.passwordInput}
-          returnKeyType="done"
-          returnKeyLabel="Login"
-          secureTextEntry={hidePassword}
-          onSubmitEditing={handleSignUp}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <View style={styles.showPasswordIcon}>
-          <TouchableOpacity activeOpacity={0.6} onPress={toggleShowPassword}>
-            {hidePassword ? (
-              <Ionicons name="eye-off" size={24} color={colors.primary} />
-            ) : (
-              <Ionicons name="eye" size={24} color={colors.primary} />
-            )}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-10}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.backButtonContainer}
+            onPress={goBack}
+          >
+            <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
+            <Text style={styles.backButtonText}>{t("back_button")}</Text>
           </TouchableOpacity>
-        </View>
-      </View>
 
-      <View style={styles.agreenmentContainer}>
-        <Checkbox
-          style={styles.agreenmentCheckbox}
-          color={isAgreenmentChecked ? colors.primary : undefined}
-          value={isAgreenmentChecked}
-          onValueChange={setAgreenmentChecked}
-        />
-
-        <Text style={styles.agreenmentText}>{t("terms_text1")}</Text>
-        <TouchableOpacity activeOpacity={0.6} onPress={openTerms}>
-          <Text style={styles.agreenmentTextButton}>
-            {t("terms_button_text")}
+          <Text style={styles.signUpText}>{t("sign_up_text")}</Text>
+          <Text style={styles.signUpDescription}>
+            {t("sign_up_description")}
           </Text>
-        </TouchableOpacity>
-        <Text style={styles.agreenmentText}>{t("terms_text2")}</Text>
-        <TouchableOpacity activeOpacity={0.6} onPress={openPrivacyPolicy}>
-          <Text style={styles.agreenmentTextButton}>
-            {t("privacy_policy_button_text")}
-          </Text>
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={handleSignUp}
-        style={[
-          styles.signUpButton,
-          { opacity: isAgreenmentChecked ? 1 : 0.6 },
-        ]}
-      >
-        <Text
-          style={[
-            styles.signUpButtonText,
-            { opacity: isAgreenmentChecked ? 1 : 0.6 },
-          ]}
-        >
-          {t("sign_up_button")}
-        </Text>
-      </TouchableOpacity>
+          <View style={styles.nameContainer}>
+            <Text style={styles.emailInputTitle}>{t("name_input_title")}</Text>
+
+            <TextInput
+              ref={nameRef}
+              style={styles.nameInput}
+              returnKeyType="next"
+              returnKeyLabel="Next"
+              onSubmitEditing={() => emailRef.current.focus()}
+              onChangeText={(text) => setName(text)}
+            />
+          </View>
+
+          <View style={styles.emailContainer}>
+            <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
+
+            <TextInput
+              ref={emailRef}
+              style={styles.emailInput}
+              keyboardType="email-address"
+              returnKeyType="next"
+              returnKeyLabel="Next"
+              onSubmitEditing={() => passwordRef.current.focus()}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+
+          <View style={styles.passwordContainer}>
+            <Text style={styles.emailInputTitle}>
+              {t("password_input_title")}
+            </Text>
+            <TextInput
+              ref={passwordRef}
+              style={styles.passwordInput}
+              returnKeyType="done"
+              returnKeyLabel="Login"
+              secureTextEntry={hidePassword}
+              onSubmitEditing={handleSignUp}
+              onChangeText={(text) => setPassword(text)}
+            />
+
+            <View style={styles.showPasswordIcon}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={toggleShowPassword}
+              >
+                {hidePassword ? (
+                  <Ionicons name="eye-off" size={24} color={colors.primary} />
+                ) : (
+                  <Ionicons name="eye" size={24} color={colors.primary} />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.agreenmentContainer}>
+            <Checkbox
+              style={styles.agreenmentCheckbox}
+              color={isAgreenmentChecked ? colors.primary : undefined}
+              value={isAgreenmentChecked}
+              onValueChange={setAgreenmentChecked}
+            />
+
+            <Text style={styles.agreenmentText}>{t("terms_text1")}</Text>
+            <TouchableOpacity activeOpacity={0.6} onPress={openTerms}>
+              <Text style={styles.agreenmentTextButton}>
+                {t("terms_button_text")}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.agreenmentText}>{t("terms_text2")}</Text>
+            <TouchableOpacity activeOpacity={0.6} onPress={openPrivacyPolicy}>
+              <Text style={styles.agreenmentTextButton}>
+                {t("privacy_policy_button_text")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={handleSignUp}
+            style={[
+              styles.signUpButton,
+              { opacity: isAgreenmentChecked ? 1 : 0.6 },
+            ]}
+          >
+            <Text
+              style={[
+                styles.signUpButtonText,
+                { opacity: isAgreenmentChecked ? 1 : 0.6 },
+              ]}
+            >
+              {t("sign_up_button")}
+            </Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+
+      <ConfirmationModal
+        title={t("sign_up_error_title")}
+        text={errorMessage}
+        buttonText={t("error_button")}
+        isVisible={showError}
+        onClose={() => setShowError(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -182,11 +226,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.paddingLeft,
+    paddingTop: defaultStyles.paddingTop,
   },
   backButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: defaultStyles.paddingTop,
   },
   backButtonText: {
     fontFamily: fonts.semiBold,
@@ -219,7 +263,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingLeft: defaultStyles.paddingLeft,
     backgroundColor: "#F5F5F5",
-    borderColor: "#E1E1E1",
+    borderColor: colors.border,
     borderWidth: 1,
     width: "100%",
     height: 50,

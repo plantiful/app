@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -6,12 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 // Firebase
 import { auth } from "../firebase";
@@ -21,6 +25,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { FirebaseError } from "firebase/app";
 
 export const SignInScreen = ({ onAuthChange }) => {
   const { t } = i18n;
@@ -33,16 +38,44 @@ export const SignInScreen = ({ onAuthChange }) => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(true); // True because we want to hide the password by default
 
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   async function handleSignIn() {
+    if (!email || !password) {
+      setErrorMessage(t("error_fill_all_fields"));
+      setShowError(true);
+      return;
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
       onAuthChange(true);
-    } catch (error: any) {
-      Alert.alert("Error", error.message);
+    } catch (error: FirebaseError | any) {
+      if (error.code === "auth/invalid-email") {
+        setErrorMessage(t("error_invalid_email"));
+        setShowError(true);
+        return;
+      } else if (error.code === "auth/user-disabled") {
+        setErrorMessage(t("error_user_disabled"));
+        setShowError(true);
+        return;
+      } else if (error.code === "auth/user-not-found") {
+        setErrorMessage(t("error_user_not_found"));
+        setShowError(true);
+        return;
+      } else if (error.code === "auth/invalid-login-credentials") {
+        setErrorMessage(t("error_invalid_login_credentials"));
+        setShowError(true);
+        return;
+      }
+
+      setErrorMessage(error.code);
+      setShowError(true);
     }
   }
 
@@ -56,96 +89,123 @@ export const SignInScreen = ({ onAuthChange }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={styles.backButtonContainer}
-        onPress={goBack}
-      >
-        <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
-        <Text style={styles.backButtonText}>{t("back_button")}</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.signInText}>{t("sign_in_text")}</Text>
-      <Text style={styles.signInDescription}>{t("sign_in_description")}</Text>
-
-      <View style={styles.emailContainer}>
-        <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
-
-        <TextInput
-          ref={emailRef}
-          style={styles.emailInput}
-          keyboardType="email-address"
-          returnKeyType="next"
-          returnKeyLabel="Next"
-          onSubmitEditing={() => passwordRef.current.focus()}
-          onChangeText={(text) => setEmail(text)}
-        />
-      </View>
-
-      <View style={styles.passwordContainer}>
-        <Text style={styles.emailInputTitle}>{t("password_input_title")}</Text>
-
-        <TextInput
-          ref={passwordRef}
-          style={styles.passwordInput}
-          returnKeyType="done"
-          returnKeyLabel="Login"
-          secureTextEntry={showPassword}
-          onSubmitEditing={handleSignIn}
-          onChangeText={(text) => setPassword(text)}
-        />
-        <View style={styles.showPasswordIcon}>
-          <TouchableOpacity activeOpacity={0.6} onPress={toggleShowPassword}>
-            {showPassword ? (
-              <Ionicons name="eye-off" size={24} color={colors.primary} />
-            ) : (
-              <Ionicons name="eye" size={24} color={colors.primary} />
-            )}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-230}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            style={styles.backButtonContainer}
+            onPress={goBack}
+          >
+            <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
+            <Text style={styles.backButtonText}>{t("back_button")}</Text>
           </TouchableOpacity>
-        </View>
-      </View>
-      <TouchableOpacity activeOpacity={0.6} onPress={navigateToForgotPassword}>
-        <Text style={styles.forgotPasswordTextButton}>
-          {t("forgot_password_text_button")}
-        </Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={handleSignIn}
-        style={[styles.signInButton]}
-      >
-        <Text style={styles.signInButtonText}>{t("sign_in_button_text")}</Text>
-      </TouchableOpacity>
+          <Text style={styles.signInText}>{t("sign_in_text")}</Text>
+          <Text style={styles.signInDescription}>
+            {t("sign_in_description")}
+          </Text>
 
-      <View style={styles.socialsContainer}>
-        <View style={{ paddingBottom: 15 }}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.googleButton}>
-            <FontAwesome name="google" size={24} color="black" />
-            <Text style={styles.googleButtonText}>
-              {t("google_sign_in_button")}
+          <View style={styles.emailContainer}>
+            <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
+
+            <TextInput
+              ref={emailRef}
+              style={styles.emailInput}
+              keyboardType="email-address"
+              returnKeyType="next"
+              returnKeyLabel="Next"
+              onSubmitEditing={() => passwordRef.current.focus()}
+              onChangeText={(text) => setEmail(text)}
+            />
+          </View>
+
+          <View style={styles.passwordContainer}>
+            <Text style={styles.emailInputTitle}>
+              {t("password_input_title")}
+            </Text>
+
+            <TextInput
+              ref={passwordRef}
+              style={styles.passwordInput}
+              returnKeyType="done"
+              returnKeyLabel="Login"
+              secureTextEntry={showPassword}
+              onSubmitEditing={handleSignIn}
+              onChangeText={(text) => setPassword(text)}
+            />
+            <View style={styles.showPasswordIcon}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={toggleShowPassword}
+              >
+                {showPassword ? (
+                  <Ionicons name="eye-off" size={24} color={colors.primary} />
+                ) : (
+                  <Ionicons name="eye" size={24} color={colors.primary} />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={navigateToForgotPassword}
+          >
+            <Text style={styles.forgotPasswordTextButton}>
+              {t("forgot_password_text_button")}
             </Text>
           </TouchableOpacity>
-        </View>
 
-        <View style={{ paddingBottom: 15 }}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.facebookButton}>
-            <FontAwesome name="facebook" size={24} color="black" />
-            <Text style={styles.facebookButtonText}>
-              {t("facebook_sign_in_button")}
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={handleSignIn}
+            style={[styles.signInButton]}
+          >
+            <Text style={styles.signInButtonText}>
+              {t("sign_in_button_text")}
             </Text>
           </TouchableOpacity>
-        </View>
 
-        <View style={{ paddingBottom: 15 }}>
-          <TouchableOpacity activeOpacity={0.6} style={styles.appleButton}>
-            <FontAwesome name="apple" size={24} color="black" />
-            <Text style={styles.appleButtonText}>
-              {t("apple_sign_in_button")}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+          <View style={styles.socialsContainer}>
+            <View style={{ paddingBottom: 15 }}>
+              <TouchableOpacity activeOpacity={0.6} style={styles.googleButton}>
+                <FontAwesome name="google" size={24} color="black" />
+                <Text style={styles.googleButtonText}>
+                  {t("google_sign_in_button")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ paddingBottom: 15 }}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                style={styles.facebookButton}
+              >
+                <FontAwesome name="facebook" size={24} color="black" />
+                <Text style={styles.facebookButtonText}>
+                  {t("facebook_sign_in_button")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ paddingBottom: 15 }}>
+              <TouchableOpacity activeOpacity={0.6} style={styles.appleButton}>
+                <FontAwesome name="apple" size={24} color="black" />
+                <Text style={styles.appleButtonText}>
+                  {t("apple_sign_in_button")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+
+      <ConfirmationModal
+        title={t("sign_in_error_title")}
+        text={errorMessage}
+        buttonText={t("error_button")}
+        isVisible={showError}
+        onClose={() => setShowError(false)}
+      />
     </SafeAreaView>
   );
 };
@@ -155,11 +215,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.paddingLeft,
+    paddingTop: defaultStyles.paddingTop,
   },
   backButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: defaultStyles.paddingTop,
   },
   backButtonText: {
     fontFamily: fonts.semiBold,

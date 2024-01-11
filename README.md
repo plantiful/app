@@ -29,7 +29,7 @@ yarn add <package-name>
 - [x] Add show password on both login and register screen
 - [x] Only show password on register screen on focus
 - [x] Replace all SVG icons with [@expo/vector-icons](https://icons.expo.fyi)
-- [ ] Move login and register button up when keyboard is displayed (better UX)
+- [x] Move login and register button up when keyboard is displayed (better UX)
 - [x] Move search bar on search screen down
 - [ ] Implement forgot password
 - [x] Fix opening camera from search screen

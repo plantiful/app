@@ -1,5 +1,5 @@
 export const defaultStyles = {
-  paddingTop: 20,
+  paddingTop: 24,
   paddingLeft: 24,
 };
 
@@ -32,5 +32,5 @@ export const fontSize = {
   small: 12,
   medium: 14,
   large: 16,
-  largePlus: 18,
+  largePlus: 20,
 };
