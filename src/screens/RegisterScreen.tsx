@@ -15,7 +15,7 @@ import i18n from "../../assets/translations/i18n";
 
 // Firebase
 import { auth } from "../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -66,6 +66,9 @@ export const RegisterScreen = ({ onAuthChange }) => {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(auth.currentUser, {
+        displayName: name,
+      });
       onAuthChange(true);
     } catch (error: any) {
       Alert.alert("Error", error.message);

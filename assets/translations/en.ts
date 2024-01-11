@@ -23,4 +23,7 @@ export default {
   LoginScreen_password_input: "Password",
   LoginScreen_login_button: "Login",
   LoginScreen_forgot_password_button: "Forgot password?",
+
+  // HomeScreen
+  HomeScreen_welcome_text: "Welcome back",
 };

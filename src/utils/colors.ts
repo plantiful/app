@@ -9,8 +9,18 @@ export const colors = {
 };
 
 export const fonts = {
-  regular: "Inter-Regular",
-  medium: "Inter-Medium",
+  bold: "OpenSans-Bold",
+  boldItalic: "OpenSans-BoldItalic",
+  extraBold: "OpenSans-ExtraBold",
+  extraBoldItalic: "OpenSans-ExtraBoldItalic",
+  italic: "OpenSans-Italic",
+  light: "OpenSans-Light",
+  lightItalic: "OpenSans-LightItalic",
+  medium: "OpenSans-Medium",
+  mediumItalic: "OpenSans-MediumItalic",
+  regular: "OpenSans-Regular",
+  semiBold: "OpenSans-SemiBold",
+  semiBoldItalic: "OpenSans-SemiBoldItalic",
 };
 
 export const fontSizes = {

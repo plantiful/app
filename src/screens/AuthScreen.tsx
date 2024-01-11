@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { ParamListBase, useNavigation } from "@react-navigation/native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -17,11 +17,16 @@ import CZFlag from "./../../assets/images/Flags/cz.svg";
 import SKFlag from "./../../assets/images/Flags/sk.svg";
 import ALFlag from "./../../assets/images/Flags/al.svg";
 
-import { RootStackParamList } from "../utils/types";
 import LanguageSelector from "../components/LanguageSelector";
 import RoundedButtonWithIcon from "../components/RoundedButtonWithIcon";
 import i18n from "../../assets/translations/i18n";
 import { colors, fonts, fontSizes } from "../utils/colors";
+
+type RootStackParamList = {
+  Auth: undefined;
+  Register: undefined;
+  Login: undefined;
+} & ParamListBase;
 
 export const AuthScreen = () => {
   const { t } = i18n;

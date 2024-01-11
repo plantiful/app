@@ -9,8 +9,6 @@ import { auth } from "./firebase";
 import { loadFonts } from "./utils/loadFonts";
 
 import { HomeScreen } from "./screens/HomeScreen";
-import { SearchScreen } from "./screens/SearchScreen";
-import { ProfileScreen } from "./screens/ProfileScreen";
 import { PlantsScreen } from "./screens/PlantsScreen";
 import { AuthScreen } from "./screens/AuthScreen";
 import { LoginScreen } from "./screens/LoginScreen";
@@ -21,25 +19,6 @@ import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-
-// Remake this for home screen (profile and search)
-// const SearchStack = createStackNavigator();
-// const SearchStackNavigator = () => {
-//   return (
-//     <SearchStack.Navigator>
-//       <SearchStack.Screen
-//         name="Search"
-//         component={SearchScreen}
-//         options={{ headerShown: false }}
-//       />
-//       <SearchStack.Screen
-//         name="Camera"
-//         component={CameraScreen}
-//         options={{ headerShown: false }}
-//       />
-//     </SearchStack.Navigator>
-//   );
-// };
 
 export const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);

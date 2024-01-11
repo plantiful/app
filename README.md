@@ -34,3 +34,5 @@ yarn add <package-name>
 - [ ] Implement forgot password
 - [x] Fix opening camera from search screen
 - [x] Make the flash icon change based on the toggle
+- [ ] Add progress bar for plant recognition
+- [ ] Add all translations
