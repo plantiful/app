@@ -8,7 +8,7 @@ import i18n from "../../assets/translations/i18n";
 // Firebase
 import { auth } from "../firebase";
 
-import ConfirmationModal from "../components/ConfirmationModal";
+import ModalConfirm from "../components/ModalConfirm";
 
 export const HomeScreen = (navigation) => {
   const { t } = i18n;
@@ -27,7 +27,7 @@ export const HomeScreen = (navigation) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ConfirmationModal
+      <ModalConfirm
         title={t("HomeScreen_email_confirmation_title")}
         text={t("HomeScreen_email_confirmation_text")}
         buttonText={t("HomeScreen_email_confirmation_button")}

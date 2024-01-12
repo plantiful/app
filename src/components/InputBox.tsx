@@ -1,3 +1,4 @@
+import React, { forwardRef } from "react";
 import {
   View,
   Text,
@@ -10,39 +11,43 @@ import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 
 interface InputBoxProps {
   title: string;
-  ref: React.RefObject<TextInput>;
   keyboardType?: KeyboardTypeOptions | undefined;
   returnKeyType: ReturnKeyTypeOptions;
-  returnKeyLabel: string;
+  secureTextEntry?: boolean | undefined;
   onSubmitEditing?: () => void | undefined;
   onChangeText: (text: string) => void;
 }
 
-const InputBox: React.FC<InputBoxProps> = ({
-  title,
-  ref,
-  keyboardType,
-  returnKeyType,
-  returnKeyLabel,
-  onSubmitEditing,
-  onChangeText,
-}) => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.inputTitle}>{title}</Text>
+// forwardRef due to the onSubmitEditing prop
+const InputBox = forwardRef<TextInput, InputBoxProps>(
+  (
+    {
+      title,
+      keyboardType,
+      returnKeyType,
+      secureTextEntry,
+      onSubmitEditing,
+      onChangeText,
+    },
+    ref
+  ) => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.inputTitle}>{title}</Text>
 
-      <TextInput
-        ref={ref}
-        style={styles.input}
-        keyboardType={keyboardType}
-        returnKeyType={returnKeyType}
-        returnKeyLabel={returnKeyLabel}
-        onSubmitEditing={() => onSubmitEditing}
-        onChangeText={(text) => onChangeText(text)}
-      />
-    </View>
-  );
-};
+        <TextInput
+          ref={ref}
+          style={styles.input}
+          keyboardType={keyboardType}
+          returnKeyType={returnKeyType}
+          secureTextEntry={secureTextEntry}
+          onSubmitEditing={onSubmitEditing}
+          onChangeText={onChangeText}
+        />
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {

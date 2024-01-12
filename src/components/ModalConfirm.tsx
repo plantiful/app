@@ -3,7 +3,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
 
-interface ConfirmationModalProps {
+interface ModalConfirmProps {
   title: string;
   text: string;
   buttonText: string;
@@ -11,7 +11,7 @@ interface ConfirmationModalProps {
   onClose: () => void;
 }
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
+const ModalConfirm: React.FC<ModalConfirmProps> = ({
   title,
   text,
   buttonText,
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfirmationModal;
+export default ModalConfirm;

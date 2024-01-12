@@ -1,7 +1,7 @@
 export default {
   // AuthScreen
   AuthScreen_welcome_text: "Welcome",
-  AuthScreen_moto_text: "On your plant care journey",
+  AuthScreen_description_text: "On your plant care journey",
   AuthScreen_sign_in_header: "Existing customer / Get started",
   AuthScreen_sign_in_button: "Sign in",
   AuthScreen_sign_up_header: "New customer?",

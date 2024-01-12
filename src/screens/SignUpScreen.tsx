@@ -16,15 +16,19 @@ import Checkbox from "expo-checkbox";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
-import ConfirmationModal from "../components/ConfirmationModal";
+
+// Components
+import ModalConfirm from "../components/ModalConfirm";
 import InputBox from "../components/InputBox";
+import ButtonShowPassword from "../components/ButtonShowPassword";
+import ButtonText from "../components/ButtonText";
+import ButtonWide from "../components/ButtonWide";
 
 // Firebase
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 // Icons
-import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 export const SignUpScreen = ({ onAuthChange }) => {
@@ -118,8 +122,7 @@ export const SignUpScreen = ({ onAuthChange }) => {
             title={t("name_input_title")}
             ref={nameRef}
             returnKeyType="next"
-            returnKeyLabel="Next"
-            onSubmitEditing={() => emailRef.current.focus()}
+            onSubmitEditing={() => emailRef.current?.focus()}
             onChangeText={(text) => setName(text)}
           />
 
@@ -128,37 +131,25 @@ export const SignUpScreen = ({ onAuthChange }) => {
             ref={emailRef}
             keyboardType="email-address"
             returnKeyType="next"
-            returnKeyLabel="Next"
-            onSubmitEditing={() => passwordRef.current.focus()}
+            onSubmitEditing={() => passwordRef.current?.focus()}
             onChangeText={(text) => setEmail(text)}
           />
 
-          <View style={styles.passwordContainer}>
-            <Text style={styles.passwordInputTitle}>
-              {t("password_input_title")}
-            </Text>
-            <TextInput
+          <View>
+            <InputBox
+              title={t("password_input_title")}
               ref={passwordRef}
-              style={styles.passwordInput}
               returnKeyType="done"
-              returnKeyLabel="Login"
               secureTextEntry={hidePassword}
-              onSubmitEditing={handleSignUp}
               onChangeText={(text) => setPassword(text)}
             />
 
-            <View style={styles.showPasswordIcon}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={toggleShowPassword}
-              >
-                {hidePassword ? (
-                  <Ionicons name="eye-off" size={24} color={colors.primary} />
-                ) : (
-                  <Ionicons name="eye" size={24} color={colors.primary} />
-                )}
-              </TouchableOpacity>
-            </View>
+            <ButtonShowPassword
+              color={colors.primary}
+              trigger={hidePassword}
+              styles={styles.showPasswordIcon}
+              onPress={toggleShowPassword}
+            />
           </View>
 
           <View style={styles.agreenmentContainer}>
@@ -170,40 +161,31 @@ export const SignUpScreen = ({ onAuthChange }) => {
             />
 
             <Text style={styles.agreenmentText}>{t("terms_text1")}</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={openTerms}>
-              <Text style={styles.agreenmentTextButton}>
-                {t("terms_button_text")}
-              </Text>
-            </TouchableOpacity>
+
+            <ButtonText
+              text={t("terms_button_text")}
+              fontFamily={fonts.extraBold}
+              fontSize={fontSize.medium}
+              onPress={openTerms}
+            />
             <Text style={styles.agreenmentText}>{t("terms_text2")}</Text>
-            <TouchableOpacity activeOpacity={0.6} onPress={openPrivacyPolicy}>
-              <Text style={styles.agreenmentTextButton}>
-                {t("privacy_policy_button_text")}
-              </Text>
-            </TouchableOpacity>
+            <ButtonText
+              text={t("privacy_policy_button_text")}
+              fontFamily={fonts.extraBold}
+              fontSize={fontSize.medium}
+              onPress={openPrivacyPolicy}
+            />
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.6}
+          <ButtonWide
+            text={t("sign_up_button")}
             onPress={handleSignUp}
-            style={[
-              styles.signUpButton,
-              { opacity: isAgreenmentChecked ? 1 : 0.6 },
-            ]}
-          >
-            <Text
-              style={[
-                styles.signUpButtonText,
-                { opacity: isAgreenmentChecked ? 1 : 0.6 },
-              ]}
-            >
-              {t("sign_up_button")}
-            </Text>
-          </TouchableOpacity>
+            disabledTrigger={!isAgreenmentChecked}
+          />
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
 
-      <ConfirmationModal
+      <ModalConfirm
         title={t("sign_up_error_title")}
         text={errorMessage}
         buttonText={t("error_button")}
@@ -245,26 +227,6 @@ const styles = StyleSheet.create({
   passwordContainer: {
     paddingTop: 20,
   },
-  passwordInputTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.medium,
-    color: colors.textGrey,
-    paddingBottom: 10,
-  },
-  passwordInput: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#F5F5F5",
-    borderColor: "#E1E1E1",
-    borderWidth: 1,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textBlack,
-  },
   showPasswordIcon: {
     position: "absolute",
     right: 20,
@@ -285,25 +247,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.medium,
     color: colors.textGrey,
     paddingBottom: 30,
-  },
-  agreenmentTextButton: {
-    fontFamily: fonts.extraBold,
-    fontSize: fontSize.medium,
-    color: colors.primary,
-    borderBottomColor: colors.primary,
-  },
-  signUpButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.primary,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-  },
-  signUpButtonText: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.large,
-    color: colors.textWhite,
   },
 });
 
