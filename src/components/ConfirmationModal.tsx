@@ -4,11 +4,11 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
 
 interface ConfirmationModalProps {
-  isVisible: boolean;
-  onClose: () => void;
   title: string;
   text: string;
   buttonText: string;
+  isVisible: boolean;
+  onClose: () => void;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({

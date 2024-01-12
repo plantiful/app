@@ -17,6 +17,7 @@ import Checkbox from "expo-checkbox";
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 import ConfirmationModal from "../components/ConfirmationModal";
+import InputBox from "../components/InputBox";
 
 // Firebase
 import { auth } from "../firebase";
@@ -113,35 +114,27 @@ export const SignUpScreen = ({ onAuthChange }) => {
             {t("sign_up_description")}
           </Text>
 
-          <View style={styles.nameContainer}>
-            <Text style={styles.emailInputTitle}>{t("name_input_title")}</Text>
+          <InputBox
+            title={t("name_input_title")}
+            ref={nameRef}
+            returnKeyType="next"
+            returnKeyLabel="Next"
+            onSubmitEditing={() => emailRef.current.focus()}
+            onChangeText={(text) => setName(text)}
+          />
 
-            <TextInput
-              ref={nameRef}
-              style={styles.nameInput}
-              returnKeyType="next"
-              returnKeyLabel="Next"
-              onSubmitEditing={() => emailRef.current.focus()}
-              onChangeText={(text) => setName(text)}
-            />
-          </View>
-
-          <View style={styles.emailContainer}>
-            <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
-
-            <TextInput
-              ref={emailRef}
-              style={styles.emailInput}
-              keyboardType="email-address"
-              returnKeyType="next"
-              returnKeyLabel="Next"
-              onSubmitEditing={() => passwordRef.current.focus()}
-              onChangeText={(text) => setEmail(text)}
-            />
-          </View>
+          <InputBox
+            title={t("email_input_title")}
+            ref={emailRef}
+            keyboardType="email-address"
+            returnKeyType="next"
+            returnKeyLabel="Next"
+            onSubmitEditing={() => passwordRef.current.focus()}
+            onChangeText={(text) => setEmail(text)}
+          />
 
           <View style={styles.passwordContainer}>
-            <Text style={styles.emailInputTitle}>
+            <Text style={styles.passwordInputTitle}>
               {t("password_input_title")}
             </Text>
             <TextInput
@@ -248,52 +241,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.large,
     color: colors.textGrey,
     paddingTop: 10,
-  },
-  nameContainer: {
-    paddingTop: 50,
-  },
-  nameInputTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.medium,
-    color: colors.textGrey,
-    paddingBottom: 10,
-  },
-  nameInput: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#F5F5F5",
-    borderColor: colors.border,
-    borderWidth: 1,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textBlack,
-  },
-  emailContainer: {
-    paddingTop: 20,
-  },
-  emailInputTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.medium,
-    color: colors.textGrey,
-    paddingBottom: 10,
-  },
-  emailInput: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#F5F5F5",
-    borderColor: colors.border,
-    borderWidth: 1,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textBlack,
   },
   passwordContainer: {
     paddingTop: 20,

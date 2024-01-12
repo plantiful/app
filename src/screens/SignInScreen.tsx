@@ -15,7 +15,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+
+// Components
 import ConfirmationModal from "../components/ConfirmationModal";
+import InputBox from "../components/InputBox";
+import ShowPasswordButton from "../components/ShowPasswordButton";
 
 // Firebase
 import { auth } from "../firebase";
@@ -36,13 +40,13 @@ export const SignInScreen = ({ onAuthChange }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(true); // True because we want to hide the password by default
+  const [hidePassword, setHidePassword] = useState(true); // True because we want to hide the password by default
 
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
+    setHidePassword(!hidePassword);
   };
 
   async function handleSignIn() {
@@ -105,46 +109,32 @@ export const SignInScreen = ({ onAuthChange }) => {
             {t("sign_in_description")}
           </Text>
 
-          <View style={styles.emailContainer}>
-            <Text style={styles.emailInputTitle}>{t("email_input_title")}</Text>
+          <InputBox
+            title={t("email_input_title")}
+            ref={emailRef}
+            keyboardType="email-address"
+            returnKeyType="next"
+            returnKeyLabel="Next"
+            onSubmitEditing={() => passwordRef.current.focus()}
+            onChangeText={(text) => setEmail(text)}
+          />
 
-            <TextInput
-              ref={emailRef}
-              style={styles.emailInput}
-              keyboardType="email-address"
-              returnKeyType="next"
-              returnKeyLabel="Next"
-              onSubmitEditing={() => passwordRef.current.focus()}
-              onChangeText={(text) => setEmail(text)}
-            />
-          </View>
-
-          <View style={styles.passwordContainer}>
-            <Text style={styles.emailInputTitle}>
-              {t("password_input_title")}
-            </Text>
-
-            <TextInput
+          <View>
+            <InputBox
+              title={t("password_input_title")}
               ref={passwordRef}
-              style={styles.passwordInput}
               returnKeyType="done"
-              returnKeyLabel="Login"
-              secureTextEntry={showPassword}
-              onSubmitEditing={handleSignIn}
+              returnKeyLabel="Done"
               onChangeText={(text) => setPassword(text)}
             />
-            <View style={styles.showPasswordIcon}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={toggleShowPassword}
-              >
-                {showPassword ? (
-                  <Ionicons name="eye-off" size={24} color={colors.primary} />
-                ) : (
-                  <Ionicons name="eye" size={24} color={colors.primary} />
-                )}
-              </TouchableOpacity>
-            </View>
+
+            <ShowPasswordButton
+              activeOpacity={0.6}
+              color={colors.primary}
+              trigger={hidePassword}
+              styles={styles.showPasswordIcon}
+              onPress={toggleShowPassword}
+            />
           </View>
           <TouchableOpacity
             activeOpacity={0.6}
@@ -238,56 +228,10 @@ const styles = StyleSheet.create({
     color: colors.textGrey,
     paddingTop: 10,
   },
-  emailContainer: {
-    paddingTop: 50,
-  },
-  emailInputTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.medium,
-    color: colors.textGrey,
-    paddingBottom: 10,
-  },
-  emailInput: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#F5F5F5",
-    borderColor: colors.border,
-    borderWidth: 1,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textBlack,
-  },
-  passwordContainer: {
-    paddingTop: 20,
-  },
-  passwordInputTitle: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.medium,
-    color: colors.textGrey,
-    paddingBottom: 10,
-  },
-  passwordInput: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
-    backgroundColor: "#F5F5F5",
-    borderColor: colors.border,
-    borderWidth: 1,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textBlack,
-  },
   showPasswordIcon: {
     position: "absolute",
     right: 20,
-    top: 60,
+    top: 80,
   },
   forgotPasswordTextButton: {
     alignSelf: "flex-end",
