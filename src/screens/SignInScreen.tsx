@@ -29,7 +29,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 // Icons
 import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import { FirebaseError } from "firebase/app";
 import ButtonWide from "../components/ButtonWide";
 
