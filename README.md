@@ -35,7 +35,7 @@ yarn add <package-name>
 - [x] Fix opening camera from search screen
 - [x] Make the flash icon change based on the toggle
 - [ ] Add loading indicator for plant recognition - first try make it async
-- [ ] Add all translations (now it is only in english) - easy s chatgpt
+- [x] Add all translations (now it is only in english) - easy s chatgpt
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
@@ -49,3 +49,4 @@ yarn add <package-name>
   - `representative photos`
   - ... (more info [here](https://documenter.getpostman.com/view/24599534/2s93z5A4v2) or [in this response body](https://www.postman.com/winter-shadow-932363/workspace/kindwise/example/24599534-6b255bc8-d037-49a3-852e-82ca9cf00041)) - Also add language parameter to the request
 - [x] Fix input reference on sign in and sign up screen
+- [ ] Add auth state persistence - [docs](https://docs.expo.dev/versions/latest/sdk/securestore/) or react-native-async-storage - [docs](https://react-native-async-storage.github.io/async-storage/docs/install)
