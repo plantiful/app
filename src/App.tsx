@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { StatusBar } from "expo-status-bar";
 
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { loadFonts } from "./utils/loadFonts";
@@ -28,10 +29,6 @@ export const App = () => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const onAuthChange = (status: boolean) => {
-    setLoggedIn(status);
-  };
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -53,6 +50,10 @@ export const App = () => {
     return null;
   }
 
+  const onAuthChange = (status: boolean) => {
+    setLoggedIn(status);
+  };
+
   // This way we dont pass an inline function to the component
   const SignUpScreenWrapper = () => (
     <SignUpScreen onAuthChange={onAuthChange} />
@@ -65,6 +66,7 @@ export const App = () => {
   if (!loggedIn) {
     return (
       <NavigationContainer>
+        <StatusBar style="dark" />
         <Stack.Navigator>
           <Stack.Screen
             name="Auth"
@@ -91,6 +93,7 @@ export const App = () => {
 
     return (
       <NavigationContainer>
+        <StatusBar style="dark" />
         <Tab.Navigator
           screenOptions={({ route }) => ({
             tabBarIcon: ({ size, color }) => {
