@@ -1,10 +1,11 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, Alert, Image } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const ScanScreen = () => {
   const [type, setType] = useState(CameraType.back);
@@ -15,6 +16,19 @@ export const ScanScreen = () => {
   const [identifiedPlant, setIdentifiedPlant] = useState("");
   const navigation = useNavigation();
   const cameraRef = useRef(null);
+
+  const [supportedRatios, setSupportedRatios] = useState([]);
+  const selectedRatio = supportedRatios.length > 0 ? supportedRatios[0] : '4:3';
+  useEffect(() => {
+    const fetchSupportedRatios = async () => {
+      if (cameraRef.current) {
+        const ratios = await cameraRef.current.getSupportedRatiosAsync();
+        setSupportedRatios(ratios);
+      }
+    };
+
+    fetchSupportedRatios();
+  }, []);
 
   if (!permission) {
     requestPermission().then((permission) => {
@@ -28,6 +42,7 @@ export const ScanScreen = () => {
   const handleSavePhoto = () => {
     // Implement logic to save the photo
     console.log("Save the photo", capturedImage);
+    console.log(supportedRatios);
     setPreviewVisible(false);
 
     if (capturedImage) {
@@ -162,38 +177,46 @@ export const ScanScreen = () => {
     );
   }
   return (
+<SafeAreaView style={{ flex: 1 }}>
+  <View style={{ flex: 1 }}>
     <Camera style={styles.camera} type={type} flashMode={flash} ref={cameraRef}>
       <View style={styles.topContainer}>
         <TouchableOpacity style={styles.backButton} onPress={goBack}>
           <Ionicons name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
       </View>
-
-      <View style={styles.bottomContainer}>
-        <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
-          {flash === FlashMode.on ? (
-            <Ionicons name="flash" size={36} color="white" />
-          ) : (
-            <Ionicons name="flash-off" size={36} color="white" />
-          )}
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.captureButton} onPress={takePicture} />
-
-        <TouchableOpacity
-          style={styles.flipCameraButton}
-          onPress={toggleCameraType}
-        >
-          <Ionicons name="camera-reverse" size={36} color="white" />
-        </TouchableOpacity>
-      </View>
     </Camera>
+  </View>
+
+  {/* Bottom buttons in a new container */}
+  <View style={styles.bottomButtonsContainer}>
+    <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
+      {flash === FlashMode.on ? (
+        <Ionicons name="flash" size={36} color="black" />
+      ) : (
+        <Ionicons name="flash-off" size={36} color="black" />
+      )}
+    </TouchableOpacity>
+
+    <TouchableOpacity style={styles.captureButton} onPress={takePicture} />
+
+    <TouchableOpacity
+      style={styles.flipCameraButton}
+      onPress={toggleCameraType}
+    >
+      <Ionicons name="camera-reverse" size={36} color="black" />
+    </TouchableOpacity>
+  </View>
+</SafeAreaView>
+
   );
 };
 
 const styles = StyleSheet.create({
   camera: {
-    flex: 1,
+    flex: 0, // takes up all available space in its container
+    width: '100%', // full width of the screen/container
+    height: '100%', // full height of the screen/container
   },
   topContainer: {
     flex: 1,
@@ -205,6 +228,12 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     marginTop: "15%",
     left: 10,
+  },
+  bottomButtonsContainer: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
   },
   bottomContainer: {
     flex: 0,
@@ -220,7 +249,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: "#fff",
+    backgroundColor: "black",
   },
   flipCameraButton: {
     paddingLeft: 50,

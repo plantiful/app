@@ -36,10 +36,12 @@ export const HomeScreen = (navigation) => {
       />
 
       <Text style={styles.welcomeText}>{t("HomeScreen_welcome_text")}</Text>
-      <Text style={styles.welcomeName}>{auth.currentUser.displayName}</Text>
     </SafeAreaView>
   );
 };
+// <Text style={styles.welcomeName}>{auth.currentUser.displayName}</Text>
+
+
 
 const styles = StyleSheet.create({
   container: {

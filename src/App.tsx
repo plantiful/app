@@ -60,6 +60,7 @@ export const App = () => {
   const SignInScreenWrapper = () => (
     <SignInScreen onAuthChange={onAuthChange} />
   );
+  /*  
 
   if (!loggedIn) {
     return (
@@ -84,6 +85,10 @@ export const App = () => {
       </NavigationContainer>
     );
   } else {
+    
+  }
+  */
+
     return (
       <NavigationContainer>
         <Tab.Navigator
@@ -124,5 +129,4 @@ export const App = () => {
         </Tab.Navigator>
       </NavigationContainer>
     );
-  }
 };
