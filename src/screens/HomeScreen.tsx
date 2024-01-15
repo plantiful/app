@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
@@ -10,6 +10,9 @@ import { auth } from "../firebase";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
+
+// Icons
+import { Ionicons } from "@expo/vector-icons";
 
 export const HomeScreen = () => {
   const { t } = i18n;
@@ -38,10 +41,15 @@ export const HomeScreen = () => {
       />
 
       <Text style={styles.welcomeText}>{t("HomeScreen_welcome_text")}</Text>
+      <Text style={styles.welcomeName}>{auth.currentUser?.displayName}</Text>
+
+      <View style={styles.searchContainer}>
+        <Text style={styles.welcomeText}>{t("HomeScreen_search_text")}</Text>
+        <Ionicons name="search" size={24} color={colors.textBlack} />
+      </View>
     </SafeAreaView>
   );
 };
-// <Text style={styles.welcomeName}>{auth.currentUser.displayName}</Text>
 
 const styles = StyleSheet.create({
   container: {
@@ -49,51 +57,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.paddingLeft,
     paddingTop: defaultStyles.paddingTop,
-  },
-  emailConfirmationCenteredView: {
-    flex: 1,
-    alignContent: "center",
-    justifyContent: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.6)",
-    paddingHorizontal: defaultStyles.paddingLeft,
-  },
-  emailConfirmationContainer: {
-    alignItems: "center",
-    padding: defaultStyles.paddingLeft,
-    backgroundColor: colors.background,
-    borderRadius: 8,
-    shadowOpacity: 0.2,
-    shadowColor: "#000000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  emailConfirmationTitle: {
-    fontFamily: fonts.bold,
-    fontSize: defaultStyles.paddingLeft,
-    color: colors.textBlack,
-    textAlign: "center",
-    paddingBottom: 10,
-  },
-  emailConfirmationText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSize.large,
-    color: colors.textBlack,
-    textAlign: "center",
-    paddingBottom: 20,
-  },
-  emailConfirmationButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.primary,
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-  },
-  emailConfirmationButtonText: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.large,
-    color: colors.textWhite,
   },
   welcomeText: {
     fontFamily: fonts.regular,
@@ -104,6 +67,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     fontSize: 36,
     color: colors.textBlack,
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 20,
   },
 });
 

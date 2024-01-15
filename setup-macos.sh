@@ -1,9 +1,7 @@
 #!/bin/sh
 # Usage:
 # ./setup-macos.sh
-#
 
-# Check if brew is installed if not install it
 if ! command -v brew &> /dev/null
 then
     echo "Installing brew..."
@@ -12,11 +10,14 @@ else
     brew update
 fi
 
-# Install Node.js, Yarn, Watchman, and Expo CLI
+echo "Installing node, yarn, watchman, and expo-cli..."
 brew install node yarn watchman
 yarn global add expo-cli expo
 
+echo "Installing project dependencies..."
 yarn install
+
+echo "Setup complete!"
 
 # If something goes wrong, try running this command:
 # rm -rf node_modules && yarn cache clean && yarn install

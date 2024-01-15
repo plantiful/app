@@ -8,7 +8,7 @@ import {
   defaultStyles,
 } from "../utils/colors";
 
-interface ButtonWithIconProps {
+interface ButtonWideWithIconProps {
   backgroundColor?: string;
   border?: boolean;
   borderColor?: string;
@@ -25,7 +25,7 @@ interface ButtonWithIconProps {
   onPress?: () => void;
 }
 
-const ButtonWithIcon: React.FC<ButtonWithIconProps> = ({
+const ButtonWideWithIcon: React.FC<ButtonWideWithIconProps> = ({
   backgroundColor = colors.background,
   border = false,
   borderColor = colors.primary,
@@ -85,4 +85,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ButtonWithIcon;
+export default ButtonWideWithIcon;

@@ -29,6 +29,7 @@ const ButtonText: React.FC<ButtonTextProps> = ({
 }) => {
   return (
     <TouchableOpacity
+      activeOpacity={0.6}
       style={[{ alignSelf, paddingTop, paddingBottom }]}
       disabled={notImplemented}
       onPress={onPress}

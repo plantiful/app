@@ -5,10 +5,11 @@ import { defaultStyles, fontSize, fonts } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 
 interface ButtonBackProps {
+  color?: string;
   onPress: () => void;
 }
 
-const ButtonBack: React.FC<ButtonBackProps> = ({ onPress }) => {
+const ButtonBack: React.FC<ButtonBackProps> = ({ color, onPress }) => {
   const { t } = i18n;
   return (
     <TouchableOpacity
@@ -16,8 +17,15 @@ const ButtonBack: React.FC<ButtonBackProps> = ({ onPress }) => {
       style={styles.container}
       onPress={onPress}
     >
-      <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
-      <Text style={styles.text}>{t("back_button_text")}</Text>
+      <MaterialIcons
+        name="keyboard-arrow-left"
+        size={24}
+        color={color === undefined ? "black" : color}
+      />
+      {/* <Text style={styles.text}>{t("back_button_text")}</Text> */}
+      <Text style={[styles.text, { color: color }]}>
+        {t("back_button_text")}
+      </Text>
     </TouchableOpacity>
   );
 };

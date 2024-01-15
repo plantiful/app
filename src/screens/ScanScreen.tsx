@@ -6,9 +6,19 @@ import { Camera, CameraType, FlashMode } from "expo-camera";
 import axios from "axios";
 import * as FileSystem from "expo-file-system";
 
+import { colors, defaultStyles } from "../utils/colors";
+import i18n from "../../assets/translations/i18n";
+
+// Components
+import ButtonBack from "../components/ButtonBack";
+import ButtonIcon from "../components/ButtonIcon";
+import ButtonWide from "../components/ButtonWide";
+
 import { Ionicons } from "@expo/vector-icons";
 
 export const ScanScreen = () => {
+  const { t } = i18n;
+
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [flash, setFlash] = useState(FlashMode.off);
@@ -20,6 +30,7 @@ export const ScanScreen = () => {
 
   const [supportedRatios, setSupportedRatios] = useState([]);
   const selectedRatio = supportedRatios.length > 0 ? supportedRatios[0] : "4:3";
+
   useEffect(() => {
     const fetchSupportedRatios = async () => {
       if (cameraRef.current) {
@@ -41,8 +52,7 @@ export const ScanScreen = () => {
   }
 
   const handleSavePhoto = () => {
-    // Implement logic to save the photo
-    console.log("Save the photo", capturedImage);
+    // console.log("Save the photo", capturedImage);
     console.log(supportedRatios);
     setPreviewVisible(false);
 
@@ -71,33 +81,32 @@ export const ScanScreen = () => {
     );
   }
 
-  const identifyPlant = async (capturedImg) => {
+  async function identifyPlant(capturedImg: { uri: string }) {
     if (!capturedImg || !capturedImg.uri) {
       console.log("No image captured");
       return;
     }
 
-    // Convert the image to a base64 string
-    const base64 = await FileSystem.readAsStringAsync(capturedImg.uri, {
-      encoding: FileSystem.EncodingType.Base64,
-    });
-
     try {
-      const payload = {
-        images: [base64], // The API expects a list of base64 strings
-        // include any other required fields according to the API documentation
+      var data = JSON.stringify({
+        images: [`data:image/jpg;base64,${capturedImage.base64}`], // Using ` because of the ${} syntax
+        latitude: 49.207,
+        longitude: 16.608,
+        similar_images: true,
+      });
+
+      const config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: "https://plant.id/api/v3/identification",
+        headers: {
+          "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
+          "Content-Type": "application/json",
+        },
+        data: data,
       };
 
-      const apiResponse = await axios.post(
-        "https://api.plant.id/v2/identify",
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Api-Key": "gnIHsLsak4YTHqvM9BHF5MIsx5mSzwIItY2KkeLAZJBJYl87wh",
-          },
-        }
-      );
+      const apiResponse = await axios(config);
 
       console.log("API Response:", apiResponse.data);
 
@@ -143,11 +152,11 @@ export const ScanScreen = () => {
         Alert.alert("API Error", `Error: ${error.message}`);
       }
     }
-  };
+  }
 
   const takePicture = async () => {
     if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync();
+      const photo = await cameraRef.current.takePictureAsync({ base64: true });
       setPreviewVisible(true);
       setCapturedImage(photo);
     } else {
@@ -177,87 +186,54 @@ export const ScanScreen = () => {
       </View>
     );
   }
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <Camera
-          style={styles.camera}
-          type={type}
-          flashMode={flash}
-          ref={cameraRef}
-        >
-          <View style={styles.topContainer}>
-            <TouchableOpacity style={styles.backButton} onPress={goBack}>
-              <Ionicons name="arrow-back" size={24} color="white" />
-            </TouchableOpacity>
-          </View>
-        </Camera>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <Camera
+        style={styles.camera}
+        type={type}
+        flashMode={flash}
+        ref={cameraRef}
+      >
+        <ButtonBack color={"white"} onPress={goBack} />
+      </Camera>
 
-      {/* Bottom buttons in a new container */}
-      <View style={styles.bottomButtonsContainer}>
-        <TouchableOpacity style={styles.flashButton} onPress={toggleFlash}>
-          {flash === FlashMode.on ? (
-            <Ionicons name="flash" size={36} color="black" />
-          ) : (
-            <Ionicons name="flash-off" size={36} color="black" />
-          )}
-        </TouchableOpacity>
+      <View style={styles.cameraButtonsContainer}>
+        <ButtonIcon
+          backgroundColor={colors.primary}
+          iconName={flash === FlashMode.on ? "flash" : "flash-off"}
+          iconColor="white"
+          onPress={toggleFlash}
+        />
 
-        <TouchableOpacity style={styles.captureButton} onPress={takePicture} />
+        <View style={{ flex: 1 }}>
+          <ButtonWide text={t("scan")} onPress={takePicture} />
+        </View>
 
-        <TouchableOpacity
-          style={styles.flipCameraButton}
+        <ButtonIcon
+          backgroundColor={colors.primary}
+          iconName={type === CameraType.back ? "camera-reverse" : "camera"}
+          iconColor="white"
           onPress={toggleCameraType}
-        >
-          <Ionicons name="camera-reverse" size={36} color="black" />
-        </TouchableOpacity>
+        />
       </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  camera: {
-    flex: 0, // takes up all available space in its container
-    width: "100%", // full width of the screen/container
-    height: "100%", // full height of the screen/container
-  },
-  topContainer: {
+  container: {
     flex: 1,
-    backgroundColor: "transparent",
+    backgroundColor: colors.background,
+  },
+  camera: {
+    flex: 1,
+    paddingHorizontal: defaultStyles.paddingLeft,
+    paddingTop: defaultStyles.paddingTop,
+  },
+  cameraButtonsContainer: {
     flexDirection: "row",
-    margin: 20,
-  },
-  backButton: {
-    marginLeft: 2,
-    marginTop: "15%",
-    left: 10,
-  },
-  bottomButtonsContainer: {
-    backgroundColor: "white",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10,
-  },
-  bottomContainer: {
-    flex: 0,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  flashButton: {
-    paddingRight: 50,
-  },
-  captureButton: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    backgroundColor: "black",
-  },
-  flipCameraButton: {
-    paddingLeft: 50,
+    paddingTop: 20,
   },
   previewContainer: {
     flex: 1,

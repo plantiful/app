@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { TouchableOpacity, Text, StyleSheet, FlexStyle } from "react-native";
 import { colors, fonts, fontSize } from "../utils/colors";
 
 interface ButtonWideProps {

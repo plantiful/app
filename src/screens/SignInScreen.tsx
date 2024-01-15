@@ -25,7 +25,7 @@ import ModalConfirm from "../components/ModalConfirm";
 import InputBox from "../components/InputBox";
 import ButtonShowPassword from "../components/ButtonShowPassword";
 import ButtonText from "../components/ButtonText";
-import ButtonWithIcon from "../components/ButtonWithIcon";
+import ButtonWideWithIcon from "../components/ButtonWideWithIcon";
 import ButtonWide from "../components/ButtonWide";
 import ButtonBack from "../components/ButtonBack";
 
@@ -153,7 +153,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
 
           <View style={styles.socialsContainer}>
             <View style={{ paddingBottom: 15 }}>
-              <ButtonWithIcon
+              <ButtonWideWithIcon
                 border={true}
                 text={t("google_sign_in_button")}
                 iconName="google"
@@ -163,7 +163,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
             </View>
 
             <View style={{ paddingBottom: 15 }}>
-              <ButtonWithIcon
+              <ButtonWideWithIcon
                 border={true}
                 text={t("facebook_sign_in_button")}
                 iconName="facebook"
@@ -173,7 +173,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
             </View>
 
             <View style={{ paddingBottom: 15 }}>
-              <ButtonWithIcon
+              <ButtonWideWithIcon
                 border={true}
                 text={t("apple_sign_in_button")}
                 iconName="apple"

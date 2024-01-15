@@ -61,4 +61,6 @@ export default {
   HomeScreen_email_confirmation_button: "Okay, I Will",
 
   HomeScreen_welcome_text: "Welcome Back,",
+
+  HomeScreen_search_text: "Search plants",
 };
