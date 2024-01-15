@@ -1,20 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
-  Alert,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StackNavigationProp } from "@react-navigation/stack";
+
+// Firebase
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import { AuthStackParamList } from "../utils/types";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -22,19 +26,24 @@ import InputBox from "../components/InputBox";
 import ButtonShowPassword from "../components/ButtonShowPassword";
 import ButtonText from "../components/ButtonText";
 import ButtonWithIcon from "../components/ButtonWithIcon";
-
-// Firebase
-import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-
-// Icons
-import { MaterialIcons } from "@expo/vector-icons";
-import { FirebaseError } from "firebase/app";
 import ButtonWide from "../components/ButtonWide";
+import ButtonBack from "../components/ButtonBack";
 
-export const SignInScreen = ({ onAuthChange }) => {
+type SignInScreenNavigationProp = StackNavigationProp<
+  AuthStackParamList,
+  "SignIn"
+>;
+
+type SignInScreenProps = {
+  navigation: SignInScreenNavigationProp;
+  onAuthChange: (status: boolean) => void;
+};
+
+export const SignInScreen: React.FC<SignInScreenProps> = ({
+  navigation,
+  onAuthChange,
+}) => {
   const { t } = i18n;
-  const navigation = useNavigation();
 
   const emailRef = useRef<TextInput>(null!);
   const passwordRef = useRef<TextInput>(null!);
@@ -79,7 +88,8 @@ export const SignInScreen = ({ onAuthChange }) => {
         return;
       }
 
-      setErrorMessage(error.code);
+      // setErrorMessage(error.code);
+      setErrorMessage(t("error_unknown"));
       setShowError(true);
     }
   }
@@ -89,21 +99,14 @@ export const SignInScreen = ({ onAuthChange }) => {
   };
 
   const navigateToForgotPassword = () => {
-    Alert.alert("Forgot password", "Not implemented yet");
+    navigation.navigate("ForgotPassword");
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-230}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.backButtonContainer}
-            onPress={goBack}
-          >
-            <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
-            <Text style={styles.backButtonText}>{t("back_button")}</Text>
-          </TouchableOpacity>
+          <ButtonBack onPress={goBack} />
 
           <Text style={styles.signInText}>{t("sign_in_text")}</Text>
           <Text style={styles.signInDescription}>
@@ -180,16 +183,16 @@ export const SignInScreen = ({ onAuthChange }) => {
             </View>
           </View>
         </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
 
-      <ModalConfirm
-        title={t("sign_in_error_title")}
-        text={errorMessage}
-        buttonText={t("error_button")}
-        isVisible={showError}
-        onClose={() => setShowError(false)}
-      />
-    </SafeAreaView>
+        <ModalConfirm
+          title={t("sign_in_error_title")}
+          text={errorMessage}
+          buttonText={t("error_button")}
+          isVisible={showError}
+          onClose={() => setShowError(false)}
+        />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -199,15 +202,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.paddingLeft,
     paddingTop: defaultStyles.paddingTop,
-  },
-  backButtonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backButtonText: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.large,
-    paddingLeft: defaultStyles.paddingLeft,
   },
   signInText: {
     fontFamily: fonts.bold,

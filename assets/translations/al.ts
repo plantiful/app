@@ -8,7 +8,7 @@ export default {
   AuthScreen_sign_up_text_button: "Krijoni llogari të re",
 
   // SignInScreen & SignUpScreen
-  back_button: "Kthehu",
+  back_button_text: "Kthehu",
 
   sign_in_text: "Identifikohu",
   sign_up_text: "Regjistrohu",
@@ -39,7 +39,8 @@ export default {
   error_button: "Provo përsëri",
 
   error_fill_all_fields: "Ju lutemi plotësoni të gjitha fushat",
-  error_agree_terms: "Ju lutemi pajtohuni me kushtet dhe politikën e privatësisë",
+  error_agree_terms:
+    "Ju lutemi pajtohuni me kushtet dhe politikën e privatësisë",
   error_email_already_in_use: "Emaili tashmë është në përdorim",
   error_invalid_email: "Email i pavlefshëm",
   error_user_disabled: "Përdoruesi është çaktivizuar",
@@ -48,7 +49,8 @@ export default {
 
   // HomeScreen
   HomeScreen_email_confirmation_title: "Kërkohet konfirmimi i emailit",
-  HomeScreen_email_confirmation_text: "Ju lutemi konfirmoni adresën tuaj të emailit.",
+  HomeScreen_email_confirmation_text:
+    "Ju lutemi konfirmoni adresën tuaj të emailit.",
   HomeScreen_email_confirmation_button: "Ok, do ta bëj",
 
   HomeScreen_welcome_text: "Mirësevini përsëri,",

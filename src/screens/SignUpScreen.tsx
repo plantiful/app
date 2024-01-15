@@ -3,19 +3,23 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StackNavigationProp } from "@react-navigation/stack";
 import Checkbox from "expo-checkbox";
+
+// Firebase
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import { AuthStackParamList } from "../utils/types";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -23,17 +27,23 @@ import InputBox from "../components/InputBox";
 import ButtonShowPassword from "../components/ButtonShowPassword";
 import ButtonText from "../components/ButtonText";
 import ButtonWide from "../components/ButtonWide";
+import ButtonBack from "../components/ButtonBack";
 
-// Firebase
-import { auth } from "../firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+type SignUpScreenNavigationProp = StackNavigationProp<
+  AuthStackParamList,
+  "SignUp"
+>;
 
-// Icons
-import { MaterialIcons } from "@expo/vector-icons";
+type SignUpScreenProps = {
+  navigation: SignUpScreenNavigationProp;
+  onAuthChange: (status: boolean) => void;
+};
 
-export const SignUpScreen = ({ onAuthChange }) => {
+export const SignUpScreen: React.FC<SignUpScreenProps> = ({
+  navigation,
+  onAuthChange,
+}) => {
   const { t } = i18n;
-  const navigation = useNavigation();
 
   const nameRef = useRef<TextInput>(null!);
   const emailRef = useRef<TextInput>(null!);
@@ -101,17 +111,10 @@ export const SignUpScreen = ({ onAuthChange }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-10}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.backButtonContainer}
-            onPress={goBack}
-          >
-            <MaterialIcons name="keyboard-arrow-left" size={24} color="black" />
-            <Text style={styles.backButtonText}>{t("back_button")}</Text>
-          </TouchableOpacity>
+          <ButtonBack onPress={goBack} />
 
           <Text style={styles.signUpText}>{t("sign_up_text")}</Text>
           <Text style={styles.signUpDescription}>
@@ -183,16 +186,16 @@ export const SignUpScreen = ({ onAuthChange }) => {
             disabledTrigger={!isAgreenmentChecked}
           />
         </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
 
-      <ModalConfirm
-        title={t("sign_up_error_title")}
-        text={errorMessage}
-        buttonText={t("error_button")}
-        isVisible={showError}
-        onClose={() => setShowError(false)}
-      />
-    </SafeAreaView>
+        <ModalConfirm
+          title={t("sign_up_error_title")}
+          text={errorMessage}
+          buttonText={t("error_button")}
+          isVisible={showError}
+          onClose={() => setShowError(false)}
+        />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -202,15 +205,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.paddingLeft,
     paddingTop: defaultStyles.paddingTop,
-  },
-  backButtonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  backButtonText: {
-    fontFamily: fonts.semiBold,
-    fontSize: fontSize.large,
-    paddingLeft: defaultStyles.paddingLeft,
   },
   signUpText: {
     fontFamily: fonts.bold,

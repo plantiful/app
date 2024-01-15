@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
@@ -8,10 +8,12 @@ import i18n from "../../assets/translations/i18n";
 // Firebase
 import { auth } from "../firebase";
 
+// Components
 import ModalConfirm from "../components/ModalConfirm";
 
-export const HomeScreen = (navigation) => {
+export const HomeScreen = () => {
   const { t } = i18n;
+
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
   useEffect(() => {
@@ -40,8 +42,6 @@ export const HomeScreen = (navigation) => {
   );
 };
 // <Text style={styles.welcomeName}>{auth.currentUser.displayName}</Text>
-
-
 
 const styles = StyleSheet.create({
   container: {

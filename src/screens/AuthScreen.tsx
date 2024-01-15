@@ -1,12 +1,11 @@
 import React from "react";
-
 import { View, Text, StyleSheet } from "react-native";
-import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import i18n from "../../assets/translations/i18n";
 import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
+import { AuthStackParamList } from "../utils/types";
 
 // Components
 import ButtonWide from "../components/ButtonWide";
@@ -16,15 +15,14 @@ import ButtonText from "../components/ButtonText";
 import P_SVG from "../../assets/images/AuthScreen/p.svg";
 import F_SVG from "../../assets/images/AuthScreen/F.svg";
 
-type RootStackParamList = {
-  Auth: undefined;
-  SignUp: undefined;
-  SignIn: undefined;
-} & ParamListBase;
+type AuthScreenNavigationProp = StackNavigationProp<AuthStackParamList>;
 
-export const AuthScreen = () => {
+type AuthScreenProps = {
+  navigation: AuthScreenNavigationProp;
+};
+
+export const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const { t } = i18n;
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const navigateToSignUp = () => {
     navigation.navigate("SignUp");

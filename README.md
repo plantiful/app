@@ -31,7 +31,7 @@ yarn add <package-name>
 - [x] Replace all SVG icons with [@expo/vector-icons](https://icons.expo.fyi)
 - [x] Move login and register button up when keyboard is displayed (better UX)
 - [x] Move search bar on search screen down
-- [ ] Add forgot password screen
+- [x] Add forgot password screen
 - [x] Fix opening camera from search screen
 - [x] Make the flash icon change based on the toggle
 - [ ] Add loading indicator for plant recognition - first try make it async
@@ -50,3 +50,5 @@ yarn add <package-name>
   - ... (more info [here](https://documenter.getpostman.com/view/24599534/2s93z5A4v2) or [in this response body](https://www.postman.com/winter-shadow-932363/workspace/kindwise/example/24599534-6b255bc8-d037-49a3-852e-82ca9cf00041)) - Also add language parameter to the request
 - [x] Fix input reference on sign in and sign up screen
 - [ ] Add auth state persistence - [docs](https://docs.expo.dev/versions/latest/sdk/securestore/) or react-native-async-storage - [docs](https://react-native-async-storage.github.io/async-storage/docs/install)
+- [ ] Add translations (use en as a template)
+- [ ] Fix sendPasswordResetEmail on ForgotPasswordScreen?

@@ -8,7 +8,7 @@ export default {
   AuthScreen_sign_up_text_button: "Vytvořit nový účet",
 
   // SignInScreen & SignUpScreen
-  back_button: "Zpět",
+  back_button_text: "Zpět",
 
   sign_in_text: "Přihlásit se",
   sign_up_text: "Zaregistrovat se",
@@ -29,7 +29,7 @@ export default {
   facebook_sign_in_button: "Přihlásit se přes Facebook",
   apple_sign_in_button: "Přihlásit se přes Apple",
 
-  terms_text1: "Souhlasím s",
+  terms_text1: "Souhlasím s ",
   terms_button_text: "podmínkami",
   terms_text2: " o používání služeb a",
   privacy_policy_button_text: "pravidly ochrany osobních údajů",
@@ -39,7 +39,8 @@ export default {
   error_button: "Zkusit znovu",
 
   error_fill_all_fields: "Prosím vyplňte všechna pole",
-  error_agree_terms: "Prosím potrvďte souhlas s podmínkami o používání služeb a s pravidly ochrany osobních údajů",
+  error_agree_terms:
+    "Prosím potrvďte souhlas s podmínkami o používání služeb a s pravidly ochrany osobních údajů",
   error_email_already_in_use: "Tento e-mail již existuje",
   error_invalid_email: "Neplatný e-mail",
   error_user_disabled: "Uživatelský áčet je deaktivován",

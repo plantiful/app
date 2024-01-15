@@ -8,7 +8,7 @@ export default {
   AuthScreen_sign_up_text_button: "Vytvoriť nový účet",
 
   // SignInScreen & SignUpScreen
-  back_button: "Späť",
+  back_button_text: "Späť",
 
   sign_in_text: "Prihlásiť sa",
   sign_up_text: "Zaregistrovať sa",
@@ -39,7 +39,8 @@ export default {
   error_button: "Skúsiť znova",
 
   error_fill_all_fields: "Prosím, vyplňte všetky polia",
-  error_agree_terms: "Prosím, súhlaste s podmienkami a zásadami ochrany osobných údajov",
+  error_agree_terms:
+    "Prosím, súhlaste s podmienkami a zásadami ochrany osobných údajov",
   error_email_already_in_use: "E-mail je už používaný",
   error_invalid_email: "Neplatný e-mail",
   error_user_disabled: "Užívateľ je deaktivovaný",
@@ -48,7 +49,8 @@ export default {
 
   // HomeScreen
   HomeScreen_email_confirmation_title: "Potrebné potvrdenie e-mailu",
-  HomeScreen_email_confirmation_text: "Prosím, potvrďte svoju e-mailovú adresu.",
+  HomeScreen_email_confirmation_text:
+    "Prosím, potvrďte svoju e-mailovú adresu.",
   HomeScreen_email_confirmation_button: "Dobre, urobím to",
 
   HomeScreen_welcome_text: "Vitajte späť,",
