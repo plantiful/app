@@ -110,10 +110,10 @@ export const ScanScreen = () => {
 
       console.log("API Response:", apiResponse.data);
 
-      const suggestions = apiResponse.data.suggestions;
-      const isPlant = apiResponse.data.is_plant;
+      const suggestions = apiResponse.data.result.classification.suggestions;
+      const isPlant = apiResponse.data.result.is_plant.binary;
 
-      if (isPlant === false) {
+      if (!isPlant) {
         Alert.alert("No plant identified");
       } else {
         if (suggestions && suggestions.length > 0) {
@@ -130,7 +130,7 @@ export const ScanScreen = () => {
             )}%`
           );
         } else {
-          Alert.alert("No plant identified");
+          Alert.alert("Suggestions not found");
         }
       }
     } catch (error) {
