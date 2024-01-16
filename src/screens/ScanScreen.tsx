@@ -108,7 +108,7 @@ export const ScanScreen = () => {
       const config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: "https://plant.id/api/v3/identification",
+        url: "https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods",
         headers: {
           "Content-Type": "application/json",
           "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
@@ -127,9 +127,55 @@ export const ScanScreen = () => {
         Alert.alert("No plant identified");
       } else {
         if (suggestions && suggestions.length > 0) {
+          suggestions.forEach((suggestion, index) => {
+            console.log(`Suggestion ${index + 1}:`, suggestion);
+        });
+
           const topSuggestion = suggestions[0];
-          const plantName = topSuggestion.plant_name;
+          const plantName = topSuggestion.details.common_names[0];
           const probability = topSuggestion.probability;
+          const plantDescription = topSuggestion.details.description.value;
+          const plantClass = topSuggestion.details.taxonomy.class;
+          const plantGenus = topSuggestion.details.taxonomy.genus;
+          const plantOrder = topSuggestion.details.taxonomy.order;
+          const plantFamily = topSuggestion.details.taxonomy.family;
+          const plantPhylum = topSuggestion.details.taxonomy.phylum;
+          const plantKingdom = topSuggestion.details.taxonomy.kingdom;
+
+
+          let plantWateringMin = ('Not available.');
+          let plantWateringMax = ('Not available.');
+          let plantWatering = ('Not available.');
+
+          if (topSuggestion.details.watering !== null ) {
+
+            //plantWatering = topSuggestion.details.watering;
+            //plantWateringMin = topSuggestion.details.watering.min;
+            //plantWateringMax = topSuggestion.details.watering.max;
+
+          } 
+          
+
+          let plantSynonyms = '';
+
+          if (topSuggestion.details.synonyms && topSuggestion.details.synonyms.length > 0) {
+              // Get up to the first three synonyms
+              plantSynonyms = topSuggestion.details.synonyms.slice(0, 3).join(', ');
+          } else {
+            plantSynonyms = topSuggestion.details.synonyms[0];
+          }
+
+          console.log(plantDescription);
+          console.log(plantClass);
+          console.log(plantGenus);
+          console.log(plantOrder);
+          console.log(plantFamily);
+          console.log(plantPhylum);
+          console.log(plantKingdom);
+          console.log(plantSynonyms);
+          console.log(plantWateringMin)
+          console.log(plantWateringMax);
+          console.log(plantWatering);
 
           Alert.alert(
             "Plant Identified",
