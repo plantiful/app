@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet, FlexStyle } from "react-native";
-import { colors, fonts, fontSize } from "../utils/colors";
+import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 
 interface ButtonWideProps {
   backgroundColor?: string;
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
     height: 50,
-    borderRadius: 8,
+    borderRadius: defaultStyles.rouding,
   },
   text: {
     fontFamily: fonts.semiBold,

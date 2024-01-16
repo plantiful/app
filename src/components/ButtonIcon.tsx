@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
-    paddingHorizontal: 20,
+    borderRadius: defaultStyles.rouding,
+    paddingHorizontal: defaultStyles.padding,
   },
 });
 

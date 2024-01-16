@@ -18,7 +18,7 @@ import { FirebaseError } from "firebase/app";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
-import { AuthStackParamList } from "../utils/types";
+import { SignInScreenProps } from "../utils/types";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -28,16 +28,6 @@ import ButtonText from "../components/ButtonText";
 import ButtonWideWithIcon from "../components/ButtonWideWithIcon";
 import ButtonWide from "../components/ButtonWide";
 import ButtonBack from "../components/ButtonBack";
-
-type SignInScreenNavigationProp = StackNavigationProp<
-  AuthStackParamList,
-  "SignIn"
->;
-
-type SignInScreenProps = {
-  navigation: SignInScreenNavigationProp;
-  onAuthChange: (status: boolean) => void;
-};
 
 export const SignInScreen: React.FC<SignInScreenProps> = ({
   navigation,
@@ -55,11 +45,15 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const goBack = () => {
+    navigation.goBack();
+  };
+
   const toggleShowPassword = () => {
     setHidePassword(!hidePassword);
   };
 
-  async function handleSignIn() {
+  const handleSignIn = async () => {
     if (!email || !password) {
       setErrorMessage(t("error_fill_all_fields"));
       setShowError(true);
@@ -92,10 +86,6 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
       setErrorMessage(t("error_unknown"));
       setShowError(true);
     }
-  }
-
-  const goBack = () => {
-    navigation.goBack();
   };
 
   const navigateToForgotPassword = () => {
@@ -200,8 +190,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: defaultStyles.paddingLeft,
-    paddingTop: defaultStyles.paddingTop,
+    paddingHorizontal: defaultStyles.padding,
+    paddingTop: defaultStyles.padding,
   },
   signInText: {
     fontFamily: fonts.bold,

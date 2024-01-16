@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: fonts.semiBold,
     fontSize: fontSize.large,
-    paddingLeft: defaultStyles.paddingLeft,
+    paddingLeft: defaultStyles.padding,
   },
 });
 

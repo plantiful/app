@@ -19,7 +19,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
-import { AuthStackParamList } from "../utils/types";
+import { SignUpScreenProps } from "../utils/types";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -28,16 +28,6 @@ import ButtonShowPassword from "../components/ButtonShowPassword";
 import ButtonText from "../components/ButtonText";
 import ButtonWide from "../components/ButtonWide";
 import ButtonBack from "../components/ButtonBack";
-
-type SignUpScreenNavigationProp = StackNavigationProp<
-  AuthStackParamList,
-  "SignUp"
->;
-
-type SignUpScreenProps = {
-  navigation: SignUpScreenNavigationProp;
-  onAuthChange: (status: boolean) => void;
-};
 
 export const SignUpScreen: React.FC<SignUpScreenProps> = ({
   navigation,
@@ -57,6 +47,10 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
 
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   const toggleShowPassword = () => {
     setHidePassword(!hidePassword);
@@ -104,10 +98,6 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
       setShowError(true);
       return;
     }
-  };
-
-  const goBack = () => {
-    navigation.goBack();
   };
 
   return (
@@ -203,8 +193,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: defaultStyles.paddingLeft,
-    paddingTop: defaultStyles.paddingTop,
+    paddingHorizontal: defaultStyles.padding,
+    paddingTop: defaultStyles.padding,
   },
   signUpText: {
     fontFamily: fonts.bold,
@@ -219,7 +209,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   passwordContainer: {
-    paddingTop: 20,
+    paddingTop: defaultStyles.padding,
   },
   showPasswordIcon: {
     position: "absolute",
@@ -228,7 +218,7 @@ const styles = StyleSheet.create({
   },
   agreenmentContainer: {
     flexDirection: "row",
-    paddingTop: 20,
+    paddingTop: defaultStyles.padding,
   },
   agreenmentCheckbox: {
     width: 24,

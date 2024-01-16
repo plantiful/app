@@ -1,95 +1,105 @@
-import React, { useState, useRef, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert, Image } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  Alert,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import axios from "axios";
-import * as FileSystem from "expo-file-system";
+import { Dimensions } from "react-native";
 
-import { colors, defaultStyles } from "../utils/colors";
+import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 
 // Components
-import ButtonBack from "../components/ButtonBack";
 import ButtonIcon from "../components/ButtonIcon";
 import ButtonWide from "../components/ButtonWide";
-
-import { Ionicons } from "@expo/vector-icons";
 
 export const ScanScreen = () => {
   const { t } = i18n;
 
+  const [camera, setCamera] = useState(null);
+  const [cameraPermission, setCameraPermission] = useState(null);
   const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
   const [flash, setFlash] = useState(FlashMode.off);
+
+  const [image, setImage] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [capturedImage, setCapturedImage] = useState(null);
-  const [identifiedPlant, setIdentifiedPlant] = useState("");
-  const navigation = useNavigation();
-  const cameraRef = useRef(null);
 
-  const [supportedRatios, setSupportedRatios] = useState([]);
-  const selectedRatio = supportedRatios.length > 0 ? supportedRatios[0] : "4:3";
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchSupportedRatios = async () => {
-      if (cameraRef.current) {
-        const ratios = await cameraRef.current.getSupportedRatiosAsync();
-        setSupportedRatios(ratios);
-      }
-    };
+  async function getCameraPermission() {
+    const cameraPermission = await Camera.requestCameraPermissionsAsync();
+    setCameraPermission(cameraPermission.status === "granted");
 
-    fetchSupportedRatios();
-  }, []);
-
-  if (!permission) {
-    requestPermission().then((permission) => {
-      if (!permission) {
-        Alert.alert("Permission to access camera is required!");
-      }
-    });
-    return null;
+    if (cameraPermission.status !== "granted") {
+      Alert.alert("Permission to access camera is required");
+    }
   }
 
-  const handleSavePhoto = () => {
-    // console.log("Save the photo", capturedImage);
-    console.log(supportedRatios);
-    setPreviewVisible(false);
+  useEffect(() => {
+    getCameraPermission();
+  }, []);
 
-    if (capturedImage) {
-      identifyPlant(capturedImage);
-    }
-
-    setCapturedImage(null);
-  };
-
-  const handleDiscardPhoto = () => {
-    // Simply discard the photo and hide the preview
-    setPreviewVisible(false);
-    setCapturedImage(null);
-  };
-
-  async function toggleFlash() {
+  const toggleFlash = async () => {
     setFlash((current) =>
       current === FlashMode.off ? FlashMode.on : FlashMode.off
     );
-  }
+  };
 
-  async function toggleCameraType() {
+  const takePicture = async () => {
+    if (camera) {
+      const data = await camera.takePictureAsync({
+        base64: true,
+        skipProcessing: true,
+      });
+
+      const screenWidth = Dimensions.get("window").width;
+      const aspectRatio = data.width / data.height;
+      const scaledHeight = screenWidth / aspectRatio;
+
+      const imageObject = {
+        uri: data.uri,
+        base64: data.base64,
+        width: screenWidth,
+        height: scaledHeight,
+        transform: type === CameraType.front ? [{ scaleX: -1 }] : [],
+      };
+
+      setImage(imageObject);
+      setPreviewVisible(true);
+    }
+  };
+
+  const toggleCameraType = async () => {
     setType((current) =>
       current === CameraType.back ? CameraType.front : CameraType.back
     );
-  }
+  };
 
-  async function identifyPlant(capturedImg: { uri: string }) {
-    if (!capturedImg || !capturedImg.uri) {
-      console.log("No image captured");
-      return;
+  const handleDiscardPhoto = () => {
+    setPreviewVisible(false);
+    setImage(null);
+  };
+
+  const handleSavePhoto = () => {
+    setPreviewVisible(false);
+
+    if (image) {
+      identifyPlant();
     }
 
+    setImage(null);
+  };
+
+  const identifyPlant = async () => {
+    setLoading(true);
     try {
       var data = JSON.stringify({
-        images: [`data:image/jpg;base64,${capturedImage.base64}`], // Using ` because of the ${} syntax
+        images: [`data:image/jpg;base64,${image.base64}`], // Using ` because of the ${} syntax
         latitude: 49.207,
         longitude: 16.608,
         similar_images: true,
@@ -100,8 +110,8 @@ export const ScanScreen = () => {
         maxBodyLength: Infinity,
         url: "https://plant.id/api/v3/identification",
         headers: {
-          "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
           "Content-Type": "application/json",
+          "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
         },
         data: data,
       };
@@ -120,8 +130,6 @@ export const ScanScreen = () => {
           const topSuggestion = suggestions[0];
           const plantName = topSuggestion.plant_name;
           const probability = topSuggestion.probability;
-
-          setIdentifiedPlant(plantName);
 
           Alert.alert(
             "Plant Identified",
@@ -151,38 +159,60 @@ export const ScanScreen = () => {
         console.log("Error", error.message);
         Alert.alert("API Error", `Error: ${error.message}`);
       }
+    } finally {
+      setLoading(false);
     }
+  };
+
+  if (previewVisible && image) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Image
+          style={{
+            width: image.width,
+            height: image.height,
+            transform: image.transform,
+          }}
+          source={{ uri: image.uri }}
+        />
+
+        <View style={{ height: defaultStyles.padding }} />
+
+        <View style={styles.bottomContainer}>
+          <View style={{ flex: 1 }}>
+            <ButtonWide
+              border={true}
+              borderColor={"red"}
+              text={t("ScanScreen_retake_button_text")}
+              textColor="red"
+              onPress={handleDiscardPhoto}
+            />
+          </View>
+
+          <View style={{ width: defaultStyles.padding }} />
+
+          <View style={{ flex: 1 }}>
+            <ButtonWide
+              text={t("ScanScreen_use_button_text")}
+              onPress={handleSavePhoto}
+              backgroundColor={colors.primary}
+            />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
   }
 
-  const takePicture = async () => {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({ base64: true });
-      setPreviewVisible(true);
-      setCapturedImage(photo);
-    } else {
-      console.log("Camera ref is not set");
-    }
-  };
-
-  const goBack = () => {
-    navigation.goBack();
-  };
-
-  if (previewVisible && capturedImage) {
+  if (loading) {
     return (
-      <View style={styles.previewContainer}>
-        <Image
-          source={{ uri: capturedImage.uri }}
-          style={styles.previewImage}
-        />
-        <View style={styles.previewButtonContainer}>
-          <TouchableOpacity onPress={handleDiscardPhoto}>
-            <Ionicons name="close-circle" size={50} color="red" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleSavePhoto}>
-            <Ionicons name="checkmark-circle" size={50} color="green" />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.container}>
+        {/* Your component content */}
+
+        {loading && (
+          <View style={styles.overlay}>
+            <ActivityIndicator size="large" color={colors.primary} />
+          </View>
+        )}
       </View>
     );
   }
@@ -190,15 +220,15 @@ export const ScanScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Camera
-        style={styles.camera}
+        style={{ flex: 1 }}
         type={type}
         flashMode={flash}
-        ref={cameraRef}
-      >
-        <ButtonBack color={"white"} onPress={goBack} />
-      </Camera>
+        ref={(ref) => setCamera(ref)}
+      />
 
-      <View style={styles.cameraButtonsContainer}>
+      <View style={{ height: defaultStyles.padding }} />
+
+      <View style={styles.bottomContainer}>
         <ButtonIcon
           backgroundColor={colors.primary}
           iconName={flash === FlashMode.on ? "flash" : "flash-off"}
@@ -206,10 +236,12 @@ export const ScanScreen = () => {
           onPress={toggleFlash}
         />
 
-        <View style={{ flex: 1 }}>
-          <ButtonWide text={t("scan")} onPress={takePicture} />
+        <View style={{ flex: 1, paddingHorizontal: defaultStyles.padding }}>
+          <ButtonWide
+            text={t("ScanScreen_idenitfy_button_text")}
+            onPress={takePicture}
+          />
         </View>
-
         <ButtonIcon
           backgroundColor={colors.primary}
           iconName={type === CameraType.back ? "camera-reverse" : "camera"}
@@ -226,30 +258,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  camera: {
-    flex: 1,
-    paddingHorizontal: defaultStyles.paddingLeft,
-    paddingTop: defaultStyles.paddingTop,
-  },
-  cameraButtonsContainer: {
+  bottomContainer: {
     flexDirection: "row",
-    paddingTop: 20,
+    paddingHorizontal: defaultStyles.padding,
   },
-  previewContainer: {
-    flex: 1,
+  text: {
+    textAlign: "center",
+    paddingTop: 10,
+    paddingBottom: 10,
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  previewImage: {
-    width: "100%",
-    height: "80%",
-  },
-  previewButtonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    padding: 20,
   },
 });
 

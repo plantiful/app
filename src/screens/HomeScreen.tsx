@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: defaultStyles.paddingLeft,
-    paddingTop: defaultStyles.paddingTop,
+    paddingHorizontal: defaultStyles.padding,
+    paddingTop: defaultStyles.padding,
   },
   welcomeText: {
     fontFamily: fonts.regular,
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 20,
+    marginTop: defaultStyles.padding,
   },
 });
 

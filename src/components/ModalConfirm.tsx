@@ -44,13 +44,13 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
-    paddingHorizontal: defaultStyles.paddingLeft,
+    paddingHorizontal: defaultStyles.padding,
   },
   modalContainer: {
     alignItems: "center",
-    padding: defaultStyles.paddingLeft,
+    padding: defaultStyles.padding,
     backgroundColor: colors.background,
-    borderRadius: 8,
+    borderRadius: defaultStyles.rouding,
     shadowOpacity: 0.15,
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 4 },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontFamily: fonts.bold,
-    fontSize: defaultStyles.paddingLeft,
+    fontSize: defaultStyles.padding,
     color: colors.textBlack,
     textAlign: "center",
     paddingBottom: 10,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     fontSize: fontSize.large,
     color: colors.textBlack,
     textAlign: "center",
-    paddingBottom: 20,
+    paddingBottom: defaultStyles.padding,
   },
   button: {
     alignItems: "center",
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     width: "100%",
     height: 50,
-    borderRadius: 8,
+    borderRadius: defaultStyles.rouding,
   },
   buttonText: {
     fontFamily: fonts.semiBold,

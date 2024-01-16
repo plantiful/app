@@ -51,7 +51,7 @@ const InputBox = forwardRef<TextInput, InputBoxProps>(
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
+    paddingTop: defaultStyles.padding,
   },
   inputTitle: {
     fontFamily: fonts.semiBold,
@@ -62,13 +62,13 @@ const styles = StyleSheet.create({
   input: {
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
+    paddingLeft: defaultStyles.padding,
     backgroundColor: "#F5F5F5",
     borderColor: colors.border,
     borderWidth: 1,
     width: "100%",
     height: 50,
-    borderRadius: 8,
+    borderRadius: defaultStyles.rouding,
     fontFamily: fonts.regular,
     fontSize: fontSize.medium,
     color: colors.textBlack,

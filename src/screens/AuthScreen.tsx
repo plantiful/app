@@ -1,11 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackNavigationProp } from "@react-navigation/stack";
 
 import i18n from "../../assets/translations/i18n";
 import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
-import { AuthStackParamList } from "../utils/types";
+import { AuthScreenProps } from "../utils/types";
 
 // Components
 import ButtonWide from "../components/ButtonWide";
@@ -14,12 +13,6 @@ import ButtonText from "../components/ButtonText";
 // SVG icons
 import P_SVG from "../../assets/images/AuthScreen/p.svg";
 import F_SVG from "../../assets/images/AuthScreen/F.svg";
-
-type AuthScreenNavigationProp = StackNavigationProp<AuthStackParamList>;
-
-type AuthScreenProps = {
-  navigation: AuthScreenNavigationProp;
-};
 
 export const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
   const { t } = i18n;
@@ -67,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: defaultStyles.paddingLeft,
+    paddingHorizontal: defaultStyles.padding,
   },
   welcomeText: {
     fontFamily: fonts.bold,

@@ -17,22 +17,13 @@ import { FirebaseError } from "firebase/app";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
-import { AuthStackParamList } from "../utils/types";
+import { ForgotPasswordScreenProps } from "../utils/types";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
 import InputBox from "../components/InputBox";
 import ButtonBack from "../components/ButtonBack";
 import ButtonWide from "../components/ButtonWide";
-
-type ForgotPasswordScreenNavigationProp = StackNavigationProp<
-  AuthStackParamList,
-  "ForgotPassword"
->;
-
-type ForgotPasswordScreenProps = {
-  navigation: ForgotPasswordScreenNavigationProp;
-};
 
 export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
@@ -46,7 +37,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  async function handleSendEmail() {
+  const handleSendEmail = async () => {
     if (!email) {
       setErrorMessage(t("error_fill_all_fields"));
       setShowError(true);
@@ -80,7 +71,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       setErrorMessage(t("error_unknown"));
       setShowError(true);
     }
-  }
+  };
 
   const goBack = () => {
     navigation.goBack();
@@ -129,8 +120,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: defaultStyles.paddingLeft,
-    paddingTop: defaultStyles.paddingTop,
+    paddingHorizontal: defaultStyles.padding,
+    paddingTop: defaultStyles.padding,
   },
   forgotPasswordText: {
     fontFamily: fonts.bold,

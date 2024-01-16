@@ -78,10 +78,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: defaultStyles.paddingLeft,
+    paddingLeft: defaultStyles.padding,
     width: "100%",
     height: 50,
-    borderRadius: 8,
+    borderRadius: defaultStyles.rouding,
   },
 });
 

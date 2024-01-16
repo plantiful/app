@@ -63,4 +63,9 @@ export default {
   HomeScreen_welcome_text: "Welcome Back,",
 
   HomeScreen_search_text: "Search plants",
+
+  // ScanScreen
+  ScanScreen_idenitfy_button_text: "Identify",
+  ScanScreen_retake_button_text: "Retake",
+  ScanScreen_use_button_text: "Use",
 };
