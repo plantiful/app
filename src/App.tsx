@@ -6,26 +6,35 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { colors } from "./utils/colors";
 import { loadFonts } from "./utils/loadFonts";
-import { AuthStackParamList, BottomTabParamList } from "./utils/types";
+import {
+  AuthStackParamList,
+  HomeStackParamList,
+  BottomTabParamList,
+  ForgotPasswordScreenProps,
+  SignInScreenProps,
+  SignUpScreenProps,
+} from "./utils/types";
 
 // Firebase
 import { auth } from "./firebase";
 
 // Screens
-import { HomeScreen } from "./screens/HomeScreen";
-import { PlantsScreen } from "./screens/PlantsScreen";
-import { AuthScreen } from "./screens/AuthScreen";
-import { SignInScreen } from "./screens/SignInScreen";
-import { SignUpScreen } from "./screens/SignUpScreen";
-import { ScanScreen } from "./screens/ScanScreen";
-import { ForgotPasswordScreen } from "./screens/ForgotPasswordScreen";
+import HomeScreen from "./screens/HomeScreen";
+import SettingsScreen from "./screens/SettingsScreen";
+import PlantsScreen from "./screens/PlantsScreen";
+import AuthScreen from "./screens/AuthScreen";
+import SignInScreen from "./screens/SignInScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import ScanScreen from "./screens/ScanScreen";
 
 // Icons
 import { Ionicons } from "@expo/vector-icons";
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
+const HomeStack = createStackNavigator<HomeStackParamList>();
+
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export const App = () => {
@@ -58,12 +67,17 @@ export const App = () => {
   };
 
   // This way we dont pass an inline function to the component
-  const SignUpScreenWrapper = (navigationProps) => (
-    <SignUpScreen {...navigationProps} onAuthChange={onAuthChange} />
-  );
-  const SignInScreenWrapper = (navigationProps) => (
-    <SignInScreen {...navigationProps} onAuthChange={onAuthChange} />
-  );
+  const SignUpScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & SignUpScreenProps
+  ) => <SignUpScreen {...navigationProps} onAuthChange={onAuthChange} />;
+
+  const SignInScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & SignInScreenProps
+  ) => <SignInScreen {...navigationProps} onAuthChange={onAuthChange} />;
+
+  const ForgotPasswordScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & ForgotPasswordScreenProps
+  ) => <ForgotPasswordScreen {...navigationProps} />;
 
   // if (!loggedIn) {
   //   return (
@@ -72,34 +86,53 @@ export const App = () => {
   //       <AuthStack.Navigator initialRouteName="Auth">
   //         <AuthStack.Screen
   //           name="Auth"
-  //           component={AuthScreen}
   //           options={{ headerShown: false }}
+  //           component={AuthScreen}
   //         />
   //         <AuthStack.Screen
   //           name="SignIn"
+  //           options={{ title: "SignIn", headerShown: false }}
   //           component={SignInScreenWrapper}
-  //           options={{ headerShown: false }}
   //         />
   //         <AuthStack.Screen
   //           name="ForgotPassword"
-  //           component={ForgotPasswordScreen}
-  //           options={{ headerShown: false }}
+  //           options={{ title: "ForgotPassword", headerShown: false }}
+  //           component={ForgotPasswordScreenWrapper}
   //         />
   //         <AuthStack.Screen
   //           name="SignUp"
+  //           options={{ title: "SignUp", headerShown: false }}
   //           component={SignUpScreenWrapper}
-  //           options={{ headerShown: false }}
   //         />
   //       </AuthStack.Navigator>
   //     </NavigationContainer>
   //   );
   // } else {
+
+  const HomeStackNavigator = () => {
+    return (
+      <HomeStack.Navigator>
+        <HomeStack.Screen
+          name="Home"
+          options={{ headerShown: false }}
+          component={HomeScreen}
+        />
+        <HomeStack.Screen
+          name="Settings"
+          options={{ headerShown: false }}
+          component={SettingsScreen}
+        />
+      </HomeStack.Navigator>
+    );
+  };
+
   return (
     <NavigationContainer>
       <StatusBar style="dark" />
       <BottomTab.Navigator
+        initialRouteName="Home"
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ size, color }) => {
+          tabBarIcon: ({ color }) => {
             let iconName: any;
 
             if (route.name === "Home") {
@@ -110,27 +143,27 @@ export const App = () => {
               iconName = "leaf-outline";
             }
 
-            return <Ionicons name={iconName} size={size} color={color} />;
+            return <Ionicons name={iconName} size={30} color={color} />;
           },
           tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
           tabBarActiveTintColor: "black",
-          tabBarInactiveTintColor: "gray",
+          tabBarInactiveTintColor: "#6A6A6A",
         })}
       >
         <BottomTab.Screen
           name="Home"
-          component={HomeScreen}
           options={{ headerShown: false }}
+          component={HomeStackNavigator}
         />
         <BottomTab.Screen
           name="Scan"
-          component={ScanScreen}
           options={{ headerShown: false }}
+          component={ScanScreen}
         />
         <BottomTab.Screen
           name="Plants"
-          component={PlantsScreen}
           options={{ headerShown: false }}
+          component={PlantsScreen}
         />
       </BottomTab.Navigator>
     </NavigationContainer>

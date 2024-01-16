@@ -6,7 +6,7 @@ export type BottomTabParamList = {
   Plants: undefined;
 };
 
-type AuthStackParamList = {
+export type AuthStackParamList = {
   Auth: undefined;
   SignIn: { onAuthChange: (status: boolean) => void };
   ForgotPassword: undefined;
@@ -50,4 +50,16 @@ type SignUpScreenNavigationProp = StackNavigationProp<
 export type SignUpScreenProps = {
   navigation: SignUpScreenNavigationProp;
   onAuthChange: (status: boolean) => void;
+};
+
+// HomeScreen
+export type HomeStackParamList = {
+  Home: undefined;
+  Settings: undefined;
+};
+
+type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
+
+export type HomeScreenProps = {
+  navigation: HomeScreenNavigationProp;
 };

@@ -10,7 +10,6 @@ import {
   Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackNavigationProp } from "@react-navigation/stack";
 import Checkbox from "expo-checkbox";
 
 // Firebase
@@ -65,14 +64,20 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
   };
 
   const handleSignUp = async () => {
+    if (!isAgreenmentChecked) {
+      setErrorMessage(t("error_agree_terms"));
+      setShowError(true);
+      return;
+    }
+
     if (!name || !email || !password) {
       setErrorMessage(t("error_fill_all_fields"));
       setShowError(true);
       return;
     }
 
-    if (!isAgreenmentChecked) {
-      setErrorMessage(t("error_agree_terms"));
+    if (password.length < 8) {
+      setErrorMessage(t("error_password_length"));
       setShowError(true);
       return;
     }
@@ -113,28 +118,34 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
 
           <InputBox
             title={t("name_input_title")}
-            ref={nameRef}
+            placeholder="Enter your full name"
+            placeholderTextColor="#B1B1B1"
             returnKeyType="next"
             onSubmitEditing={() => emailRef.current?.focus()}
             onChangeText={(text) => setName(text)}
+            ref={nameRef}
           />
 
           <InputBox
             title={t("email_input_title")}
-            ref={emailRef}
+            placeholder="Enter your email"
+            placeholderTextColor="#B1B1B1"
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
             onChangeText={(text) => setEmail(text)}
+            ref={emailRef}
           />
 
           <View>
             <InputBox
               title={t("password_input_title")}
-              ref={passwordRef}
+              placeholder="Minimum 8 characters"
+              placeholderTextColor="#B1B1B1"
               returnKeyType="done"
-              secureTextEntry={hidePassword}
               onChangeText={(text) => setPassword(text)}
+              secureTextEntry={hidePassword}
+              ref={passwordRef}
             />
 
             <ButtonShowPassword

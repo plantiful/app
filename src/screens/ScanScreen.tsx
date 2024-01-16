@@ -230,6 +230,7 @@ export const ScanScreen = () => {
 
       <View style={styles.bottomContainer}>
         <ButtonIcon
+          iconSet="Ionicons"
           backgroundColor={colors.primary}
           iconName={flash === FlashMode.on ? "flash" : "flash-off"}
           iconColor="white"
@@ -242,7 +243,9 @@ export const ScanScreen = () => {
             onPress={takePicture}
           />
         </View>
+
         <ButtonIcon
+          iconSet="Ionicons"
           backgroundColor={colors.primary}
           iconName={type === CameraType.back ? "camera-reverse" : "camera"}
           iconColor="white"

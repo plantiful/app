@@ -46,8 +46,9 @@ export default {
   forgot_password_error_title: "Password Reset Failed",
   error_button: "Try Again",
 
-  error_fill_all_fields: "Please fill in all fields",
   error_agree_terms: "Please agree to the terms and privacy policy",
+  error_fill_all_fields: "Please fill in all fields",
+  error_password_length: "Password must be at least 8 characters long",
   error_email_already_in_use: "Email already in use",
   error_invalid_email: "Invalid email",
   error_user_disabled: "User disabled",

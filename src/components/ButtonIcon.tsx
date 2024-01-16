@@ -1,13 +1,12 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
-
 import { colors, defaultStyles } from "../utils/colors";
-
-import { Ionicons } from "@expo/vector-icons";
+import * as Icons from "@expo/vector-icons";
 
 interface ButtonIconProps {
+  iconSet: keyof typeof Icons;
   backgroundColor?: string;
-  iconName: any;
+  iconName: string;
   iconSize?: number;
   iconColor?: string;
   disabledTrigger?: boolean;
@@ -17,6 +16,7 @@ interface ButtonIconProps {
 
 const ButtonIcon: React.FC<ButtonIconProps> = ({
   backgroundColor = colors.background,
+  iconSet,
   iconName,
   iconSize = 24,
   iconColor = "black",
@@ -24,6 +24,8 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   notImplemented = false,
   onPress,
 }) => {
+  const IconComponent = Icons[iconSet];
+
   return (
     <TouchableOpacity
       activeOpacity={0.6}
@@ -37,7 +39,7 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
         },
       ]}
     >
-      <Ionicons name={iconName} size={iconSize} color={iconColor} />
+      <IconComponent name={iconName} size={iconSize} color={iconColor} />
     </TouchableOpacity>
   );
 };
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: defaultStyles.rouding,
+    borderRadius: defaultStyles.rounding,
     paddingHorizontal: defaultStyles.padding,
   },
 });

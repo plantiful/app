@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { colors, fonts, fontSize } from "../utils/colors";
 
-export const PlantsScreen = () => {
+export const SettingsScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Plants</Text>
+      <Text style={styles.text}>Settings</Text>
     </View>
   );
 };
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PlantsScreen;
+export default SettingsScreen;

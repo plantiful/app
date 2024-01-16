@@ -9,7 +9,6 @@ import {
   Keyboard,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackNavigationProp } from "@react-navigation/stack";
 
 // Firebase
 import { auth } from "../firebase";
@@ -105,16 +104,20 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
 
           <InputBox
             title={t("email_input_title")}
-            ref={emailRef}
+            placeholder="Enter your email"
+            placeholderTextColor="#B1B1B1"
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
             onChangeText={(text) => setEmail(text)}
+            ref={emailRef}
           />
 
           <View>
             <InputBox
               title={t("password_input_title")}
+              placeholder="Enter your password"
+              placeholderTextColor="#B1B1B1"
               ref={passwordRef}
               returnKeyType="done"
               secureTextEntry={hidePassword}

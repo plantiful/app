@@ -8,7 +8,6 @@ import {
   TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackNavigationProp } from "@react-navigation/stack";
 
 // Firebase
 import { auth } from "../firebase";
@@ -36,6 +35,10 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   const handleSendEmail = async () => {
     if (!email) {
@@ -71,10 +74,6 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
       setErrorMessage(t("error_unknown"));
       setShowError(true);
     }
-  };
-
-  const goBack = () => {
-    navigation.goBack();
   };
 
   return (

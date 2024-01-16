@@ -1,6 +1,6 @@
 export const defaultStyles = {
   padding: 20,
-  rouding: 8,
+  rounding: 8,
 };
 
 export const colors = {

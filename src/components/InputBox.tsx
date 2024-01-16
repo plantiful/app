@@ -10,7 +10,12 @@ import {
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 
 interface InputBoxProps {
-  title: string;
+  backgroundColor?: string | undefined;
+  border?: boolean;
+  borderColor?: string | undefined;
+  placeholder?: string | undefined;
+  placeholderTextColor?: string | undefined;
+  title?: string;
   keyboardType?: KeyboardTypeOptions | undefined;
   returnKeyType: ReturnKeyTypeOptions;
   secureTextEntry?: boolean | undefined;
@@ -22,7 +27,12 @@ interface InputBoxProps {
 const InputBox = forwardRef<TextInput, InputBoxProps>(
   (
     {
-      title,
+      border = true,
+      borderColor = colors.border,
+      backgroundColor = "#F5F5F5",
+      placeholder,
+      placeholderTextColor,
+      title = "",
       keyboardType,
       returnKeyType,
       secureTextEntry,
@@ -36,13 +46,19 @@ const InputBox = forwardRef<TextInput, InputBoxProps>(
         <Text style={styles.inputTitle}>{title}</Text>
 
         <TextInput
-          ref={ref}
-          style={styles.input}
+          placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor}
           keyboardType={keyboardType}
           returnKeyType={returnKeyType}
           secureTextEntry={secureTextEntry}
           onSubmitEditing={onSubmitEditing}
           onChangeText={onChangeText}
+          ref={ref}
+          style={[
+            styles.input,
+            { backgroundColor },
+            border ? [{ borderColor }, { borderWidth: 1 }] : null,
+          ]}
         />
       </View>
     );
@@ -63,12 +79,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: defaultStyles.padding,
-    backgroundColor: "#F5F5F5",
-    borderColor: colors.border,
-    borderWidth: 1,
     width: "100%",
     height: 50,
-    borderRadius: defaultStyles.rouding,
+    borderRadius: defaultStyles.rounding,
     fontFamily: fonts.regular,
     fontSize: fontSize.medium,
     color: colors.textBlack,

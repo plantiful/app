@@ -1,34 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { Text, StyleSheet, View } from "react-native";
+import { Text, StyleSheet, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import { HomeScreenProps } from "../utils/types";
 
 // Firebase
 import { auth } from "../firebase";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
+import ButtonIcon from "../components/ButtonIcon";
 
-// Icons
-import { Ionicons } from "@expo/vector-icons";
-
-export const HomeScreen = () => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { t } = i18n;
 
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
-  useEffect(() => {
-    const checkEmailVerification = () => {
-      const user = auth.currentUser;
-      if (user && user.emailVerified === false) {
-        setShowEmailConfirmation(true);
-      }
-    };
+  const checkEmailVerification = () => {
+    const user = auth.currentUser;
+    if (user && user.emailVerified === false) {
+      setShowEmailConfirmation(true);
+    }
+  };
 
+  useEffect(() => {
     checkEmailVerification();
   }, []);
+
+  const navigateToSettings = () => {
+    navigation.navigate("Settings");
+  };
+
+  const navigateToNotifications = () => {
+    // navigation.navigate("Notifications");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -40,12 +47,32 @@ export const HomeScreen = () => {
         onClose={() => setShowEmailConfirmation(false)}
       />
 
-      <Text style={styles.welcomeText}>{t("HomeScreen_welcome_text")}</Text>
-      <Text style={styles.welcomeName}>{auth.currentUser?.displayName}</Text>
+      <View style={styles.topContainer}>
+        <View
+          style={[
+            styles.topContainer,
+            { marginRight: -defaultStyles.padding / 2 },
+          ]}
+        >
+          <ButtonIcon
+            iconSet="Ionicons"
+            iconName="notifications-outline"
+            onPress={navigateToNotifications}
+          />
+        </View>
 
-      <View style={styles.searchContainer}>
-        <Text style={styles.welcomeText}>{t("HomeScreen_search_text")}</Text>
-        <Ionicons name="search" size={24} color={colors.textBlack} />
+        <View
+          style={[
+            styles.topContainer,
+            { marginRight: -defaultStyles.padding / 2 },
+          ]}
+        >
+          <ButtonIcon
+            iconSet="Ionicons"
+            iconName="settings-outline"
+            onPress={navigateToSettings}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -58,21 +85,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: defaultStyles.padding,
     paddingTop: defaultStyles.padding,
   },
-  welcomeText: {
-    fontFamily: fonts.regular,
-    fontSize: fontSize.largePlus,
-    color: colors.textBlack,
-  },
-  welcomeName: {
-    fontFamily: fonts.bold,
-    fontSize: 36,
-    color: colors.textBlack,
-  },
-  searchContainer: {
+  topContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: defaultStyles.padding,
+    justifyContent: "flex-end",
   },
 });
 

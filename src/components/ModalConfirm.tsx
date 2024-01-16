@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: defaultStyles.padding,
     backgroundColor: colors.background,
-    borderRadius: defaultStyles.rouding,
+    borderRadius: defaultStyles.rounding,
     shadowOpacity: 0.15,
     shadowColor: "#000000",
     shadowOffset: { width: 0, height: 4 },
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     width: "100%",
     height: 50,
-    borderRadius: defaultStyles.rouding,
+    borderRadius: defaultStyles.rounding,
   },
   buttonText: {
     fontFamily: fonts.semiBold,
