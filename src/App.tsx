@@ -9,11 +9,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { loadFonts } from "./utils/loadFonts";
 import {
   AuthStackParamList,
+  SignInScreenProps,
+  ForgotPasswordScreenProps,
+  SignUpScreenProps,
   HomeStackParamList,
   BottomTabParamList,
-  ForgotPasswordScreenProps,
-  SignInScreenProps,
-  SignUpScreenProps,
+  SettingsScreenProps,
+  ProfileScreenProps,
 } from "./utils/types";
 
 // Firebase
@@ -31,6 +33,7 @@ import ScanScreen from "./screens/ScanScreen";
 
 // Icons
 import { Ionicons } from "@expo/vector-icons";
+import ProfileScreen from "./screens/ProfileScreen";
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -79,6 +82,18 @@ export const App = () => {
     navigationProps: React.JSX.IntrinsicAttributes & ForgotPasswordScreenProps
   ) => <ForgotPasswordScreen {...navigationProps} />;
 
+  const ProfileScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & ProfileScreenProps
+  ) => <ProfileScreen {...navigationProps} onAuthChange={onAuthChange} />;
+
+  const NotificationSettingsScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & SettingsScreenProps
+  ) => <SettingsScreen {...navigationProps} />;
+
+  const SettingsScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & SettingsScreenProps
+  ) => <SettingsScreen {...navigationProps} />;
+
   // if (!loggedIn) {
   //   return (
   //     <NavigationContainer>
@@ -108,7 +123,6 @@ export const App = () => {
   //     </NavigationContainer>
   //   );
   // } else {
-
   const HomeStackNavigator = () => {
     return (
       <HomeStack.Navigator>
@@ -118,9 +132,19 @@ export const App = () => {
           component={HomeScreen}
         />
         <HomeStack.Screen
+          name="Profile"
+          options={{ headerShown: false }}
+          component={ProfileScreenWrapper}
+        />
+        <HomeStack.Screen
+          name="NotificationSettings"
+          options={{ headerShown: false }}
+          component={NotificationSettingsScreenWrapper}
+        />
+        <HomeStack.Screen
           name="Settings"
           options={{ headerShown: false }}
-          component={SettingsScreen}
+          component={SettingsScreenWrapper}
         />
       </HomeStack.Navigator>
     );

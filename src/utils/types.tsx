@@ -14,7 +14,7 @@ export type AuthStackParamList = {
 };
 
 // AuthScreen
-type AuthScreenNavigationProp = StackNavigationProp<AuthStackParamList>;
+type AuthScreenNavigationProp = StackNavigationProp<AuthStackParamList, "Auth">;
 
 export type AuthScreenProps = {
   navigation: AuthScreenNavigationProp;
@@ -55,11 +55,41 @@ export type SignUpScreenProps = {
 // HomeScreen
 export type HomeStackParamList = {
   Home: undefined;
+  Profile: { onAuthChange: (status: boolean) => void };
+  NotificationSettings: undefined;
   Settings: undefined;
 };
 
-type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList>;
+type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
 
 export type HomeScreenProps = {
   navigation: HomeScreenNavigationProp;
+};
+
+type ProfileScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "Profile"
+>;
+
+export type ProfileScreenProps = {
+  navigation: ProfileScreenNavigationProp;
+  onAuthChange: (status: boolean) => void;
+};
+
+type NotificationSettingsScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "NotificationSettings"
+>;
+
+export type NotificationSettingsScreenProps = {
+  navigation: NotificationSettingsScreenNavigationProp;
+};
+
+type SettingsScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "Settings"
+>;
+
+export type SettingsScreenProps = {
+  navigation: SettingsScreenNavigationProp;
 };

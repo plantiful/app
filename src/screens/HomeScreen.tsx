@@ -29,12 +29,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     checkEmailVerification();
   }, []);
 
-  const navigateToSettings = () => {
-    navigation.navigate("Settings");
-  };
-
-  const navigateToNotifications = () => {
-    // navigation.navigate("Notifications");
+  const navigateToProfile = () => {
+    navigation.navigate("Profile");
   };
 
   return (
@@ -48,31 +44,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       />
 
       <View style={styles.topContainer}>
-        <View
-          style={[
-            styles.topContainer,
-            { marginRight: -defaultStyles.padding / 2 },
-          ]}
-        >
-          <ButtonIcon
-            iconSet="Ionicons"
-            iconName="notifications-outline"
-            onPress={navigateToNotifications}
-          />
-        </View>
+        <ButtonIcon
+          iconSet="Ionicons"
+          iconName="notifications-outline"
+          onPress={null}
+        />
 
-        <View
-          style={[
-            styles.topContainer,
-            { marginRight: -defaultStyles.padding / 2 },
-          ]}
+        <TouchableOpacity
+          style={styles.profileButton}
+          activeOpacity={0.6}
+          onPress={navigateToProfile}
         >
-          <ButtonIcon
-            iconSet="Ionicons"
-            iconName="settings-outline"
-            onPress={navigateToSettings}
-          />
-        </View>
+          <Text style={styles.profileButtonText}>
+            {auth.currentUser?.displayName?.charAt(0)}
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -88,6 +74,19 @@ const styles = StyleSheet.create({
   topContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
+  },
+  profileButton: {
+    justifyContent: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: colors.primary,
+  },
+  profileButtonText: {
+    textAlign: "center",
+    fontFamily: fonts.medium,
+    fontSize: 30,
+    color: colors.textWhite,
   },
 });
 

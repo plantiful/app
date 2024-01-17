@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
-import { SettingsScreenProps } from "../utils/types";
+import { NotificationSettingsScreenProps } from "../utils/types";
 
 // Firebase
 import { auth } from "../firebase";
@@ -12,7 +12,7 @@ import { auth } from "../firebase";
 // Components
 import ButtonBack from "../components/ButtonBack";
 
-export const SettingsScreen: React.FC<SettingsScreenProps> = ({
+export const SettingsScreen: React.FC<NotificationSettingsScreenProps> = ({
   navigation,
 }) => {
   const { t } = i18n;

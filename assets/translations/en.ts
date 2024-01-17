@@ -61,9 +61,14 @@ export default {
   HomeScreen_email_confirmation_text: "Please confirm your email address.",
   HomeScreen_email_confirmation_button: "Okay, I Will",
 
-  HomeScreen_welcome_text: "Welcome Back,",
-
-  HomeScreen_search_text: "Search plants",
+  // ProfileScreen
+  ProfileScreen_edit_profile_button_text: "Edit Profile",
+  ProfileScreen_stats_plants_text: "Plants",
+  ProfileScreen_stats_streak_text: "Streak",
+  ProfileScreen_notifications_button_text: "Notifications",
+  ProfileScreen_help_n_support_button_text: "Help & Support",
+  ProfileScreen_settings_button_text: "Settings",
+  ProfileScreen_sign_out_button_text: "Sign Out",
 
   // ScanScreen
   ScanScreen_idenitfy_button_text: "Identify",
