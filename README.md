@@ -62,7 +62,7 @@ yarn add <package-name>
     - [ ] change language
     - [ ] change theme
     - [ ] change units
-  - [z] logout
+  - [x] logout
 - [ ] Add edit profile functionality - change name and profile picture
 - [ ] Add settings for notifications
 - [ ] Add calendar widget on home screen? - [dribbble](https://dribbble.com/shots/11360445-Plant-care-app/attachments/2972899?mode=media)
