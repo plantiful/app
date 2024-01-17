@@ -39,7 +39,7 @@ yarn add <package-name>
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
-- [ ] Add custom SVG icons on login screen for socials
+- [ ] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
 - [ ] Add terms and privacy policy links on sign up screen - [docs](https://docs.expo.dev/versions/latest/sdk/webview/) - we dont have them yet
 - [ ] Add plant recognition results into variables
   - `common (vernacular) name`
@@ -47,7 +47,8 @@ yarn add <package-name>
   - `plant description`
   - `watering recommendations`
   - `representative photos`
-  - ... (more info [here](https://documenter.getpostman.com/view/24599534/2s93z5A4v2) or [in this response body](https://www.postman.com/winter-shadow-932363/workspace/kindwise/example/24599534-6b255bc8-d037-49a3-852e-82ca9cf00041)) - Also add language parameter to the request
+  - ... (more info [here](https://documenter.getpostman.com/view/24599534/2s93z5A4v2) or [in this response body](https://www.postman.com/winter-shadow-932363/workspace/kindwise/example/24599534-6b255bc8-d037-49a3-852e-82ca9cf00041))
+  - [ ] Add language parameter to plant recognition request (`i18n.language`)
 - [x] Fix input reference on sign in and sign up screen
 - [x] Add auth state persistence - [docs](https://docs.expo.dev/versions/latest/sdk/securestore/) or react-native-async-storage - [docs](https://react-native-async-storage.github.io/async-storage/docs/install)
 - [ ] Add translations (use `en` as a template)
