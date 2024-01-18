@@ -55,9 +55,10 @@ export type SignUpScreenProps = {
 // HomeScreen
 export type HomeStackParamList = {
   Home: undefined;
-  Profile: { onAuthChange: (status: boolean) => void };
+  Profile: undefined;
   NotificationSettings: undefined;
-  Settings: undefined;
+  Settings: { onAuthChange: (status: boolean) => void };
+  LanguageSettings: undefined;
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
@@ -73,6 +74,15 @@ type ProfileScreenNavigationProp = StackNavigationProp<
 
 export type ProfileScreenProps = {
   navigation: ProfileScreenNavigationProp;
+};
+
+type SettingsScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "Settings"
+>;
+
+export type SettingsScreenProps = {
+  navigation: SettingsScreenNavigationProp;
   onAuthChange: (status: boolean) => void;
 };
 
@@ -85,11 +95,11 @@ export type NotificationSettingsScreenProps = {
   navigation: NotificationSettingsScreenNavigationProp;
 };
 
-type SettingsScreenNavigationProp = StackNavigationProp<
+type LanguageSettingsScreenNavigationProp = StackNavigationProp<
   HomeStackParamList,
-  "Settings"
+  "LanguageSettings"
 >;
 
-export type SettingsScreenProps = {
-  navigation: SettingsScreenNavigationProp;
+export type LanguageSettingsScreenProps = {
+  navigation: LanguageSettingsScreenNavigationProp;
 };

@@ -16,6 +16,8 @@ import {
   BottomTabParamList,
   SettingsScreenProps,
   ProfileScreenProps,
+  NotificationSettingsScreenProps,
+  LanguageSettingsScreenProps,
 } from "./utils/types";
 
 // Firebase
@@ -24,6 +26,8 @@ import { auth } from "./firebase";
 // Screens
 import HomeScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import LanuageSetttingsScreen from "./screens/LanuageSetttingsScreen";
+import NotificationSettingsScreen from "./screens/NotificationSettingsScreen";
 import PlantsScreen from "./screens/PlantsScreen";
 import AuthScreen from "./screens/AuthScreen";
 import SignInScreen from "./screens/SignInScreen";
@@ -84,15 +88,20 @@ export const App = () => {
 
   const ProfileScreenWrapper = (
     navigationProps: React.JSX.IntrinsicAttributes & ProfileScreenProps
-  ) => <ProfileScreen {...navigationProps} onAuthChange={onAuthChange} />;
-
-  const NotificationSettingsScreenWrapper = (
-    navigationProps: React.JSX.IntrinsicAttributes & SettingsScreenProps
-  ) => <SettingsScreen {...navigationProps} />;
+  ) => <ProfileScreen {...navigationProps} />;
 
   const SettingsScreenWrapper = (
     navigationProps: React.JSX.IntrinsicAttributes & SettingsScreenProps
-  ) => <SettingsScreen {...navigationProps} />;
+  ) => <SettingsScreen {...navigationProps} onAuthChange={onAuthChange} />;
+
+  const NotificationSettingsScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes &
+      NotificationSettingsScreenProps
+  ) => <NotificationSettingsScreen {...navigationProps} />;
+
+  const LanguageSettingsScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & LanguageSettingsScreenProps
+  ) => <LanuageSetttingsScreen {...navigationProps} />;
 
   // if (!loggedIn) {
   //   return (
@@ -137,14 +146,19 @@ export const App = () => {
           component={ProfileScreenWrapper}
         />
         <HomeStack.Screen
+          name="Settings"
+          options={{ headerShown: false }}
+          component={SettingsScreenWrapper}
+        />
+        <HomeStack.Screen
           name="NotificationSettings"
           options={{ headerShown: false }}
           component={NotificationSettingsScreenWrapper}
         />
         <HomeStack.Screen
-          name="Settings"
+          name="LanguageSettings"
           options={{ headerShown: false }}
-          component={SettingsScreenWrapper}
+          component={LanguageSettingsScreenWrapper}
         />
       </HomeStack.Navigator>
     );

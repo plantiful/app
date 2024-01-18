@@ -12,11 +12,9 @@ import { auth } from "../firebase";
 // Components
 import ButtonBack from "../components/ButtonBack";
 import ButtonWide from "../components/ButtonWide";
+import ButtonIcon from "../components/ButtonIcon";
 
-export const ProfileScreen: React.FC<ProfileScreenProps> = ({
-  navigation,
-  onAuthChange,
-}) => {
+export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { t } = i18n;
 
   const goBack = () => {
@@ -31,20 +29,17 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
     navigation.navigate("Settings");
   };
 
-  const logout = () => {
-    auth
-      .signOut()
-      .then(() => {
-        onAuthChange(false);
-      })
-      .catch((error) => {
-        console.log("Sign out error:", error);
-      });
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <ButtonBack onPress={goBack} />
+      <View style={styles.topContainer}>
+        <ButtonBack onPress={goBack} />
+
+        <ButtonIcon
+          iconSet="Ionicons"
+          iconName="settings-outline"
+          onPress={navigateToSettings}
+        />
+      </View>
 
       <View style={styles.profileContainer}>
         <View style={styles.profileCircle}>
@@ -77,47 +72,6 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           </Text>
         </View>
       </View>
-
-      <View style={styles.bottomContainer}>
-        <View style={styles.line} />
-
-        <View style={styles.buttonsContainer}>
-          <ButtonWide
-            border={true}
-            borderColor={colors.textGrey}
-            text={t("ProfileScreen_notifications_button_text")}
-            textColor={colors.textGrey}
-            onPress={navigateToNotificationSettings}
-          />
-
-          <View style={{ height: defaultStyles.padding }} />
-          <ButtonWide
-            border={true}
-            borderColor={colors.textGrey}
-            text={t("ProfileScreen_help_n_support_button_text")}
-            textColor={colors.textGrey}
-            onPress={() => {}}
-          />
-
-          <View style={{ height: defaultStyles.padding }} />
-          <ButtonWide
-            border={true}
-            borderColor={colors.textGrey}
-            text={t("ProfileScreen_settings_button_text")}
-            textColor={colors.textGrey}
-            onPress={navigateToSettings}
-          />
-
-          <View style={{ height: defaultStyles.padding }} />
-          <ButtonWide
-            border={true}
-            borderColor="red"
-            text={t("ProfileScreen_sign_out_button_text")}
-            textColor="red"
-            onPress={logout}
-          />
-        </View>
-      </View>
     </SafeAreaView>
   );
 };
@@ -128,6 +82,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.padding,
     paddingTop: defaultStyles.padding,
+  },
+  topContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   profileContainer: {
     alignItems: "center",
