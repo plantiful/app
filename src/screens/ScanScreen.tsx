@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -10,8 +10,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import axios from "axios";
 import { Dimensions } from "react-native";
-
+import { PlantContext, Plant } from './PlantContext';
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
+import { useFocusEffect } from '@react-navigation/native';
 import i18n from "../../assets/translations/i18n";
 
 // Components
@@ -25,33 +26,65 @@ export const ScanScreen = () => {
   const [cameraPermission, setCameraPermission] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [flash, setFlash] = useState(FlashMode.off);
+  const [isCameraReady, setIsCameraReady] = useState(false);
 
   const [image, setImage] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
+  const [key, setKey] = useState(Math.random().toString());
 
   const [loading, setLoading] = useState(false);
 
+  const { addPlant } = useContext(PlantContext);
+
   async function getCameraPermission() {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
-    setCameraPermission(cameraPermission.status === "granted");
-
-    if (cameraPermission.status !== "granted") {
+    if (cameraPermission.status === "granted") {
+      setCameraPermission(true);
+      setIsCameraReady(true);
+    } else {
+      setCameraPermission(false);
+      setIsCameraReady(false);
       Alert.alert("Permission to access camera is required");
     }
   }
+  
 
   useEffect(() => {
     getCameraPermission();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+  
+      const setupCamera = async () => {
+        if (isActive) {
+          setIsCameraReady(false);
+          await getCameraPermission();
+        }
+      };
+  
+      setupCamera();
+      setKey(Math.random().toString()); // Change key to force remount
+  
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+  
+  
+  
 
   const toggleFlash = async () => {
     setFlash((current) =>
       current === FlashMode.off ? FlashMode.on : FlashMode.off
     );
   };
+  
 
   const takePicture = async () => {
-    if (camera) {
+    if (camera && isCameraReady) {
       const data = await camera.takePictureAsync({
         base64: true,
         skipProcessing: true,
@@ -72,6 +105,8 @@ export const ScanScreen = () => {
       setImage(imageObject);
       setPreviewVisible(true);
     }
+    else {
+      console.log("Camera is not ready or camera ref is not set");    }
   };
 
   const toggleCameraType = async () => {
@@ -164,6 +199,15 @@ export const ScanScreen = () => {
           } else {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
+
+          const plantData: Plant = {
+            name: plantName,
+            description: plantDescription
+            // any other relevant data
+        };
+
+        addPlant(plantData);
+        console.log("Added plant", plantData);
 
           console.log(plantDescription);
           console.log(plantClass);
@@ -269,8 +313,11 @@ export const ScanScreen = () => {
         style={{ flex: 1 }}
         type={type}
         flashMode={flash}
-        ref={(ref) => setCamera(ref)}
+        ref={setCamera}
+        onCameraReady={() => setIsCameraReady(true)}
+        key={key}
       />
+
 
       <View style={{ height: defaultStyles.padding }} />
 

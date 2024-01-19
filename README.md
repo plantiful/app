@@ -23,9 +23,9 @@ yarn add <package-name>
 ```
 
 ## TODO
-
 - [x] Finish CameraScreen - [tutorial](https://www.freecodecamp.org/news/how-to-create-a-camera-app-with-expo-and-react-native/), [code](https://github.com/hayanisaid/expo-camera-tutorial/blob/master/App.tsx)
 - [x] Fix CameraScreen screenratio
+- [x] Fix CameraScreen reloading
 - [x] Add show password on both login and register screen
 - [x] Only show password on register screen on focus
 - [x] Replace all SVG icons with [@expo/vector-icons](https://icons.expo.fyi)
@@ -36,6 +36,9 @@ yarn add <package-name>
 - [x] Make the flash icon change based on the toggle
 - [x] Add loading indicator for plant recognition - first try make it async
 - [x] Add all translations (now it is only in english) - easy s chatgpt
+- [x] Add recognized plants from ScanScreen to PlantScreen (there is one Example Plant always added for now)
+- [ ] Finish PlantScreen
+- [ ] Link PlantScreen and PlantDetailScreen together
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma

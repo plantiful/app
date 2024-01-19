@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { onAuthStateChanged } from "firebase/auth";
+import { PlantProvider } from './screens/PlantContext';
 
 import { loadFonts } from "./utils/loadFonts";
 import {
@@ -40,6 +41,7 @@ import ScanScreen from "./screens/ScanScreen";
 import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 import ChangeEmailScreen from "./screens/ChangeEmailScreen";
 import ChangeNameScreen from "./screens/ChangeNameScreen";
+
 
 // Icons
 import { Ionicons } from "@expo/vector-icons";
@@ -122,7 +124,7 @@ export const App = () => {
   const LanguageSettingsScreenWrapper = (
     navigationProps: React.JSX.IntrinsicAttributes & LanguageSettingsScreenProps
   ) => <LanuageSetttingsScreen {...navigationProps} />;
-
+/*
   if (!loggedIn) {
     return (
       <NavigationContainer>
@@ -152,54 +154,58 @@ export const App = () => {
       </NavigationContainer>
     );
   } else {
+  }
+   */
     const HomeStackNavigator = () => {
       return (
-        <HomeStack.Navigator>
-          <HomeStack.Screen
-            name="Home"
-            options={{ headerShown: false }}
-            component={HomeScreen}
-          />
-          <HomeStack.Screen
-            name="Profile"
-            options={{ headerShown: false }}
-            component={ProfileScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="Settings"
-            options={{ headerShown: false }}
-            component={SettingsScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="ChangeName"
-            options={{ headerShown: false }}
-            component={ChangeNameScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="ChangeEmail"
-            options={{ headerShown: false }}
-            component={ChangeEmailScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="ChangePassword"
-            options={{ headerShown: false }}
-            component={ChangePasswordScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="NotificationSettings"
-            options={{ headerShown: false }}
-            component={NotificationSettingsScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="LanguageSettings"
-            options={{ headerShown: false }}
-            component={LanguageSettingsScreenWrapper}
-          />
-        </HomeStack.Navigator>
+          <HomeStack.Navigator>
+            <HomeStack.Screen
+              name="Home"
+              options={{ headerShown: false }}
+              component={HomeScreen}
+            />
+            <HomeStack.Screen
+              name="Profile"
+              options={{ headerShown: false }}
+              component={ProfileScreenWrapper}
+            />
+            <HomeStack.Screen
+              name="Settings"
+              options={{ headerShown: false }}
+              component={SettingsScreenWrapper}
+            />
+            <HomeStack.Screen
+              name="ChangeName"
+              options={{ headerShown: false }}
+              component={ChangeNameScreenWrapper}
+            />
+            <HomeStack.Screen
+              name="ChangeEmail"
+              options={{ headerShown: false }}
+              component={ChangeEmailScreenWrapper}
+            />
+            <HomeStack.Screen
+              name="ChangePassword"
+              options={{ headerShown: false }}
+              component={ChangePasswordScreenWrapper}
+            />
+            <HomeStack.Screen
+              name="NotificationSettings"
+              options={{ headerShown: false }}
+              component={NotificationSettingsScreenWrapper}
+            />
+            <HomeStack.Screen
+              name="LanguageSettings"
+              options={{ headerShown: false }}
+              component={LanguageSettingsScreenWrapper}
+            />
+          </HomeStack.Navigator>
       );
     };
 
     return (
+      <PlantProvider>
+
       <NavigationContainer>
         <StatusBar style="dark" />
         <BottomTab.Navigator
@@ -240,6 +246,7 @@ export const App = () => {
           />
         </BottomTab.Navigator>
       </NavigationContainer>
+      </PlantProvider>
+
     );
-  }
 };
