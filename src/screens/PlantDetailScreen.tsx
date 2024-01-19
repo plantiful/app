@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+
 import {Plant} from './PlantContext';
 
 // Assuming this is the structure of your navigation parameter
@@ -15,10 +17,10 @@ export const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
     const { plant } = route.params;
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Text>{plant.name}</Text>
-            {/* Display other plant details */}
-        </View>
+            <Text>{plant.description}</Text>
+        </SafeAreaView>
     );
 };
 

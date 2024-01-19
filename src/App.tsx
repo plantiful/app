@@ -22,7 +22,14 @@ import {
   ChangeNameScreenProps,
   ChangeEmailScreenProps,
   ChangePasswordScreenProps,
+  PlantsScreenParamList,
 } from "./utils/types";
+
+declare global {
+  namespace ReactNavigation {
+    interface HomeParamList extends HomeStackParamList {}
+  }
+}
 
 // Firebase
 import { auth } from "./firebase";
@@ -33,6 +40,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 import LanuageSetttingsScreen from "./screens/LanuageSetttingsScreen";
 import NotificationSettingsScreen from "./screens/NotificationSettingsScreen";
 import PlantsScreen from "./screens/PlantsScreen";
+import { PlantDetailScreen} from "./screens/PlantDetailScreen";
 import AuthScreen from "./screens/AuthScreen";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -49,6 +57,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const HomeStack = createStackNavigator<HomeStackParamList>();
+const PlantStack = createStackNavigator<PlantsScreenParamList>();
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -156,6 +165,23 @@ export const App = () => {
   } else {
   }
    */
+  const PlantStackNavigator = () => {
+    return (
+<PlantStack.Navigator>
+      <PlantStack.Screen
+    name="PlantsScreen"
+    options={{ headerShown: false }}
+    component={PlantsScreen}
+  />
+      <PlantStack.Screen
+    name="PlantDetailScreen"
+    options={{ headerShown: false }}
+    component={PlantDetailScreen}
+  />
+</PlantStack.Navigator>
+    );
+  }
+
     const HomeStackNavigator = () => {
       return (
           <HomeStack.Navigator>
@@ -242,7 +268,7 @@ export const App = () => {
           <BottomTab.Screen
             name="Plants"
             options={{ headerShown: false }}
-            component={PlantsScreen}
+            component={PlantStackNavigator}
           />
         </BottomTab.Navigator>
       </NavigationContainer>

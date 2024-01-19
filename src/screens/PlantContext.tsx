@@ -29,9 +29,9 @@ interface PlantProviderProps {
 
 // Create the PlantProvider component
 export const PlantProvider = ({ children }: PlantProviderProps) => {
-    const [plants, setPlants] = useState<Plant[]>([
-        { name: "Test Plant", description: "Test Descr" }
-    ]);
+    const [plants, setPlants] = useState([
+        { name: "Test Plant", description: "Test Description" }
+    ] as Plant[]);
 
     const addPlant = (plant: Plant) => {
         setPlants(currentPlants => {

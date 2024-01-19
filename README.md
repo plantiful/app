@@ -38,7 +38,7 @@ yarn add <package-name>
 - [x] Add all translations (now it is only in english) - easy s chatgpt
 - [x] Add recognized plants from ScanScreen to PlantScreen (there is one Example Plant always added for now)
 - [ ] Finish PlantScreen
-- [ ] Link PlantScreen and PlantDetailScreen together
+- [x] Link PlantScreen and PlantDetailScreen together
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma

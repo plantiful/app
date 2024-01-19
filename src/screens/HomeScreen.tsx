@@ -39,7 +39,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         title={t("HomeScreen_email_confirmation_title")}
         text={t("HomeScreen_email_confirmation_text")}
         buttonText={t("HomeScreen_email_confirmation_button")}
-        isVisible={showEmailConfirmation}
+        isVisible={showEmailConfirmation} 
         onClose={() => setShowEmailConfirmation(false)}
       />
 
