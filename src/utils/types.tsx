@@ -56,9 +56,13 @@ export type SignUpScreenProps = {
 export type HomeStackParamList = {
   Home: undefined;
   Profile: undefined;
-  NotificationSettings: undefined;
   Settings: { onAuthChange: (status: boolean) => void };
+  ChangeName: undefined;
+  ChangeEmail: undefined;
+  ChangePassword: undefined;
+  NotificationSettings: undefined;
   LanguageSettings: undefined;
+  ThemeSettings: undefined;
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
@@ -83,6 +87,34 @@ type SettingsScreenNavigationProp = StackNavigationProp<
 
 export type SettingsScreenProps = {
   navigation: SettingsScreenNavigationProp;
+  onAuthChange: (status: boolean) => void;
+};
+
+type ChangeNameScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "ChangeName"
+>;
+
+export type ChangeNameScreenProps = {
+  navigation: ChangeNameScreenNavigationProp;
+};
+
+type ChangeEmailScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "ChangeEmail"
+>;
+
+export type ChangeEmailScreenProps = {
+  navigation: ChangeEmailScreenNavigationProp;
+};
+
+type ChangePasswordScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "ChangePassword"
+>;
+
+export type ChangePasswordScreenProps = {
+  navigation: ChangePasswordScreenNavigationProp;
   onAuthChange: (status: boolean) => void;
 };
 

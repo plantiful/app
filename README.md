@@ -52,13 +52,14 @@ yarn add <package-name>
 - [x] Fix input reference on sign in and sign up screen
 - [x] Add auth state persistence - [docs](https://docs.expo.dev/versions/latest/sdk/securestore/) or react-native-async-storage - [docs](https://react-native-async-storage.github.io/async-storage/docs/install)
 - [ ] Add translations (use `en` as a template)
-- [ ] Fix sendPasswordResetEmail on ForgotPasswordScreen?
+- [x] Fix sendPasswordResetEmail on ForgotPasswordScreen?
 - [ ] Try to optimize take picture delay on ScanScreen
 - [ ] Add settings
   - Account
-    - [ ] change email
-    - [ ] change password
-    - [ ] delete account
+    - [x] change name
+    - [x] change email
+    - [x] change password
+    - [x] delete account
   - App
     - [ ] change language
     - [ ] change theme

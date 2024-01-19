@@ -21,6 +21,7 @@ export default {
   name_input_title: "Name",
   email_input_title: "E-mail",
   password_input_title: "Password",
+  password_input_title_confirm: "Confirm Password",
 
   forgot_password_text_button: "Forgot Password?",
 
@@ -49,6 +50,7 @@ export default {
   error_agree_terms: "Please agree to the terms and privacy policy",
   error_fill_all_fields: "Please fill in all fields",
   error_password_length: "Password must be at least 8 characters long",
+  error_passwords_dont_match: "Passwords don't match",
   error_email_already_in_use: "Email already in use",
   error_invalid_email: "Invalid email",
   error_user_disabled: "User disabled",
@@ -65,10 +67,58 @@ export default {
   ProfileScreen_edit_profile_button_text: "Edit Profile",
   ProfileScreen_stats_plants_text: "Plants",
   ProfileScreen_stats_streak_text: "Streak",
-  ProfileScreen_notifications_button_text: "Notifications",
-  ProfileScreen_help_n_support_button_text: "Help & Support",
-  ProfileScreen_settings_button_text: "Settings",
-  ProfileScreen_sign_out_button_text: "Sign Out",
+
+  // SettingsScreen
+  SettingsScreen_account_settings_cathegory_text: "Account",
+  SettingsScreen_change_name_button_text: "Change Name",
+  SettingsScreen_change_email_button_text: "Change Email",
+  SettingsScreen_change_password_button_text: "Change Password",
+  SettingsScreen_delete_account_button_text: "Delete Account",
+  SettingsScreen_delete_account_alert_title: "Delete Account",
+  SettingsScreen_delete_account_alert_text:
+    "Are you sure you want to delete your account?",
+  SettingsScreen_delete_account_alert_cancel: "Cancel",
+  SettingsScreen_delete_account_alert_confirm: "Confirm",
+  SettingsScreen_sign_out_button_text: "Sign Out",
+
+  SettingsScreen_app_settings_cathegory_text: "App Settings",
+  SettingsScreen_notifications_button_text: "Notifications",
+  SettingsScreen_language_button_text: "Language",
+  SettingsScreen_theme_button_text: "Theme",
+
+  SettingsScreen_about_cathegory_text: "About",
+  SettingsScreen_privacy_policy_button_text: "Privacy Policy",
+  SettingsScreen_terms_of_use_button_text: "Terms of Use",
+  SettingsScreen_contact_us_button_text: "Contact Us",
+
+  // ChangeNameScreen
+  ChangeNameScreen_title: "Change Name",
+  ChangeNameScreen_description: "Please enter your new name",
+  ChangeNameScreen_button_text: "Confirm",
+  ChangeNameScreen_success_title: "Name Changed",
+  ChangeNameScreen_success_text: "Your name has been changed successfully",
+  ChangeNameScreen_success_button: "Okay",
+  ChangeNameScreen_error_title: "Name Change Failed",
+
+  // ChangeEmailScreen
+  ChangeEmailScreen_title: "Change Email",
+  ChangeEmailScreen_description: "Please enter your new email address",
+  ChangeEmailScreen_button_text: "Confirm",
+  ChangeEmailScreen_success_title: "Email Changed",
+  ChangeEmailScreen_success_text:
+    "Check both your old and new email addresses for a confirmation email",
+  ChangeEmailScreen_success_button: "Okay",
+  ChangeEmailScreen_error_title: "Email Change Failed",
+
+  // ChangePasswordScreen
+  ChangePasswordScreen_title: "Change Password",
+  ChangePasswordScreen_description: "Please enter your new password",
+  ChangePasswordScreen_button_text: "Confirm",
+  ChangePasswordScreen_success_title: "Password Changed",
+  ChangePasswordScreen_success_text:
+    "Your password has been changed successfully",
+  ChangePasswordScreen_success_button: "Okay",
+  ChangePasswordScreen_error_title: "Password Change Failed",
 
   // ScanScreen
   ScanScreen_idenitfy_button_text: "Identify",

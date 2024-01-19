@@ -11,12 +11,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 // Firebase
 import { auth } from "../firebase";
-import { sendPasswordResetEmail } from "firebase/auth";
+import { updateEmail } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
-import { ForgotPasswordScreenProps } from "../utils/types";
+import { ChangeEmailScreenProps } from "../utils/types";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -24,7 +24,7 @@ import InputBox from "../components/InputBox";
 import ButtonBack from "../components/ButtonBack";
 import ButtonWide from "../components/ButtonWide";
 
-export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
+export const ChangeEmailScreen: React.FC<ChangeEmailScreenProps> = ({
   navigation,
 }) => {
   const { t } = i18n;
@@ -42,7 +42,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     navigation.goBack();
   };
 
-  const handleSendEmail = async () => {
+  const handleChangeEmail = async () => {
     if (!email) {
       setErrorMessage(t("error_fill_all_fields"));
       setShowError(true);
@@ -50,22 +50,11 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     }
 
     try {
-      await sendPasswordResetEmail(auth, email);
+      await updateEmail(auth.currentUser!, email);
 
       setShowSuccess(true);
     } catch (error: FirebaseError | any) {
-      if (error.code === "auth/invalid-email") {
-        setErrorMessage(t("error_invalid_email"));
-        setShowError(true);
-        return;
-      } else if (error.code === "auth/user-disabled") {
-        setErrorMessage(t("error_user_disabled"));
-        setShowError(true);
-        return;
-      }
-      // User not found not added because it might be a security issue
-
-      // setErrorMessage(error.code);
+      //   setErrorMessage(error.code);
       setErrorMessage(t("error_unknown"));
       setShowError(true);
     }
@@ -75,39 +64,33 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
         <ButtonBack onPress={goBack} />
-        <Text style={styles.forgotPasswordText}>
-          {t("forgot_password_text")}
+        <Text style={styles.titleText}>{t("ChangeEmailScreen_title")}</Text>
+        <Text style={styles.descriptionText}>
+          {t("ChangeEmailScreen_description")}
         </Text>
-        <Text style={styles.forgotPasswordDescription}>
-          {t("forgot_password_description")}
-        </Text>
-
         <InputBox
           title={t("email_input_title")}
+          placeholder={auth.currentUser?.email}
           ref={emailRef}
-          keyboardType="email-address"
           returnKeyType="send"
-          onSubmitEditing={handleSendEmail}
+          onSubmitEditing={handleChangeEmail}
           onChangeText={(text) => setEmail(text)}
         />
-
         <View style={{ height: 20 }} />
-
         <ButtonWide
-          text={t("forgot_password_button")}
-          onPress={handleSendEmail}
+          text={t("ChangeEmailScreen_button_text")}
+          onPress={handleChangeEmail}
         />
-
         <ModalConfirm
-          title={t("forgot_password_success_title")}
-          text={t("forgot_password_success_text")}
-          buttonText={t("forgot_password_success_button")}
+          title={t("ChangeEmailScreen_success_title")}
+          text={t("ChangeEmailScreen_success_text")}
+          buttonText={t("ChangeEmailScreen_success_button")}
           isVisible={showSuccess}
-          onClose={() => navigation.navigate("SignIn")}
+          onClose={() => navigation.navigate("Home")}
         />
 
         <ModalConfirm
-          title={t("forgot_password_error_title")}
+          title={t("ChangeEmailScreen_error_title")}
           text={errorMessage}
           buttonText={t("error_button")}
           isVisible={showError}
@@ -125,13 +108,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: defaultStyles.padding,
     paddingTop: defaultStyles.padding,
   },
-  forgotPasswordText: {
+  titleText: {
     fontFamily: fonts.bold,
     fontSize: 41,
     color: colors.primary,
     paddingTop: 40,
   },
-  forgotPasswordDescription: {
+  descriptionText: {
     fontFamily: fonts.semiBold,
     fontSize: fontSize.large,
     color: colors.textGrey,
@@ -139,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ForgotPasswordScreen;
+export default ChangeEmailScreen;

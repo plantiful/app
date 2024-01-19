@@ -21,6 +21,7 @@ interface InputBoxProps {
   secureTextEntry?: boolean | undefined;
   onSubmitEditing?: () => void | undefined;
   onChangeText: (text: string) => void;
+  onFocus?: () => void | undefined;
 }
 
 // forwardRef due to the onSubmitEditing prop
@@ -31,13 +32,14 @@ const InputBox = forwardRef<TextInput, InputBoxProps>(
       borderColor = colors.border,
       backgroundColor = "#F5F5F5",
       placeholder,
-      placeholderTextColor,
+      placeholderTextColor = "#B1B1B1",
       title = "",
       keyboardType,
       returnKeyType,
       secureTextEntry,
       onSubmitEditing,
       onChangeText,
+      onFocus,
     },
     ref
   ) => {
@@ -53,6 +55,7 @@ const InputBox = forwardRef<TextInput, InputBoxProps>(
           secureTextEntry={secureTextEntry}
           onSubmitEditing={onSubmitEditing}
           onChangeText={onChangeText}
+          onFocus={onFocus}
           ref={ref}
           style={[
             styles.input,

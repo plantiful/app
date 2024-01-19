@@ -75,7 +75,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
         setErrorMessage(t("error_user_not_found"));
         setShowError(true);
         return;
-      } else if (error.code === "auth/invalid-login-credentials") {
+      } else if (error.code === "auth/invalid-credential") {
         setErrorMessage(t("error_invalid_login_credentials"));
         setShowError(true);
         return;
@@ -105,7 +105,6 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
           <InputBox
             title={t("email_input_title")}
             placeholder="Enter your email"
-            placeholderTextColor="#B1B1B1"
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
@@ -117,7 +116,6 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
             <InputBox
               title={t("password_input_title")}
               placeholder="Enter your password"
-              placeholderTextColor="#B1B1B1"
               ref={passwordRef}
               returnKeyType="done"
               secureTextEntry={hidePassword}

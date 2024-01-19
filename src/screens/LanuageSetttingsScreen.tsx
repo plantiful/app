@@ -26,6 +26,7 @@ export const SettingsScreen: React.FC<LanguageSettingsScreenProps> = ({
 
   const changeLanguage = (langKey: string) => {
     i18n.changeLanguage(langKey);
+    goBack();
   };
 
   return (
