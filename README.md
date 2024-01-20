@@ -20,7 +20,7 @@ yarn start
 
 ```sh
 yarn add <package-name>
-```
+``
 
 ## TODO
 
@@ -39,13 +39,15 @@ yarn add <package-name>
 - [x] Add all translations (now it is only in english) - easy s chatgpt
 - [x] Add recognized plants from ScanScreen to PlantScreen (there is one Example Plant always added for now)
 - [ ] Finish PlantScreen
+- [ ] FInish PlantDetailScreen
+- [x] Create template PlantDetailScreen design with all the info
 - [x] Link PlantScreen and PlantDetailScreen together
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
 - [ ] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
 - [ ] Add terms and privacy policy links on sign up screen - [docs](https://docs.expo.dev/versions/latest/sdk/webview/) - we dont have them yet
-- [ ] Add plant recognition results into variables
+- [ ] ** Add plant recognition results into variables, more info directly in code **
   - `common (vernacular) name`
   - `scientific name`
   - `plant description`
@@ -58,6 +60,7 @@ yarn add <package-name>
 - [x] Add translations (use `en` as a template)
 - [x] Fix sendPasswordResetEmail on ForgotPasswordScreen?
 - [ ] Try to optimize take picture delay on ScanScreen
+- [ ] ScanScreen line 220, Plant identified alert message should be in all languages (currently in english only)
 - [ ] Add settings
   - Account
     - [x] change name

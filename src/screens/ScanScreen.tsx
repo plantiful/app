@@ -171,10 +171,29 @@ export const ScanScreen = () => {
           const plantFamily = topSuggestion.details.taxonomy.family;
           const plantPhylum = topSuggestion.details.taxonomy.phylum;
           const plantKingdom = topSuggestion.details.taxonomy.kingdom;
+          const plantSunlight = "Not implemented.";
+          const plantTemperature = "Not implemented.";
+          const plantOrigin = "Not implemented.";
+          const plantGrowthHabit = "Not implemented.";
+          // leaving the variables as not implement, Valon can fix later
+
 
           let plantWateringMin = "Not available.";
           let plantWateringMax = "Not available.";
           let plantWatering = "Not available.";
+
+          const plantData: Plant = {
+            id: Math.floor(Math.random() * 1000000),
+            name: plantName,
+            description: plantDescription,
+            imageUrl: topSuggestion.similar_images[0].url,
+            watering: plantWatering,
+            sunlight: plantSunlight,
+            temperature: plantTemperature,
+            origin: plantOrigin,
+            family: plantFamily,
+            growthHabit: plantGrowthHabit,
+          };
 
           if (topSuggestion.details.watering !== null) {
             //plantWatering = topSuggestion.details.watering;
@@ -195,12 +214,6 @@ export const ScanScreen = () => {
           } else {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
-
-          const plantData: Plant = {
-            name: plantName,
-            description: plantDescription,
-            // any other relevant data
-          };
 
           addPlant(plantData);
           console.log("Added plant", plantData);
