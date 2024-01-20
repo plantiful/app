@@ -20,7 +20,7 @@ yarn start
 
 ```sh
 yarn add <package-name>
-``
+```
 
 ## TODO
 
