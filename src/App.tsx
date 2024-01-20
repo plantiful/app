@@ -131,33 +131,31 @@ export const App = () => {
 
   if (!loggedIn) {
     return (
-      <LanguageProvider>
-        <NavigationContainer>
-          <StatusBar style="dark" />
-          <AuthStack.Navigator initialRouteName="Auth">
-            <AuthStack.Screen
-              name="Auth"
-              options={{ headerShown: false }}
-              component={AuthScreen}
-            />
-            <AuthStack.Screen
-              name="SignIn"
-              options={{ title: "SignIn", headerShown: false }}
-              component={SignInScreenWrapper}
-            />
-            <AuthStack.Screen
-              name="ForgotPassword"
-              options={{ title: "ForgotPassword", headerShown: false }}
-              component={ForgotPasswordScreenWrapper}
-            />
-            <AuthStack.Screen
-              name="SignUp"
-              options={{ title: "SignUp", headerShown: false }}
-              component={SignUpScreenWrapper}
-            />
-          </AuthStack.Navigator>
-        </NavigationContainer>
-      </LanguageProvider>
+      <NavigationContainer>
+        <StatusBar style="dark" />
+        <AuthStack.Navigator initialRouteName="Auth">
+          <AuthStack.Screen
+            name="Auth"
+            options={{ headerShown: false }}
+            component={AuthScreen}
+          />
+          <AuthStack.Screen
+            name="SignIn"
+            options={{ title: "SignIn", headerShown: false }}
+            component={SignInScreenWrapper}
+          />
+          <AuthStack.Screen
+            name="ForgotPassword"
+            options={{ title: "ForgotPassword", headerShown: false }}
+            component={ForgotPasswordScreenWrapper}
+          />
+          <AuthStack.Screen
+            name="SignUp"
+            options={{ title: "SignUp", headerShown: false }}
+            component={SignUpScreenWrapper}
+          />
+        </AuthStack.Navigator>
+      </NavigationContainer>
     );
   } else {
     const PlantStackNavigator = () => {
@@ -226,46 +224,48 @@ export const App = () => {
 
     return (
       <LanguageProvider>
-        <NavigationContainer>
-          <StatusBar style="dark" />
-          <BottomTab.Navigator
-            initialRouteName="Home"
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ color }) => {
-                let iconName: any;
+        <PlantProvider>
+          <NavigationContainer>
+            <StatusBar style="dark" />
+            <BottomTab.Navigator
+              initialRouteName="Home"
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ color }) => {
+                  let iconName: any;
 
-                if (route.name === "Home") {
-                  iconName = "home-outline";
-                } else if (route.name === "Scan") {
-                  iconName = "scan";
-                } else if (route.name === "Plants") {
-                  iconName = "leaf-outline";
-                }
+                  if (route.name === "Home") {
+                    iconName = "home-outline";
+                  } else if (route.name === "Scan") {
+                    iconName = "scan";
+                  } else if (route.name === "Plants") {
+                    iconName = "leaf-outline";
+                  }
 
-                return <Ionicons name={iconName} size={30} color={color} />;
-              },
-              tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
-              tabBarActiveTintColor: "black",
-              tabBarInactiveTintColor: "#6A6A6A",
-            })}
-          >
-            <BottomTab.Screen
-              name="Home"
-              options={{ headerShown: false }}
-              component={HomeStackNavigator}
-            />
-            <BottomTab.Screen
-              name="Scan"
-              options={{ headerShown: false }}
-              component={ScanScreen}
-            />
-            <BottomTab.Screen
-              name="Plants"
-              options={{ headerShown: false }}
-              component={PlantStackNavigator}
-            />
-          </BottomTab.Navigator>
-        </NavigationContainer>
+                  return <Ionicons name={iconName} size={30} color={color} />;
+                },
+                tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
+                tabBarActiveTintColor: "black",
+                tabBarInactiveTintColor: "#6A6A6A",
+              })}
+            >
+              <BottomTab.Screen
+                name="Home"
+                options={{ headerShown: false }}
+                component={HomeStackNavigator}
+              />
+              <BottomTab.Screen
+                name="Scan"
+                options={{ headerShown: false }}
+                component={ScanScreen}
+              />
+              <BottomTab.Screen
+                name="Plants"
+                options={{ headerShown: false }}
+                component={PlantStackNavigator}
+              />
+            </BottomTab.Navigator>
+          </NavigationContainer>
+        </PlantProvider>
       </LanguageProvider>
     );
   }
