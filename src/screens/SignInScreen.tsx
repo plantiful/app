@@ -97,14 +97,14 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-230}>
           <ButtonBack onPress={goBack} />
 
-          <Text style={styles.signInText}>{t("sign_in_text")}</Text>
+          <Text style={styles.signInText}>{t("sign_in")}</Text>
           <Text style={styles.signInDescription}>
             {t("sign_in_description")}
           </Text>
 
           <InputBox
-            title={t("email_input_title")}
-            placeholder="Enter your email"
+            title={t("email")}
+            placeholder={t("email_placeholder")}
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
@@ -114,8 +114,8 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
 
           <View>
             <InputBox
-              title={t("password_input_title")}
-              placeholder="Enter your password"
+              title={t("password")}
+              placeholder={t("password_placeholder")}
               ref={passwordRef}
               returnKeyType="done"
               secureTextEntry={hidePassword}
@@ -140,7 +140,7 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
             onPress={navigateToForgotPassword}
           />
 
-          <ButtonWide text={t("sign_in_button_text")} onPress={handleSignIn} />
+          <ButtonWide text={t("sign_in")} onPress={handleSignIn} />
 
           <View style={styles.socialsContainer}>
             <View style={{ paddingBottom: 15 }}>
@@ -176,9 +176,9 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
         </KeyboardAvoidingView>
 
         <ModalConfirm
-          title={t("sign_in_error_title")}
+          title={t("error")}
           text={errorMessage}
-          buttonText={t("error_button")}
+          buttonText={t("try_again")}
           isVisible={showError}
           onClose={() => setShowError(false)}
         />

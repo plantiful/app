@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import { useLanguage } from "../utils/LanguageContext";
 import { SettingsScreenProps } from "../utils/types";
 
 // Firebase
@@ -18,13 +19,34 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   navigation,
   onAuthChange,
 }) => {
+  const { language } = useLanguage();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
   const { t } = i18n;
+
+  useEffect(() => {
+    setCurrentLanguage(language);
+    i18n.changeLanguage(language);
+  }, [language]);
 
   const [showDeleteAccountConfirmation, setShowDeleteAccountConfirmation] =
     useState(false);
+  const [showSignOutConfirmation, setShowSignOutConfirmation] = useState(false);
 
   const goBack = () => {
     navigation.goBack();
+  };
+
+  const toggleDeleteAccountConfirmation = () => {
+    setShowDeleteAccountConfirmation(!showDeleteAccountConfirmation);
+  };
+
+  const handleDeleteAccount = async () => {
+    auth.currentUser.delete();
+    handleSignOut();
+  };
+
+  const toggleSignOutConfirmation = () => {
+    setShowSignOutConfirmation(!showSignOutConfirmation);
   };
 
   const handleSignOut = () => {
@@ -36,15 +58,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       .catch((error) => {
         console.log("Sign out error:", error);
       });
-  };
-
-  const toggleDeleteAccountConfirmation = () => {
-    setShowDeleteAccountConfirmation(!showDeleteAccountConfirmation);
-  };
-
-  const handleDeleteAccount = () => {
-    auth.currentUser?.delete();
-    handleSignOut();
   };
 
   const navigateToChangeName = () => {
@@ -109,11 +122,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           />
 
           <ButtonRowWithIconBack
-            text={t("SettingsScreen_sign_out_button_text")}
+            text={t("sign_out")}
             textColor="red"
             iconSet="Ionicons"
             iconName="chevron-forward-outline"
-            onPress={handleSignOut}
+            onPress={toggleSignOutConfirmation}
           />
         </View>
 
@@ -150,14 +163,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           </Text>
 
           <ButtonRowWithIconBack
-            text={t("SettingsScreen_privacy_policy_button_text")}
+            text={t("privacy_policy")}
             iconSet="Ionicons"
             iconName="chevron-forward-outline"
             onPress={null}
           />
 
           <ButtonRowWithIconBack
-            text={t("SettingsScreen_terms_of_use_button_text")}
+            text={t("terms_of_use")}
             iconSet="Ionicons"
             iconName="chevron-forward-outline"
             onPress={null}
@@ -173,13 +186,25 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       </ScrollView>
 
       <ModalChoice
-        title={t("SettingsScreen_delete_account_alert_title")}
-        text={t("SettingsScreen_delete_account_alert_text")}
-        firstButtonText={t("SettingsScreen_delete_account_alert_cancel")}
-        secondButtonText={t("SettingsScreen_delete_account_alert_confirm")}
+        title={t("warning")}
+        text={t("warning_delete_account")}
+        firstButtonText={t("cancel")}
+        secondButtonColor="red"
+        secondButtonText={t("confirm")}
         isVisible={showDeleteAccountConfirmation}
         onFirstButtonPress={toggleDeleteAccountConfirmation}
         onSecondButtonPress={handleDeleteAccount}
+      />
+
+      <ModalChoice
+        title={t("warning")}
+        text={t("warning_sign_out")}
+        firstButtonText={t("cancel")}
+        secondButtonColor="red"
+        secondButtonText={t("confirm")}
+        isVisible={showSignOutConfirmation}
+        onFirstButtonPress={toggleSignOutConfirmation}
+        onSecondButtonPress={handleSignOut}
       />
     </SafeAreaView>
   );

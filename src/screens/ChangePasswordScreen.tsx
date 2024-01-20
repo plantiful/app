@@ -105,7 +105,7 @@ export const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
           </Text>
           <View>
             <InputBox
-              title={t("password_input_title")}
+              title={t("password")}
               placeholder="********"
               ref={passwordRef}
               returnKeyType="next"
@@ -127,7 +127,7 @@ export const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
 
           <View>
             <InputBox
-              title={t("password_input_title_confirm")}
+              title={t("ChangePasswordScreen_configm_button_text")}
               placeholder="********"
               ref={passwordConfirmRef}
               returnKeyType="send"
@@ -148,24 +148,21 @@ export const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
           </View>
 
           <View style={{ height: 20 }} />
-          <ButtonWide
-            text={t("ChangePasswordScreen_button_text")}
-            onPress={handleChangePassword}
-          />
+          <ButtonWide text={t("confirm")} onPress={handleChangePassword} />
         </KeyboardAvoidingView>
 
         <ModalConfirm
-          title={t("ChangePasswordScreen_success_title")}
-          text={t("ChangePasswordScreen_success_text")}
-          buttonText={t("ChangePasswordScreen_success_button")}
+          title={t("success")}
+          text={t("success_password_changed")}
+          buttonText={t("okay")}
           isVisible={showSuccess}
           onClose={() => navigation.navigate("Home")}
         />
 
         <ModalConfirm
-          title={t("ChangePasswordScreen_error_title")}
+          title={t("error")}
           text={errorMessage}
-          buttonText={t("error_button")}
+          buttonText={t("try_again")}
           isVisible={showError}
           onClose={() => setShowError(false)}
         />

@@ -47,6 +47,10 @@ export const ChangeNameScreen: React.FC<ChangeNameScreenProps> = ({
       setErrorMessage(t("error_fill_all_fields"));
       setShowError(true);
       return;
+    } else if (displayName.length < 3) {
+      setErrorMessage(t("error_name_length"));
+      setShowError(true);
+      return;
     }
 
     try {
@@ -71,7 +75,7 @@ export const ChangeNameScreen: React.FC<ChangeNameScreenProps> = ({
           {t("ChangeNameScreen_description")}
         </Text>
         <InputBox
-          title={t("name_input_title")}
+          title={t("name")}
           placeholder={auth.currentUser?.displayName}
           ref={displayNameRef}
           returnKeyType="send"
@@ -79,22 +83,19 @@ export const ChangeNameScreen: React.FC<ChangeNameScreenProps> = ({
           onChangeText={(text) => setDisplayName(text)}
         />
         <View style={{ height: 20 }} />
-        <ButtonWide
-          text={t("ChangeNameScreen_button_text")}
-          onPress={handleChangeDisplayName}
-        />
+        <ButtonWide text={t("confirm")} onPress={handleChangeDisplayName} />
         <ModalConfirm
-          title={t("ChangeNameScreen_success_title")}
-          text={t("ChangeNameScreen_success_text")}
-          buttonText={t("ChangeNameScreen_success_button")}
+          title={t("success")}
+          text={t("success_name_changed")}
+          buttonText={t("okay")}
           isVisible={showSuccess}
           onClose={() => navigation.navigate("Home")}
         />
 
         <ModalConfirm
-          title={t("ChangeNameScreen_error_title")}
+          title={t("error")}
           text={errorMessage}
-          buttonText={t("error_button")}
+          buttonText={t("try_again")}
           isVisible={showError}
           onClose={() => setShowError(false)}
         />

@@ -83,7 +83,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         </Text>
 
         <InputBox
-          title={t("email_input_title")}
+          title={t("email")}
           ref={emailRef}
           keyboardType="email-address"
           returnKeyType="send"
@@ -99,7 +99,7 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         />
 
         <ModalConfirm
-          title={t("forgot_password_success_title")}
+          title={t("success")}
           text={t("forgot_password_success_text")}
           buttonText={t("forgot_password_success_button")}
           isVisible={showSuccess}
@@ -107,9 +107,9 @@ export const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
         />
 
         <ModalConfirm
-          title={t("forgot_password_error_title")}
+          title={t("error")}
           text={errorMessage}
-          buttonText={t("error_button")}
+          buttonText={t("try_again")}
           isVisible={showError}
           onClose={() => setShowError(false)}
         />

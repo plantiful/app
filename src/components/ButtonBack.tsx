@@ -22,10 +22,8 @@ const ButtonBack: React.FC<ButtonBackProps> = ({ color, onPress }) => {
         size={24}
         color={color === undefined ? "black" : color}
       />
-      {/* <Text style={styles.text}>{t("back_button_text")}</Text> */}
-      <Text style={[styles.text, { color: color }]}>
-        {t("back_button_text")}
-      </Text>
+      {/* <Text style={styles.text}>{t("back")}</Text> */}
+      <Text style={[styles.text, { color: color }]}>{t("back")}</Text>
     </TouchableOpacity>
   );
 };

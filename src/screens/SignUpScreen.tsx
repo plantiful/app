@@ -56,11 +56,11 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
   };
 
   const openTerms = () => {
-    Alert.alert("Terms", "Not implemented yet");
+    Alert.alert(t("terms_of_use"), t("not_implemented_yet"));
   };
 
   const openPrivacyPolicy = () => {
-    Alert.alert("Privacy policy", "Not implemented yet");
+    Alert.alert(t("privacy_policy"), t("not_implemented_yet"));
   };
 
   const handleSignUp = async () => {
@@ -72,6 +72,12 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
 
     if (!name || !email || !password) {
       setErrorMessage(t("error_fill_all_fields"));
+      setShowError(true);
+      return;
+    }
+
+    if (name.length < 3) {
+      setErrorMessage(t("error_name_length"));
       setShowError(true);
       return;
     }
@@ -111,14 +117,14 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
         <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={-10}>
           <ButtonBack onPress={goBack} />
 
-          <Text style={styles.signUpText}>{t("sign_up_text")}</Text>
+          <Text style={styles.signUpText}>{t("sign_up")}</Text>
           <Text style={styles.signUpDescription}>
             {t("sign_up_description")}
           </Text>
 
           <InputBox
-            title={t("name_input_title")}
-            placeholder="Enter your full name"
+            title={t("name")}
+            placeholder={t("name_placeholder")}
             returnKeyType="next"
             onSubmitEditing={() => emailRef.current?.focus()}
             onChangeText={(text) => setName(text)}
@@ -126,8 +132,8 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
           />
 
           <InputBox
-            title={t("email_input_title")}
-            placeholder="Enter your email"
+            title={t("email")}
+            placeholder={t("email_placeholder")}
             keyboardType="email-address"
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current?.focus()}
@@ -137,8 +143,8 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
 
           <View>
             <InputBox
-              title={t("password_input_title")}
-              placeholder="Minimum 8 characters"
+              title={t("password")}
+              placeholder={t("minimum_8_characters")}
               returnKeyType="done"
               onChangeText={(text) => setPassword(text)}
               secureTextEntry={hidePassword}
@@ -164,14 +170,14 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
             <Text style={styles.agreenmentText}>{t("terms_text1")}</Text>
 
             <ButtonText
-              text={t("terms_button_text")}
+              text={t("terms_of_use")}
               fontFamily={fonts.extraBold}
               fontSize={fontSize.medium}
               onPress={openTerms}
             />
             <Text style={styles.agreenmentText}>{t("terms_text2")}</Text>
             <ButtonText
-              text={t("privacy_policy_button_text")}
+              text={t("privacy_policy")}
               fontFamily={fonts.extraBold}
               fontSize={fontSize.medium}
               onPress={openPrivacyPolicy}
@@ -179,16 +185,16 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
           </View>
 
           <ButtonWide
-            text={t("sign_up_button")}
+            text={t("sign_up")}
             onPress={handleSignUp}
             disabledTrigger={!isAgreenmentChecked}
           />
         </KeyboardAvoidingView>
 
         <ModalConfirm
-          title={t("sign_up_error_title")}
+          title={t("error")}
           text={errorMessage}
-          buttonText={t("error_button")}
+          buttonText={t("try_again")}
           isVisible={showError}
           onClose={() => setShowError(false)}
         />

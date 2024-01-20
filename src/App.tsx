@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { onAuthStateChanged } from "firebase/auth";
-import { PlantProvider } from './screens/PlantContext';
+import { PlantProvider } from "./screens/PlantContext";
 
 import { loadFonts } from "./utils/loadFonts";
 import {
@@ -25,12 +25,6 @@ import {
   PlantsScreenParamList,
 } from "./utils/types";
 
-declare global {
-  namespace ReactNavigation {
-    interface HomeParamList extends HomeStackParamList {}
-  }
-}
-
 // Firebase
 import { auth } from "./firebase";
 
@@ -40,7 +34,7 @@ import SettingsScreen from "./screens/SettingsScreen";
 import LanuageSetttingsScreen from "./screens/LanuageSetttingsScreen";
 import NotificationSettingsScreen from "./screens/NotificationSettingsScreen";
 import PlantsScreen from "./screens/PlantsScreen";
-import { PlantDetailScreen} from "./screens/PlantDetailScreen";
+import PlantDetailScreen from "./screens/PlantDetailScreen";
 import AuthScreen from "./screens/AuthScreen";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -50,10 +44,11 @@ import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 import ChangeEmailScreen from "./screens/ChangeEmailScreen";
 import ChangeNameScreen from "./screens/ChangeNameScreen";
 
-
 // Icons
 import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "./screens/ProfileScreen";
+
+import { LanguageProvider } from "./utils/LanguageContext";
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -133,146 +128,145 @@ export const App = () => {
   const LanguageSettingsScreenWrapper = (
     navigationProps: React.JSX.IntrinsicAttributes & LanguageSettingsScreenProps
   ) => <LanuageSetttingsScreen {...navigationProps} />;
-/*
+
   if (!loggedIn) {
     return (
-      <NavigationContainer>
-        <StatusBar style="dark" />
-        <AuthStack.Navigator initialRouteName="Auth">
-          <AuthStack.Screen
-            name="Auth"
-            options={{ headerShown: false }}
-            component={AuthScreen}
-          />
-          <AuthStack.Screen
-            name="SignIn"
-            options={{ title: "SignIn", headerShown: false }}
-            component={SignInScreenWrapper}
-          />
-          <AuthStack.Screen
-            name="ForgotPassword"
-            options={{ title: "ForgotPassword", headerShown: false }}
-            component={ForgotPasswordScreenWrapper}
-          />
-          <AuthStack.Screen
-            name="SignUp"
-            options={{ title: "SignUp", headerShown: false }}
-            component={SignUpScreenWrapper}
-          />
-        </AuthStack.Navigator>
-      </NavigationContainer>
+      <LanguageProvider>
+        <NavigationContainer>
+          <StatusBar style="dark" />
+          <AuthStack.Navigator initialRouteName="Auth">
+            <AuthStack.Screen
+              name="Auth"
+              options={{ headerShown: false }}
+              component={AuthScreen}
+            />
+            <AuthStack.Screen
+              name="SignIn"
+              options={{ title: "SignIn", headerShown: false }}
+              component={SignInScreenWrapper}
+            />
+            <AuthStack.Screen
+              name="ForgotPassword"
+              options={{ title: "ForgotPassword", headerShown: false }}
+              component={ForgotPasswordScreenWrapper}
+            />
+            <AuthStack.Screen
+              name="SignUp"
+              options={{ title: "SignUp", headerShown: false }}
+              component={SignUpScreenWrapper}
+            />
+          </AuthStack.Navigator>
+        </NavigationContainer>
+      </LanguageProvider>
     );
   } else {
-  }
-   */
-  const PlantStackNavigator = () => {
-    return (
-<PlantStack.Navigator>
-      <PlantStack.Screen
-    name="PlantsScreen"
-    options={{ headerShown: false }}
-    component={PlantsScreen}
-  />
-      <PlantStack.Screen
-    name="PlantDetailScreen"
-    options={{ headerShown: false }}
-    component={PlantDetailScreen}
-  />
-</PlantStack.Navigator>
-    );
-  }
+    const PlantStackNavigator = () => {
+      return (
+        <PlantStack.Navigator>
+          <PlantStack.Screen
+            name="PlantsScreen"
+            options={{ headerShown: false }}
+            component={PlantsScreen}
+          />
+          <PlantStack.Screen
+            name="PlantDetailScreen"
+            options={{ headerShown: false }}
+            component={PlantDetailScreen}
+          />
+        </PlantStack.Navigator>
+      );
+    };
 
     const HomeStackNavigator = () => {
       return (
-          <HomeStack.Navigator>
-            <HomeStack.Screen
-              name="Home"
-              options={{ headerShown: false }}
-              component={HomeScreen}
-            />
-            <HomeStack.Screen
-              name="Profile"
-              options={{ headerShown: false }}
-              component={ProfileScreenWrapper}
-            />
-            <HomeStack.Screen
-              name="Settings"
-              options={{ headerShown: false }}
-              component={SettingsScreenWrapper}
-            />
-            <HomeStack.Screen
-              name="ChangeName"
-              options={{ headerShown: false }}
-              component={ChangeNameScreenWrapper}
-            />
-            <HomeStack.Screen
-              name="ChangeEmail"
-              options={{ headerShown: false }}
-              component={ChangeEmailScreenWrapper}
-            />
-            <HomeStack.Screen
-              name="ChangePassword"
-              options={{ headerShown: false }}
-              component={ChangePasswordScreenWrapper}
-            />
-            <HomeStack.Screen
-              name="NotificationSettings"
-              options={{ headerShown: false }}
-              component={NotificationSettingsScreenWrapper}
-            />
-            <HomeStack.Screen
-              name="LanguageSettings"
-              options={{ headerShown: false }}
-              component={LanguageSettingsScreenWrapper}
-            />
-          </HomeStack.Navigator>
+        <HomeStack.Navigator>
+          <HomeStack.Screen
+            name="Home"
+            options={{ headerShown: false }}
+            component={HomeScreen}
+          />
+          <HomeStack.Screen
+            name="Profile"
+            options={{ headerShown: false }}
+            component={ProfileScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="Settings"
+            options={{ headerShown: false }}
+            component={SettingsScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="ChangeName"
+            options={{ headerShown: false }}
+            component={ChangeNameScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="ChangeEmail"
+            options={{ headerShown: false }}
+            component={ChangeEmailScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="ChangePassword"
+            options={{ headerShown: false }}
+            component={ChangePasswordScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="NotificationSettings"
+            options={{ headerShown: false }}
+            component={NotificationSettingsScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="LanguageSettings"
+            options={{ headerShown: false }}
+            component={LanguageSettingsScreenWrapper}
+          />
+        </HomeStack.Navigator>
       );
     };
 
     return (
-      <PlantProvider>
+      <LanguageProvider>
+        <NavigationContainer>
+          <StatusBar style="dark" />
+          <BottomTab.Navigator
+            initialRouteName="Home"
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ color }) => {
+                let iconName: any;
 
-      <NavigationContainer>
-        <StatusBar style="dark" />
-        <BottomTab.Navigator
-          initialRouteName="Home"
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color }) => {
-              let iconName: any;
+                if (route.name === "Home") {
+                  iconName = "home-outline";
+                } else if (route.name === "Scan") {
+                  iconName = "scan";
+                } else if (route.name === "Plants") {
+                  iconName = "leaf-outline";
+                }
 
-              if (route.name === "Home") {
-                iconName = "home-outline";
-              } else if (route.name === "Scan") {
-                iconName = "scan";
-              } else if (route.name === "Plants") {
-                iconName = "leaf-outline";
-              }
-
-              return <Ionicons name={iconName} size={30} color={color} />;
-            },
-            tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
-            tabBarActiveTintColor: "black",
-            tabBarInactiveTintColor: "#6A6A6A",
-          })}
-        >
-          <BottomTab.Screen
-            name="Home"
-            options={{ headerShown: false }}
-            component={HomeStackNavigator}
-          />
-          <BottomTab.Screen
-            name="Scan"
-            options={{ headerShown: false }}
-            component={ScanScreen}
-          />
-          <BottomTab.Screen
-            name="Plants"
-            options={{ headerShown: false }}
-            component={PlantStackNavigator}
-          />
-        </BottomTab.Navigator>
-      </NavigationContainer>
-      </PlantProvider>
-
+                return <Ionicons name={iconName} size={30} color={color} />;
+              },
+              tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
+              tabBarActiveTintColor: "black",
+              tabBarInactiveTintColor: "#6A6A6A",
+            })}
+          >
+            <BottomTab.Screen
+              name="Home"
+              options={{ headerShown: false }}
+              component={HomeStackNavigator}
+            />
+            <BottomTab.Screen
+              name="Scan"
+              options={{ headerShown: false }}
+              component={ScanScreen}
+            />
+            <BottomTab.Screen
+              name="Plants"
+              options={{ headerShown: false }}
+              component={PlantStackNavigator}
+            />
+          </BottomTab.Navigator>
+        </NavigationContainer>
+      </LanguageProvider>
     );
+  }
 };

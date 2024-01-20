@@ -12,9 +12,17 @@ import { auth } from "../firebase";
 // Components
 import ModalConfirm from "../components/ModalConfirm";
 import ButtonIcon from "../components/ButtonIcon";
+import { useLanguage } from "../utils/LanguageContext";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const { language } = useLanguage();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
   const { t } = i18n;
+
+  useEffect(() => {
+    setCurrentLanguage(language);
+    i18n.changeLanguage(language);
+  }, [language]);
 
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
@@ -38,8 +46,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <ModalConfirm
         title={t("HomeScreen_email_confirmation_title")}
         text={t("HomeScreen_email_confirmation_text")}
-        buttonText={t("HomeScreen_email_confirmation_button")}
-        isVisible={showEmailConfirmation} 
+        buttonText={t("okay")}
+        isVisible={showEmailConfirmation}
         onClose={() => setShowEmailConfirmation(false)}
       />
 

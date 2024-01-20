@@ -45,7 +45,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({ navigation }) => {
       <View style={[{ flexDirection: "row", alignItems: "center" }]}>
         <Text style={styles.signUpText}>{t("AuthScreen_sign_up_header")}</Text>
         <ButtonText
-          text={t("AuthScreen_sign_up_text_button")}
+          text={t("AuthScreen_sign_up_button")}
           fontFamily={fonts.semiBold}
           fontSize={fontSize.large}
           paddingTop={15}

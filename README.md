@@ -23,6 +23,7 @@ yarn add <package-name>
 ```
 
 ## TODO
+
 - [x] Finish CameraScreen - [tutorial](https://www.freecodecamp.org/news/how-to-create-a-camera-app-with-expo-and-react-native/), [code](https://github.com/hayanisaid/expo-camera-tutorial/blob/master/App.tsx)
 - [x] Fix CameraScreen screenratio
 - [x] Fix CameraScreen reloading
@@ -54,7 +55,7 @@ yarn add <package-name>
   - [ ] Add language parameter to plant recognition request (`i18n.language`)
 - [x] Fix input reference on sign in and sign up screen
 - [x] Add auth state persistence - [docs](https://docs.expo.dev/versions/latest/sdk/securestore/) or react-native-async-storage - [docs](https://react-native-async-storage.github.io/async-storage/docs/install)
-- [ ] Add translations (use `en` as a template)
+- [x] Add translations (use `en` as a template)
 - [x] Fix sendPasswordResetEmail on ForgotPasswordScreen?
 - [ ] Try to optimize take picture delay on ScanScreen
 - [ ] Add settings
@@ -64,7 +65,7 @@ yarn add <package-name>
     - [x] change password
     - [x] delete account
   - App
-    - [ ] change language
+    - [x] change language
     - [ ] change theme
     - [ ] change units
   - [x] logout

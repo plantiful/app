@@ -69,7 +69,7 @@ export const ChangeEmailScreen: React.FC<ChangeEmailScreenProps> = ({
           {t("ChangeEmailScreen_description")}
         </Text>
         <InputBox
-          title={t("email_input_title")}
+          title={t("email")}
           placeholder={auth.currentUser?.email}
           ref={emailRef}
           returnKeyType="send"
@@ -77,22 +77,19 @@ export const ChangeEmailScreen: React.FC<ChangeEmailScreenProps> = ({
           onChangeText={(text) => setEmail(text)}
         />
         <View style={{ height: 20 }} />
-        <ButtonWide
-          text={t("ChangeEmailScreen_button_text")}
-          onPress={handleChangeEmail}
-        />
+        <ButtonWide text={t("confirm")} onPress={handleChangeEmail} />
         <ModalConfirm
-          title={t("ChangeEmailScreen_success_title")}
-          text={t("ChangeEmailScreen_success_text")}
-          buttonText={t("ChangeEmailScreen_success_button")}
+          title={t("success")}
+          text={t("success_email_changed")}
+          buttonText={t("okay")}
           isVisible={showSuccess}
           onClose={() => navigation.navigate("Home")}
         />
 
         <ModalConfirm
-          title={t("ChangeEmailScreen_error_title")}
+          title={t("error")}
           text={errorMessage}
-          buttonText={t("error_button")}
+          buttonText={t("try_again")}
           isVisible={showError}
           onClose={() => setShowError(false)}
         />

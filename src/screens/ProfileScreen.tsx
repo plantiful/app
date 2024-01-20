@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,11 +11,18 @@ import { auth } from "../firebase";
 
 // Components
 import ButtonBack from "../components/ButtonBack";
-import ButtonWide from "../components/ButtonWide";
 import ButtonIcon from "../components/ButtonIcon";
+import { useLanguage } from "../utils/LanguageContext";
 
 export const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+  const { language } = useLanguage();
+  const [currentLanguage, setCurrentLanguage] = useState(language);
   const { t } = i18n;
+
+  useEffect(() => {
+    setCurrentLanguage(language);
+    i18n.changeLanguage(language);
+  }, [language]);
 
   const goBack = () => {
     navigation.goBack();

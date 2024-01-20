@@ -10,9 +10,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import axios from "axios";
 import { Dimensions } from "react-native";
-import { PlantContext, Plant } from './PlantContext';
+import { PlantContext, Plant } from "./PlantContext";
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import i18n from "../../assets/translations/i18n";
 
 // Components
@@ -47,7 +47,6 @@ export const ScanScreen = () => {
       Alert.alert("Permission to access camera is required");
     }
   }
-  
 
   useEffect(() => {
     getCameraPermission();
@@ -56,32 +55,28 @@ export const ScanScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-  
+
       const setupCamera = async () => {
         if (isActive) {
           setIsCameraReady(false);
           await getCameraPermission();
         }
       };
-  
+
       setupCamera();
       setKey(Math.random().toString()); // Change key to force remount
-  
+
       return () => {
         isActive = false;
       };
     }, [])
   );
-  
-  
-  
 
   const toggleFlash = async () => {
     setFlash((current) =>
       current === FlashMode.off ? FlashMode.on : FlashMode.off
     );
   };
-  
 
   const takePicture = async () => {
     if (camera && isCameraReady) {
@@ -104,9 +99,9 @@ export const ScanScreen = () => {
 
       setImage(imageObject);
       setPreviewVisible(true);
+    } else {
+      console.log("Camera is not ready or camera ref is not set");
     }
-    else {
-      console.log("Camera is not ready or camera ref is not set");    }
   };
 
   const toggleCameraType = async () => {
@@ -164,7 +159,7 @@ export const ScanScreen = () => {
         if (suggestions && suggestions.length > 0) {
           suggestions.forEach((suggestion, index) => {
             console.log(`Suggestion ${index + 1}:`, suggestion);
-        });
+          });
 
           const topSuggestion = suggestions[0];
           const plantName = topSuggestion.details.common_names[0];
@@ -177,37 +172,38 @@ export const ScanScreen = () => {
           const plantPhylum = topSuggestion.details.taxonomy.phylum;
           const plantKingdom = topSuggestion.details.taxonomy.kingdom;
 
+          let plantWateringMin = "Not available.";
+          let plantWateringMax = "Not available.";
+          let plantWatering = "Not available.";
 
-          let plantWateringMin = ('Not available.');
-          let plantWateringMax = ('Not available.');
-          let plantWatering = ('Not available.');
-
-          if (topSuggestion.details.watering !== null ) {
-
+          if (topSuggestion.details.watering !== null) {
             //plantWatering = topSuggestion.details.watering;
             //plantWateringMin = topSuggestion.details.watering.min;
             //plantWateringMax = topSuggestion.details.watering.max;
+          }
 
-          } 
-          
+          let plantSynonyms = "";
 
-          let plantSynonyms = '';
-
-          if (topSuggestion.details.synonyms && topSuggestion.details.synonyms.length > 0) {
-              // Get up to the first three synonyms
-              plantSynonyms = topSuggestion.details.synonyms.slice(0, 3).join(', ');
+          if (
+            topSuggestion.details.synonyms &&
+            topSuggestion.details.synonyms.length > 0
+          ) {
+            // Get up to the first three synonyms
+            plantSynonyms = topSuggestion.details.synonyms
+              .slice(0, 3)
+              .join(", ");
           } else {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
 
           const plantData: Plant = {
             name: plantName,
-            description: plantDescription
+            description: plantDescription,
             // any other relevant data
-        };
+          };
 
-        addPlant(plantData);
-        console.log("Added plant", plantData);
+          addPlant(plantData);
+          console.log("Added plant", plantData);
 
           console.log(plantDescription);
           console.log(plantClass);
@@ -217,7 +213,7 @@ export const ScanScreen = () => {
           console.log(plantPhylum);
           console.log(plantKingdom);
           console.log(plantSynonyms);
-          console.log(plantWateringMin)
+          console.log(plantWateringMin);
           console.log(plantWateringMax);
           console.log(plantWatering);
 
@@ -317,7 +313,6 @@ export const ScanScreen = () => {
         onCameraReady={() => setIsCameraReady(true)}
         key={key}
       />
-
 
       <View style={{ height: defaultStyles.padding }} />
 

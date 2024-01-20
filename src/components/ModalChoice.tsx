@@ -6,8 +6,16 @@ import { colors, fonts, fontSize, defaultStyles } from "../utils/colors";
 interface ModalChoiceProps {
   title: string;
   text: string;
+  firstButtonColor?: string;
+  firstButtonOutlineColor?: string;
+  firstButtonOutline?: boolean;
   firstButtonText: string;
+  firstButtonTextColor?: string;
+  secondButtonOutline?: boolean;
+  secondButtonOutlineColor?: string;
+  secondButtonColor?: string;
   secondButtonText: string;
+  secondButtonTextColor?: string;
   isVisible: boolean;
   onFirstButtonPress: () => void;
   onSecondButtonPress: () => void;
@@ -16,12 +24,34 @@ interface ModalChoiceProps {
 const ModalChoice: React.FC<ModalChoiceProps> = ({
   title,
   text,
+  firstButtonOutline = false,
+  firstButtonOutlineColor = colors.primary,
+  firstButtonColor = colors.primary,
   firstButtonText,
+  firstButtonTextColor = colors.textWhite,
+  secondButtonOutline = false,
+  secondButtonOutlineColor = colors.primary,
+  secondButtonColor = colors.primary,
   secondButtonText,
+  secondButtonTextColor = colors.textWhite,
   isVisible,
   onFirstButtonPress,
   onSecondButtonPress,
 }) => {
+  // Dynamic styles for the first button
+  const firstButtonStyle = {
+    backgroundColor: firstButtonOutline ? "transparent" : firstButtonColor,
+    borderColor: firstButtonOutline ? firstButtonOutlineColor : "transparent",
+    borderWidth: firstButtonOutline ? 1 : 0,
+  };
+
+  // Dynamic styles for the second button
+  const secondButtonStyle = {
+    backgroundColor: secondButtonOutline ? "transparent" : secondButtonColor,
+    borderColor: secondButtonOutline ? secondButtonOutlineColor : "transparent",
+    borderWidth: secondButtonOutline ? 1 : 0,
+  };
+
   return (
     <Modal animationType="fade" transparent={true} visible={isVisible}>
       <View style={styles.centeredView}>
@@ -31,17 +61,25 @@ const ModalChoice: React.FC<ModalChoiceProps> = ({
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               activeOpacity={0.6}
-              style={[styles.button, styles.halfWidth]}
+              style={[styles.button, styles.halfWidth, firstButtonStyle]}
               onPress={onFirstButtonPress}
             >
-              <Text style={styles.buttonText}>{firstButtonText}</Text>
+              <Text
+                style={[styles.buttonText, { color: firstButtonTextColor }]}
+              >
+                {firstButtonText}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.6}
-              style={[styles.button, styles.halfWidth]}
+              style={[styles.button, styles.halfWidth, secondButtonStyle]}
               onPress={onSecondButtonPress}
             >
-              <Text style={styles.buttonText}>{secondButtonText}</Text>
+              <Text
+                style={[styles.buttonText, { color: secondButtonTextColor }]}
+              >
+                {secondButtonText}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -91,7 +129,6 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.primary,
     height: 50,
     borderRadius: defaultStyles.rounding,
   },
@@ -102,7 +139,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: fonts.semiBold,
     fontSize: fontSize.large,
-    color: colors.textWhite,
   },
 });
 
