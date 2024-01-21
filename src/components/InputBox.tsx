@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   input: {
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: defaultStyles.padding,
+    paddingHorizontal: defaultStyles.padding,
     width: "100%",
     height: 50,
     borderRadius: defaultStyles.rounding,

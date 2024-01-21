@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { SvgProps } from "react-native-svg";
 import {
   colors,
   fonts,
@@ -16,8 +16,9 @@ interface ButtonWideWithIconProps {
   fontSize?: number;
   text: string;
   textColor?: string;
-  textPaddingLeft?: number;
-  iconName: any;
+  paddingLeft?: number;
+  paddingRight?: number;
+  IconSVG?: React.FC<SvgProps>;
   iconSize?: number;
   iconColor?: string;
   disabledTrigger?: boolean;
@@ -33,8 +34,9 @@ const ButtonWideWithIcon: React.FC<ButtonWideWithIconProps> = ({
   fontSize = defaultFontSize.large,
   text,
   textColor = colors.primary,
-  textPaddingLeft = 10,
-  iconName,
+  paddingLeft = 0,
+  paddingRight = 0,
+  IconSVG,
   iconSize = 24,
   iconColor = "black",
   disabledTrigger = false,
@@ -53,17 +55,21 @@ const ButtonWideWithIcon: React.FC<ButtonWideWithIconProps> = ({
           borderColor: border ? borderColor : "transparent",
           borderWidth: border ? 1 : 0,
           opacity: disabledTrigger ? 0.6 : 1,
+          paddingLeft: paddingLeft,
+          paddingRight: paddingRight,
         },
       ]}
     >
-      <FontAwesome name={iconName} size={iconSize} color={iconColor} />
+      {IconSVG && (
+        <IconSVG width={iconSize} height={iconSize} fill={iconColor} />
+      )}
       <Text
         style={[
           {
             fontFamily,
             fontSize,
             color: textColor,
-            paddingLeft: textPaddingLeft,
+            paddingLeft: 10,
           },
         ]}
       >
@@ -78,7 +84,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: defaultStyles.padding,
     width: "100%",
     height: 50,
     borderRadius: defaultStyles.rounding,

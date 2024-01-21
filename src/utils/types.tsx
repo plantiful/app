@@ -1,5 +1,5 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import {Plant} from '../screens/PlantContext';
+import { Plant } from "../screens/PlantContext";
 
 export type BottomTabParamList = {
   Home: undefined;
@@ -65,10 +65,10 @@ export type HomeStackParamList = {
   LanguageSettings: undefined;
   ThemeSettings: undefined;
 };
-export type  PlantsScreenParamList = {
+export type PlantsScreenParamList = {
   PlantsScreen: undefined;
   PlantDetailScreen: { plant: Plant };
-}
+};
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
 
@@ -92,16 +92,6 @@ type SettingsScreenNavigationProp = StackNavigationProp<
 
 export type SettingsScreenProps = {
   navigation: SettingsScreenNavigationProp;
-  onAuthChange: (status: boolean) => void;
-};
-
-type PlantScrenNavigationProp = StackNavigationProp<
-  PlantsScreenParamList,
-  "PlantDetailScreen"
->;
-
-export type PlantScreenProps = {
-  navigation: PlantScrenNavigationProp;
   onAuthChange: (status: boolean) => void;
 };
 
@@ -149,4 +139,14 @@ type LanguageSettingsScreenNavigationProp = StackNavigationProp<
 
 export type LanguageSettingsScreenProps = {
   navigation: LanguageSettingsScreenNavigationProp;
+};
+
+type PlantScrenNavigationProp = StackNavigationProp<
+  PlantsScreenParamList,
+  "PlantDetailScreen"
+>;
+
+export type PlantScreenProps = {
+  navigation: PlantScrenNavigationProp;
+  onAuthChange: (status: boolean) => void;
 };

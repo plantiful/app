@@ -45,7 +45,7 @@ yarn add <package-name>
 - [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
-- [ ] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
+- [x] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
 - [ ] Add terms and privacy policy links on sign up screen - [docs](https://docs.expo.dev/versions/latest/sdk/webview/) - we dont have them yet
 - [ ] ** Add plant recognition results into variables, more info directly in code **
   - `common (vernacular) name`
@@ -75,3 +75,4 @@ yarn add <package-name>
 - [ ] Add edit profile functionality - change name and profile picture
 - [ ] Add settings for notifications
 - [ ] Add calendar widget on home screen? - [dribbble](https://dribbble.com/shots/11360445-Plant-care-app/attachments/2972899?mode=media)
+  - Add progress indicator on home screen

@@ -138,7 +138,7 @@ export const ScanScreen = () => {
       const config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: "https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods",
+        url: "https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods ",
         headers: {
           "Content-Type": "application/json",
           "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
@@ -157,7 +157,7 @@ export const ScanScreen = () => {
         Alert.alert("No plant identified");
       } else {
         if (suggestions && suggestions.length > 0) {
-          suggestions.forEach((suggestion, index) => {
+          suggestions.forEach((suggestion: any, index: number) => {
             console.log(`Suggestion ${index + 1}:`, suggestion);
           });
 
@@ -176,7 +176,6 @@ export const ScanScreen = () => {
           const plantOrigin = "Not implemented.";
           const plantGrowthHabit = "Not implemented.";
           // leaving the variables as not implement, Valon can fix later
-
 
           let plantWateringMin = "Not available.";
           let plantWateringMax = "Not available.";

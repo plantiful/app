@@ -28,6 +28,11 @@ import ButtonWideWithIcon from "../components/ButtonWideWithIcon";
 import ButtonWide from "../components/ButtonWide";
 import ButtonBack from "../components/ButtonBack";
 
+// Icons
+import Apple from "../../assets/images/AuthScreen/Apple.svg";
+import Google from "../../assets/images/AuthScreen/Google.svg";
+import Facebook from "../../assets/images/AuthScreen/Facebook.svg";
+
 export const SignInScreen: React.FC<SignInScreenProps> = ({
   navigation,
   onAuthChange,
@@ -147,7 +152,8 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
               <ButtonWideWithIcon
                 border={true}
                 text={t("google_sign_in_button")}
-                iconName="google"
+                IconSVG={Google}
+                iconSize={20}
                 disabledTrigger={true}
                 notImplemented={true}
               />
@@ -157,7 +163,9 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
               <ButtonWideWithIcon
                 border={true}
                 text={t("facebook_sign_in_button")}
-                iconName="facebook"
+                IconSVG={Facebook}
+                iconSize={20}
+                paddingLeft={20}
                 disabledTrigger={true}
                 notImplemented={true}
               />
@@ -167,7 +175,9 @@ export const SignInScreen: React.FC<SignInScreenProps> = ({
               <ButtonWideWithIcon
                 border={true}
                 text={t("apple_sign_in_button")}
-                iconName="apple"
+                IconSVG={Apple}
+                iconSize={20}
+                paddingRight={10}
                 disabledTrigger={true}
                 notImplemented={true}
               />
