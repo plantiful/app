@@ -44,7 +44,7 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
       imageUrl: "https://www.pokojovky.co/cdn/shop/products/XxDsKnCY_1391x1854.jpg?v=1667897784",
       watering: "100 ml per day",
       sunlight: "70% sunlight",
-      temperature: "23°C",
+      temperature: "23",
       origin: "Central America",
       family: "Araceae",
       growthHabit: "Climbing evergreen",

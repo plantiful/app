@@ -15,12 +15,16 @@ import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import { useFocusEffect } from "@react-navigation/native";
 import i18n from "../../assets/translations/i18n";
 
+import { useLanguage } from "../utils/LanguageContext";
+
 // Components
 import ButtonIcon from "../components/ButtonIcon";
 import ButtonWide from "../components/ButtonWide";
 
 export const ScanScreen = () => {
   const { t } = i18n;
+
+  const { language } = useLanguage();
 
   const [camera, setCamera] = useState(null);
   const [cameraPermission, setCameraPermission] = useState(null);
@@ -138,7 +142,7 @@ export const ScanScreen = () => {
       const config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: "https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods ",
+        url: `https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods&language=${language}`,
         headers: {
           "Content-Type": "application/json",
           "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
@@ -195,7 +199,7 @@ export const ScanScreen = () => {
           };
 
           if (topSuggestion.details.watering !== null) {
-            //plantWatering = topSuggestion.details.watering;
+            plantWatering = topSuggestion.details.watering['max'];
             //plantWateringMin = topSuggestion.details.watering.min;
             //plantWateringMax = topSuggestion.details.watering.max;
           }

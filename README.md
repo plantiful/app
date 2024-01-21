@@ -54,7 +54,7 @@ yarn add <package-name>
   - `watering recommendations`
   - `representative photos`
   - ... (more info [here](https://documenter.getpostman.com/view/24599534/2s93z5A4v2) or [in this response body](https://www.postman.com/winter-shadow-932363/workspace/kindwise/example/24599534-6b255bc8-d037-49a3-852e-82ca9cf00041))
-  - [ ] Add language parameter to plant recognition request (`i18n.language`)
+  - [x] Add language parameter to plant recognition request (`i18n.language`)
 - [x] Fix input reference on sign in and sign up screen
 - [x] Add auth state persistence - [docs](https://docs.expo.dev/versions/latest/sdk/securestore/) or react-native-async-storage - [docs](https://react-native-async-storage.github.io/async-storage/docs/install)
 - [x] Add translations (use `en` as a template)
