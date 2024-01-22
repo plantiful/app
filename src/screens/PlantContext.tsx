@@ -45,9 +45,9 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
       watering: "100 ml per day",
       sunlight: "70% sunlight",
       temperature: "23",
-      origin: "Central America",
-      family: "Araceae",
-      growthHabit: "Climbing evergreen",
+      origin: "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
+      family: "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
+      growthHabit: "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
     },
   ]);
 

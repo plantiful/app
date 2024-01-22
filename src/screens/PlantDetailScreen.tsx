@@ -45,6 +45,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
         <View style={styles.detailsContainer}>
           <View style={styles.line}></View>
           <Text style={styles.name}>{plant.name}</Text>
+          <Text style={styles.scientificName}>{plant.name}</Text>
           <ScrollView
             horizontal
             style={styles.infoSection}
@@ -109,19 +110,26 @@ const styles = StyleSheet.create({
   },
   line: {
     alignSelf: 'center',
-    width: '40%',
+    width: '30%',
     height: 3,
-    backgroundColor: 'grey',
+    backgroundColor: '#E3E3E3',
   },
   name: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '500',
     color: '#000',
-    marginBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D3D3D3',
-    paddingBottom: 8,
     paddingTop: 8,
+  },
+  scientificName: {
+    fontFamily: 'OpenSans-Regular',
+    fontStyle: 'italic',
+    fontSize: 18,
+    fontWeight: '100',
+    color: '#E3E3E3', // Set your desired color
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#E3E3E3',
+    paddingBottom: 8,
+    marginBottom: 8,
   },
   infoSection: {
     flexDirection: 'row',
@@ -142,14 +150,18 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: '400',
     color: '#000',
-    marginTop: 24,
+    marginTop: 10,
+    marginBottom: 10,
   },
   text: {
-    fontSize: 18,
+    fontSize: 16,
+    fontFamily: 'OpenSans-Regular',
     color: '#000',
-    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E3E3E3',
+    paddingBottom: 10,
   },
 });
 
