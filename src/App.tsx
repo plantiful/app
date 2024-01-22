@@ -228,12 +228,12 @@ export const App = () => {
         <NavigationContainer>
           <StatusBar style="dark" />
           <BottomTab.Navigator
-            initialRouteName="Home"
+            initialRouteName="Homea"
             screenOptions={({ route }) => ({
               tabBarIcon: ({ color }) => {
                 let iconName: any;
 
-                if (route.name === "Home") {
+                if (route.name === "Homea") {
                   iconName = "home-outline";
                 } else if (route.name === "Scan") {
                   iconName = "scan";
@@ -249,7 +249,7 @@ export const App = () => {
             })}
           >
             <BottomTab.Screen
-              name="Home"
+              name="Homea"
               options={{ headerShown: false }}
               component={HomeStackNavigator}
             />
