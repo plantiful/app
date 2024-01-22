@@ -145,7 +145,7 @@ export const ScanScreen = () => {
         url: `https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods&language=${language}`,
         headers: {
           "Content-Type": "application/json",
-          "Api-Key": "qaWgnZVMw5FqXSgo7sdTWsWD6PCLuSs62JIHjEXmEq1TqxhLt8",
+          "Api-Key": "3ZMZIOX4tONgD1hL5lsHtYv22LlAuExACIAVkpHHZOBby4qzRw",
         },
         data: data,
       };
@@ -179,6 +179,7 @@ export const ScanScreen = () => {
           const plantTemperature = "Not implemented.";
           const plantOrigin = "Not implemented.";
           const plantGrowthHabit = "Not implemented.";
+          const lastWatered = 0;
           // leaving the variables as not implement, Valon can fix later
 
           let plantWateringMin = "Not available.";
@@ -192,6 +193,7 @@ export const ScanScreen = () => {
             description: plantDescription,
             imageUrl: topSuggestion.similar_images[0].url,
             watering: plantWatering,
+            lastWatered: lastWatered,
             sunlight: plantSunlight,
             temperature: plantTemperature,
             origin: plantOrigin,
