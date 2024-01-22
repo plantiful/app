@@ -202,7 +202,7 @@ export const ScanScreen = () => {
           };
 
           if (topSuggestion.details.watering !== null) {
-            plantWatering = topSuggestion.details.watering['max'];
+            plantWatering = topSuggestion.details.watering["max"];
             //plantWateringMin = topSuggestion.details.watering.min;
             //plantWateringMax = topSuggestion.details.watering.max;
           }
@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: "row",
     paddingHorizontal: defaultStyles.padding,
+    // marginBottom: defaultStyles.padding,
   },
   text: {
     textAlign: "center",

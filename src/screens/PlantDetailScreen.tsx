@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { View, Text, Animated, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { Plant } from "./PlantContext";
 
@@ -20,7 +20,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 100],
     outputRange: [400, 200],
-    extrapolate: 'clamp',
+    extrapolate: "clamp",
   });
 
   return (
@@ -85,10 +85,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   image: {
-    width: '100%',
+    width: "100%",
     // height is now dynamic and controlled by animation
   },
 
@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
     padding: 16,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     marginTop: -20,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -109,58 +109,58 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   line: {
-    alignSelf: 'center',
-    width: '30%',
+    alignSelf: "center",
+    width: "30%",
     height: 3,
-    backgroundColor: '#E3E3E3',
+    backgroundColor: "#E3E3E3",
   },
   name: {
     fontSize: 24,
-    fontWeight: '500',
-    color: '#000',
+    fontWeight: "500",
+    color: "#000",
     paddingTop: 8,
   },
   scientificName: {
-    fontFamily: 'OpenSans-Regular',
-    fontStyle: 'italic',
+    fontFamily: "OpenSans-Regular",
+    fontStyle: "italic",
     fontSize: 18,
-    fontWeight: '100',
-    color: '#E3E3E3', // Set your desired color
+    fontWeight: "100",
+    color: "#E3E3E3", // Set your desired color
     borderBottomWidth: 1.5,
-    borderBottomColor: '#E3E3E3',
+    borderBottomColor: "#E3E3E3",
     paddingBottom: 8,
     marginBottom: 8,
   },
   infoSection: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 16,
   },
   iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
     borderRadius: 20,
     padding: 8,
     marginRight: 8,
   },
   infoText: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
     marginLeft: 4,
   },
   header: {
     fontSize: 22,
-    fontWeight: '400',
-    color: '#000',
+    fontWeight: "400",
+    color: "#000",
     marginTop: 10,
     marginBottom: 10,
   },
   text: {
     fontSize: 16,
-    fontFamily: 'OpenSans-Regular',
-    color: '#000',
+    fontFamily: "OpenSans-Regular",
+    color: "#000",
     borderBottomWidth: 1,
-    borderBottomColor: '#E3E3E3',
+    borderBottomColor: "#E3E3E3",
     paddingBottom: 10,
   },
 });

@@ -2,7 +2,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Plant } from "../screens/PlantContext";
 
 export type BottomTabParamList = {
-  Home: undefined;
+  Homea: undefined;
   Scan: undefined;
   Plants: undefined;
 };
