@@ -40,7 +40,7 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
     {
       id: 1,
       name: "Monstera Deliciosa",
-      description: "A description for Monstera Deliciosa...",
+      description: "Dříve nutný itinerář úřadů, dnes královna pokojovek. Je velmi nenáročná na pěstování a při správné péči se vám odmění typicky vyříznutými okrasnými listy, které během několika let dosáhnou opravdu monstrózních rozměrů.",
       imageUrl: "https://www.pokojovky.co/cdn/shop/products/XxDsKnCY_1391x1854.jpg?v=1667897784",
       watering: "100 ml per day",
       sunlight: "70% sunlight",

@@ -18,7 +18,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const headerHeight = scrollY.interpolate({
-    inputRange: [0, 200],
+    inputRange: [0, 100],
     outputRange: [400, 200], // Adjust the output range to control the speed of the parallax effect
     extrapolate: 'clamp',
   });
@@ -31,13 +31,19 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
           [{ nativeEvent: { contentOffset: { y: scrollY } } }],
           { useNativeDriver: false }
         )}
-        scrollEventThrottle={16}
+        scrollEventThrottle={8}
+        overScrollMode="always" // Added to allow the scroll to go a bit over and then bounce back
+        decelerationRate="fast"
+        alwaysBounceHorizontal={false}
+        alwaysBounceVertical={false}
+        bounces={false} // Adjusts how quickly the scroll slows down
       >
         <Animated.Image
           source={{ uri: plant.imageUrl }}
           style={[styles.image, { height: headerHeight }]}
         />
         <View style={styles.detailsContainer}>
+          <View style={styles.line}></View>
           <Text style={styles.name}>{plant.name}</Text>
           <View style={styles.infoSection}>
             <View style={styles.iconContainer}>
@@ -62,6 +68,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
           <Text style={styles.header}>Description</Text>
           <Text style={styles.text}>{plant.description}</Text>
         </View>
+        <View style={{ height: 50 }} />
       </Animated.ScrollView>
     </SafeAreaView>
   );
@@ -95,7 +102,12 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-
+  line: {
+    alignSelf: 'center',
+    width: '40%', // Adjust the width as needed
+    height: 3, // Adjust the height to control the thickness of the line
+    backgroundColor: 'grey', // Adjust the color of the line
+  },
   name: {
     fontSize: 28,
     fontWeight: 'bold',
@@ -104,6 +116,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, // This adds the line below the text
     borderBottomColor: '#D3D3D3', // This sets the line color to grey
     paddingBottom: 8, // This adds some space between the text and the line
+    paddingTop: 8, // This adds some space between the text and the line
   },
   infoSection: {
     flexDirection: 'row',
