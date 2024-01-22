@@ -187,7 +187,8 @@ export const ScanScreen = () => {
 
           const plantData: Plant = {
             id: Math.floor(Math.random() * 1000000),
-            name: plantName,
+            commonName: plantName,
+            scientificName: plantGenus,
             description: plantDescription,
             imageUrl: topSuggestion.similar_images[0].url,
             watering: plantWatering,

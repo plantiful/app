@@ -44,8 +44,8 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
         />
         <View style={styles.detailsContainer}>
           <View style={styles.line}></View>
-          <Text style={styles.name}>{plant.name}</Text>
-          <Text style={styles.scientificName}>{plant.name}</Text>
+          <Text style={styles.name}>{plant.commonName}</Text>
+          <Text style={styles.scientificName}>{plant.scientificName}</Text>
           <ScrollView
             horizontal
             style={styles.infoSection}

@@ -22,7 +22,7 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
       style={styles.plantItem}
       onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
     >
-      <Text style={styles.text}>{item.name}</Text>
+      <Text style={styles.text}>{item.commonName}</Text>
     </TouchableOpacity>
   );
 
