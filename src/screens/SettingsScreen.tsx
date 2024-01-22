@@ -217,7 +217,6 @@ const styles = StyleSheet.create({
     paddingTop: defaultStyles.padding,
   },
   cathegoryContainer: {
-    backgroundColor: "#FaFaFa",
     marginBottom: defaultStyles.padding,
     paddingHorizontal: defaultStyles.padding,
   },

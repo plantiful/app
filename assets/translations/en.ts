@@ -87,8 +87,28 @@ export default {
   forgot_password_success_button: "Continue to Sign In",
 
   // HomeScreen
-  HomeScreen_email_confirmation_title: "Email Confirmation Required",
-  HomeScreen_email_confirmation_text: "Please confirm your email address.",
+  HomeScreen_search_bar_placeholder: "Search plants...",
+
+  HomeScreen_search_settings_watering_needs: "Watering Needs",
+  HomeScreen_search_settings_watering_needs_low: "Low",
+  HomeScreen_search_settings_watering_needs_medium: "Medium",
+  HomeScreen_search_settings_watering_needs_high: "High",
+
+  HomeScreen_search_settings_size: "Size",
+  HomeScreen_search_settings_size_small: "Small",
+  HomeScreen_search_settings_size_medium: "Medium",
+  HomeScreen_search_settings_size_large: "Large",
+
+  HomeScreen_search_settings_maintenance: "Maintenance",
+  HomeScreen_search_settings_maintenance_easy: "Easy",
+  HomeScreen_search_settings_maintenance_moderate: "Moderate",
+  HomeScreen_search_settings_maintenance_hard: "Hard",
+
+  HomeScreen_search_settings_special: "Special",
+  HomeScreen_search_settings_special_pet_friendly: "Pet Friendly",
+  HomeScreen_search_settings_special_air_purifying: "Air Purifying",
+
+  HomeScreen_search_settings_apply_filters: "Apply Filters",
 
   // ProfileScreen
   ProfileScreen_edit_profile_button_text: "Edit Profile",

@@ -8,6 +8,7 @@ import {
   Keyboard,
   Modal,
   ScrollView,
+  Animated,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -25,6 +26,9 @@ import { useLanguage } from "../utils/LanguageContext";
 import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import Checkbox from "expo-checkbox";
+import ButtonWide from "../components/ButtonWide";
+import { AnimatedCircularProgress } from "react-native-circular-progress";
+import Svg, { Circle } from "react-native-svg";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const searchInputRef = useRef<TextInput>(null!);
@@ -32,19 +36,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const [showSearchSettings, setShowSearchSettings] = useState(false);
 
-  const [plantType, setPlantType] = useState({
-    Annual: false,
-    Perennial: false,
-    Succulent: false,
-    Cactus: false,
-  });
-  const [growthHabit, setGrowthHabit] = useState({
-    Tree: false,
-    Shrub: false,
-    Vine: false,
-    Groundcover: false,
-    Grass: false,
-  });
   const [wateringNeeds, setWateringNeeds] = useState({
     Low: false,
     Medium: false,
@@ -54,7 +45,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     Small: false, // up to 1 ft
     Medium: false, // 1-3 ft
     Large: false, // 3-6 ft
-    ExtraLarge: false, // 6+ ft
   });
   const [maintenance, setMaintenance] = useState({
     LowMaintenance: false,
@@ -68,11 +58,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const renderCheckboxes = (category, state, setState) => {
     return Object.keys(category).map((key) => (
-      <View key={key} style={styles.searchSettingsCheckboxContainer}>
-        <Text style={styles.searchSettingsCheckboxLabel}>
+      <View key={key} style={styles.searchSettingsModalCheckboxContainer}>
+        <Text style={styles.searchSettingsModalCheckboxLabel}>
           {key.replace(/([A-Z])/g, " $1").trim()}
         </Text>
         <Checkbox
+          style={styles.searchSettingsModalCheckbox}
           color={state[key] ? colors.primary : undefined}
           value={state[key]}
           onValueChange={() => setState({ ...state, [key]: !state[key] })}
@@ -84,16 +75,26 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+
+  const [progress, setProgress] = useState(new Animated.Value(0));
+
   const { language } = useLanguage();
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const { t } = i18n;
 
   useEffect(() => {
+    // checkEmailVerification();
+
+    Animated.timing(progress, {
+      toValue: 75,
+      duration: 2000,
+      useNativeDriver: false,
+    }).start();
+
     setCurrentLanguage(language);
     i18n.changeLanguage(language);
   }, [language]);
-
-  const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
 
   const checkEmailVerification = () => {
     const user = auth.currentUser;
@@ -101,10 +102,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       setShowEmailConfirmation(true);
     }
   };
-
-  useEffect(() => {
-    // checkEmailVerification();
-  }, []);
 
   const navigateToSettings = () => {
     navigation.navigate("Settings");
@@ -118,8 +115,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.container}>
         <ModalConfirm
-          title={t("HomeScreen_email_confirmation_title")}
-          text={t("HomeScreen_email_confirmation_text")}
+          title={t("warning_email_not_verified_title")}
+          text={t("warning_email_not_verified_text")}
           buttonText={t("okay")}
           isVisible={showEmailConfirmation}
           onClose={() => setShowEmailConfirmation(false)}
@@ -137,7 +134,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <View style={styles.searchRect}>
             <Ionicons name="search-outline" size={24} color="black" />
             <TextInput
-              placeholder="Search plants"
+              placeholder={t("HomeScreen_search_bar_placeholder")}
               placeholderTextColor={colors.textGrey}
               keyboardType="default"
               returnKeyType="search"
@@ -152,8 +149,32 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             style={styles.searchSettingsRect}
             onPress={toggleSearchSettings}
           >
-            <Ionicons name="options-outline" size={24} color="black" />
+            <ButtonIcon
+              backgroundColor="transparent"
+              iconSet="Ionicons"
+              iconName="options-outline"
+              iconSize={24}
+              onPress={toggleSearchSettings}
+            />
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.progressBar}>
+          <AnimatedCircularProgress
+            backgroundColor="#F5F5F5"
+            size={200}
+            width={10}
+            fill={50}
+            tintColor={colors.primary}
+            lineCap="round"
+            // onAnimationComplete={() => console.log("onAnimationComplete")}
+          >
+            {(fill) => (
+              <Text style={styles.progressBarText}>
+                {Math.round(fill)}%{"\n"}done
+              </Text>
+            )}
+          </AnimatedCircularProgress>
         </View>
 
         <Modal
@@ -166,36 +187,38 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <View style={styles.searchSettingsModalOverlay}>
               <TouchableWithoutFeedback>
                 <View style={styles.searchSettingsModalContainer}>
-                  <Text
-                    style={{
-                      fontFamily: fonts.medium,
-                      fontSize: 30,
-                      color: colors.primary,
-                      paddingBottom: 5,
-                    }}
-                  >
-                    Filters
-                  </Text>
+                  <ScrollView>
+                    <Text style={styles.searchSettingsModalFilterTitle}>
+                      {t("HomeScreen_search_settings_watering_needs")}
+                    </Text>
+                    {renderCheckboxes(
+                      wateringNeeds,
+                      wateringNeeds,
+                      setWateringNeeds
+                    )}
 
-                  <Text style={styles.searchSettingsFilterTitle}>
-                    Watering Needs
-                  </Text>
-                  {renderCheckboxes(
-                    wateringNeeds,
-                    wateringNeeds,
-                    setWateringNeeds
-                  )}
+                    <Text style={styles.searchSettingsModalFilterTitle}>
+                      {t("HomeScreen_search_settings_size")}
+                    </Text>
+                    {renderCheckboxes(size, size, setSize)}
 
-                  <Text style={styles.searchSettingsFilterTitle}>Size</Text>
-                  {renderCheckboxes(size, size, setSize)}
+                    <Text style={styles.searchSettingsModalFilterTitle}>
+                      {t("HomeScreen_search_settings_maintenance")}
+                    </Text>
+                    {renderCheckboxes(maintenance, maintenance, setMaintenance)}
 
-                  <Text style={styles.searchSettingsFilterTitle}>
-                    Maintenance
-                  </Text>
-                  {renderCheckboxes(maintenance, maintenance, setMaintenance)}
+                    <Text style={styles.searchSettingsModalFilterTitle}>
+                      {t("HomeScreen_search_settings_special")}
+                    </Text>
+                    {renderCheckboxes(special, special, setSpecial)}
 
-                  <Text style={styles.searchSettingsFilterTitle}>Special</Text>
-                  {renderCheckboxes(special, special, setSpecial)}
+                    <View style={{ height: defaultStyles.padding }} />
+
+                    <ButtonWide
+                      text={t("HomeScreen_search_settings_apply_filters")}
+                      onPress={toggleSearchSettings}
+                    />
+                  </ScrollView>
                 </View>
               </TouchableWithoutFeedback>
             </View>
@@ -234,67 +257,70 @@ const styles = StyleSheet.create({
   searchRect: {
     flexDirection: "row",
     alignItems: "center",
-    width: "82%",
+    width: "80%",
     height: 60,
     borderRadius: defaultStyles.rounding,
     paddingHorizontal: defaultStyles.padding,
     fontFamily: fonts.regular,
     fontSize: fontSize.medium,
-    backgroundColor: "#EBEBEB",
+    backgroundColor: "#F5F5F5",
   },
   searchInput: {
     flex: 1,
     fontFamily: fonts.regular,
     fontSize: fontSize.medium,
     color: colors.textBlack,
-    paddingHorizontal: defaultStyles.padding / 2,
-    width: "80%",
-    height: "100%",
+    paddingHorizontal: defaultStyles.padding,
   },
   searchSettingsRect: {
     justifyContent: "center",
-    alignItems: "center",
-    width: "15%",
     height: 60,
-    backgroundColor: "#EBEBEB",
+    backgroundColor: "#F5F5F5",
     borderRadius: defaultStyles.rounding,
   },
   searchSettingsModalOverlay: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
+    paddingHorizontal: defaultStyles.padding,
   },
   searchSettingsModalContainer: {
     backgroundColor: colors.background,
     padding: defaultStyles.padding,
     borderRadius: defaultStyles.rounding,
-    margin: 20,
-    width: "90%",
-    maxHeight: "80%",
+    width: "100%",
   },
-  searchSettingsFilterTitle: {
-    fontFamily: fonts.semiBold,
+  searchSettingsModalFilterTitle: {
+    fontFamily: fonts.bold,
     fontSize: fontSize.largePlus,
     color: colors.textGrey,
-    paddingBottom: 5,
+    paddingVertical: 5,
   },
-  searchSettingsCheckboxContainer: {
+  searchSettingsModalCheckboxContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: 5,
-    paddingRight: defaultStyles.padding,
   },
-  searchSettingsCheckboxLabel: {
+  searchSettingsModalCheckboxLabel: {
     fontFamily: fonts.medium,
     fontSize: fontSize.large,
     color: colors.textGrey,
   },
-  searchSettingsCheckbox: {
-    width: 36,
-    height: 36,
+  searchSettingsModalCheckbox: {
+    width: 24,
+    height: 24,
     borderColor: colors.primary,
+    marginVertical: 2,
+  },
+  progressBar: {
+    paddingTop: defaultStyles.padding * 2,
+    alignItems: "center",
+  },
+  progressBarText: {
+    textAlign: "center",
+    fontFamily: fonts.medium,
+    fontSize: 40,
+    color: colors.primary,
   },
 });
 

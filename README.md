@@ -2,6 +2,8 @@
 
 [Expo Documentation](https://docs.expo.dev/)
 
+### [Useful](https://reactnativeexample.com/)
+
 ## Setup
 
 ```sh
@@ -42,7 +44,6 @@ yarn add <package-name>
 - [ ] FInish PlantDetailScreen
 - [x] Create template PlantDetailScreen design with all the info
 - [x] Link PlantScreen and PlantDetailScreen together
-- [ ] Add dark mode support - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
 - [x] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
@@ -68,11 +69,14 @@ yarn add <package-name>
     - [x] change password
     - [x] delete account
   - App
+    - [ ] notifications - use [switch][https://reactnative.dev/docs/switch] component
+      - Watering
+      - ... (more to come)
     - [x] change language
-    - [ ] change theme
+    - [ ] change theme - [docs](https://docs.expo.dev/develop/user-interface/color-themes/)
     - [ ] change units
   - [x] logout
 - [ ] Add edit profile functionality - change name and profile picture
-- [ ] Add settings for notifications
-- [ ] Add calendar widget on home screen? - [dribbble](https://dribbble.com/shots/11360445-Plant-care-app/attachments/2972899?mode=media)
-  - Add progress indicator on home screen
+- [ ] Add calendar widget on home screen? - [dribbble](https://dribbble.com/shots/11360445-Plant-care-app/attachments/2972899?mode=media), [react-native-calendars](https://github.com/wix/react-native-calendars)
+  - [x] Add progress indicator on home screen
+- [ ] Change checkbox rendering on the home screen in search settings to be able to use translations
