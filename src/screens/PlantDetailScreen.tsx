@@ -19,7 +19,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
 
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 100],
-    outputRange: [400, 200], // Adjust the output range to control the speed of the parallax effect
+    outputRange: [400, 200],
     extrapolate: 'clamp',
   });
 
@@ -32,11 +32,11 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
           { useNativeDriver: false }
         )}
         scrollEventThrottle={8}
-        overScrollMode="always" // Added to allow the scroll to go a bit over and then bounce back
+        overScrollMode="always"
         decelerationRate="fast"
         alwaysBounceHorizontal={false}
         alwaysBounceVertical={false}
-        bounces={false} // Adjusts how quickly the scroll slows down
+        bounces={false}
       >
         <Animated.Image
           source={{ uri: plant.imageUrl }}
@@ -45,7 +45,11 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
         <View style={styles.detailsContainer}>
           <View style={styles.line}></View>
           <Text style={styles.name}>{plant.name}</Text>
-          <View style={styles.infoSection}>
+          <ScrollView
+            horizontal
+            style={styles.infoSection}
+            showsHorizontalScrollIndicator={false}
+          >
             <View style={styles.iconContainer}>
               <Icon name="water" size={24} color="#000" />
               <Text style={styles.infoText}>{plant.watering}</Text>
@@ -58,7 +62,8 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
               <Icon name="thermometer" size={24} color="#000" />
               <Text style={styles.infoText}>{`${plant.temperature}°C`}</Text>
             </View>
-          </View>
+            {/* Add more items as needed */}
+          </ScrollView>
           <Text style={styles.header}>Origin</Text>
           <Text style={styles.text}>{plant.origin}</Text>
           <Text style={styles.header}>Plant Family</Text>
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     backgroundColor: '#fff',
-    marginTop: -20, // Adjust this value as needed to create the desired effect
+    marginTop: -20,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {
@@ -104,32 +109,31 @@ const styles = StyleSheet.create({
   },
   line: {
     alignSelf: 'center',
-    width: '40%', // Adjust the width as needed
-    height: 3, // Adjust the height to control the thickness of the line
-    backgroundColor: 'grey', // Adjust the color of the line
+    width: '40%',
+    height: 3,
+    backgroundColor: 'grey',
   },
   name: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#000',
     marginBottom: 8,
-    borderBottomWidth: 1, // This adds the line below the text
-    borderBottomColor: '#D3D3D3', // This sets the line color to grey
-    paddingBottom: 8, // This adds some space between the text and the line
-    paddingTop: 8, // This adds some space between the text and the line
+    borderBottomWidth: 1,
+    borderBottomColor: '#D3D3D3',
+    paddingBottom: 8,
+    paddingTop: 8,
   },
   infoSection: {
     flexDirection: 'row',
-    justifyContent: 'flex-start', // Aligned to the left
     marginBottom: 16,
   },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0', // Soft background color for icons
-    borderRadius: 20, // Rounded corners for icons
-    padding: 8, // Padding inside the icon containers
-    marginRight: 8, // Space between icon containers
+    backgroundColor: '#f0f0f0',
+    borderRadius: 20,
+    padding: 8,
+    marginRight: 8,
   },
   infoText: {
     fontSize: 16,
@@ -137,15 +141,15 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   header: {
-    fontSize: 22, // Larger font size for headers
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#000',
     marginTop: 24,
   },
   text: {
-    fontSize: 18, // Larger font size for text
+    fontSize: 18,
     color: '#000',
-    marginBottom: 8, // Space after text
+    marginBottom: 8,
   },
 });
 
