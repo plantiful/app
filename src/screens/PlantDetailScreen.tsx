@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Animated } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useRef } from "react";
+import { View, Text, Animated, StyleSheet, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { BlurView } from '@react-native-community/blur';
 
-import { Plant } from './PlantContext'; // Import the Plant type
+import { Plant } from "./PlantContext";
 
 interface PlantDetailScreenProps {
   route: {
@@ -16,22 +15,28 @@ interface PlantDetailScreenProps {
 
 const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
   const { plant } = route.params;
-  const [blurRadius, setBlurRadius] = useState(0);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
-  const handleScroll = (event) => {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    const newBlurRadius = Math.min(10, scrollY / 50);
-    setBlurRadius(newBlurRadius);
-  };
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [400, 200], // Adjust the output range to control the speed of the parallax effect
+    extrapolate: 'clamp',
+  });
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
+      <Animated.ScrollView
         style={styles.scrollView}
-        onScroll={handleScroll}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
         scrollEventThrottle={16}
       >
-        <View style={styles.spacer} />
+        <Animated.Image
+          source={{ uri: plant.imageUrl }}
+          style={[styles.image, { height: headerHeight }]}
+        />
         <View style={styles.detailsContainer}>
           <Text style={styles.name}>{plant.name}</Text>
           <View style={styles.infoSection}>
@@ -57,20 +62,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
           <Text style={styles.header}>Description</Text>
           <Text style={styles.text}>{plant.description}</Text>
         </View>
-      </ScrollView>
-      <Image 
-        source={{ uri: plant.imageUrl }} 
-        style={styles.image} 
-      />
-      <Animated.View 
-        style={[styles.blurView, { opacity: blurRadius / 10 }]}
-      >
-        <BlurView
-          style={styles.absolute}
-          blurType="light"
-          blurAmount={blurRadius}
-        />
-      </Animated.View>
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 };
@@ -83,21 +75,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   image: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 400,
     width: '100%',
+    // height is now dynamic and controlled by animation
   },
-  spacer: {
-    height: 400,
-  },
+
   detailsContainer: {
     padding: 16,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     backgroundColor: '#fff',
+    marginTop: -20, // Adjust this value as needed to create the desired effect
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {
@@ -108,27 +95,28 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
+
   name: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#000',
     marginBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D3D3D3',
-    paddingBottom: 8,
+    borderBottomWidth: 1, // This adds the line below the text
+    borderBottomColor: '#D3D3D3', // This sets the line color to grey
+    paddingBottom: 8, // This adds some space between the text and the line
   },
   infoSection: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-start', // Aligned to the left
     marginBottom: 16,
   },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 20,
-    padding: 8,
-    marginRight: 8,
+    backgroundColor: '#f0f0f0', // Soft background color for icons
+    borderRadius: 20, // Rounded corners for icons
+    padding: 8, // Padding inside the icon containers
+    marginRight: 8, // Space between icon containers
   },
   infoText: {
     fontSize: 16,
@@ -136,29 +124,15 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   header: {
-    fontSize: 22,
+    fontSize: 22, // Larger font size for headers
     fontWeight: 'bold',
     color: '#000',
     marginTop: 24,
   },
   text: {
-    fontSize: 18,
+    fontSize: 18, // Larger font size for text
     color: '#000',
-    marginBottom: 8,
-  },
-  blurView: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 400,
-  },
-  absolute: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
+    marginBottom: 8, // Space after text
   },
 });
 
