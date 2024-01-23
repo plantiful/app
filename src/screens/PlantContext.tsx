@@ -65,34 +65,46 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
       roomId: 1,
       commonName: "Monstera",
       scientificName: "Monstera Deliciosa",
-      description: "Dříve nutný itinerář úřadů, dnes královna pokojovek. Je velmi nenáročná na pěstování a při správné péči se vám odmění typicky vyříznutými okrasnými listy, které během několika let dosáhnou opravdu monstrózních rozměrů.",
-      imageUrl: "https://www.pokojovky.co/cdn/shop/products/XxDsKnCY_1391x1854.jpg?v=1667897784",
+      description:
+        "Dříve nutný itinerář úřadů, dnes královna pokojovek. Je velmi nenáročná na pěstování a při správné péči se vám odmění typicky vyříznutými okrasnými listy, které během několika let dosáhnou opravdu monstrózních rozměrů.",
+      imageUrl:
+        "https://www.pokojovky.co/cdn/shop/products/XxDsKnCY_1391x1854.jpg?v=1667897784",
       watering: "100 ml per day",
-      lastWatered : 2,
+      lastWatered: 2,
       sunlight: "70% sunlight",
       temperature: "23",
-      origin: "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
-      family: "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
-      growthHabit: "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
+      origin:
+        "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
+      family:
+        "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
+      growthHabit:
+        "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
     },
     {
       id: 2,
       roomId: 2,
       commonName: "Bird of paradise",
       scientificName: "Strelitzia nicolai",
-      description: "Kus pralesa u vás doma! Stěží najdete exotičtější pokojovku, než právě \"Bird of paradise\" se svými lesklými, rozložitými listy. V pokojových podmínkách může vyrůst až tři metry. Navíc je skvělou volbou pro začátečníky a umí čistit vzduch.",
-      imageUrl: "https://www.pokojovky.co/cdn/shop/products/ngqdQsp0_696x927.jpg?v=1670316319",
+      description:
+        'Kus pralesa u vás doma! Stěží najdete exotičtější pokojovku, než právě "Bird of paradise" se svými lesklými, rozložitými listy. V pokojových podmínkách může vyrůst až tři metry. Navíc je skvělou volbou pro začátečníky a umí čistit vzduch.',
+      imageUrl:
+        "https://www.pokojovky.co/cdn/shop/products/ngqdQsp0_696x927.jpg?v=1670316319",
       watering: "100 ml per day",
-      lastWatered : 7,
+      lastWatered: 7,
       sunlight: "85% sunlight",
       temperature: "18-25",
-      origin: "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
-      family: "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
-      growthHabit: "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
-    }
+      origin:
+        "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
+      family:
+        "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
+      growthHabit:
+        "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
+    },
   ]);
   const [rooms, setRooms] = useState<Room[]>(initialValue.rooms);
-  const [currentRoomIndex, setCurrentRoomIndex] = useState<number>(initialValue.currentRoomIndex);
+  const [currentRoomIndex, setCurrentRoomIndex] = useState<number>(
+    initialValue.currentRoomIndex
+  );
 
   const addPlant = (newPlant: Plant) => {
     setPlants((currentPlants) => [...currentPlants, newPlant]);
@@ -104,7 +116,16 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
 
   // The context provider will now pass down the rooms, currentRoomIndex, and its setter function
   return (
-    <PlantContext.Provider value={{ plants, rooms, currentRoomIndex, setCurrentRoomIndex, addPlant, addRoom }}>
+    <PlantContext.Provider
+      value={{
+        plants,
+        rooms,
+        currentRoomIndex,
+        setCurrentRoomIndex,
+        addPlant,
+        addRoom,
+      }}
+    >
       {children}
     </PlantContext.Provider>
   );

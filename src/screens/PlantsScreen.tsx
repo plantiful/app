@@ -13,7 +13,6 @@ import { colors, fonts, fontSize } from "../utils/colors";
 import { PlantScreenProps } from "../utils/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
 export const PlantsScreen: React.FC<PlantScreenProps> = ({
   navigation,
   onAuthChange,
@@ -29,8 +28,7 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
   const goToPreviousRoom = () => {
     if (currentRoomIndex > 0) {
       setCurrentRoomIndex(currentRoomIndex - 1);
-    }
-    else if (currentRoomIndex == 0) {
+    } else if (currentRoomIndex == 0) {
       setCurrentRoomIndex(rooms.length - 1);
     }
   };
@@ -38,15 +36,14 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
   const goToNextRoom = () => {
     if (currentRoomIndex < rooms.length - 1) {
       setCurrentRoomIndex(currentRoomIndex + 1);
-    }
-    else if (currentRoomIndex == rooms.length - 1) {
+    } else if (currentRoomIndex == rooms.length - 1) {
       setCurrentRoomIndex(0);
     }
   };
   const renderPlantItem = ({ item }) => (
     <TouchableOpacity
       style={styles.plantItem}
-      onPress={() => navigation.navigate('PlantDetailScreen', { plant: item })}
+      onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
     >
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
       <SafeAreaView style={styles.textContainer}>
@@ -64,11 +61,11 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.roomSelectorContainer}>
         <TouchableOpacity onPress={goToPreviousRoom}>
-          <Text style={styles.arrowText}>{'<'}</Text>
+          <Text style={styles.arrowText}>{"<"}</Text>
         </TouchableOpacity>
         <Text style={styles.roomNameText}>{rooms[currentRoomIndex].name}</Text>
         <TouchableOpacity onPress={goToNextRoom}>
-          <Text style={styles.arrowText}>{'>'}</Text>
+          <Text style={styles.arrowText}>{">"}</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -85,7 +82,7 @@ const styles = StyleSheet.create({
   supportText: {
     fontSize: fontSize.medium,
     fontFamily: fonts.medium,
-    color: 'red',
+    color: "red",
     // Set the height to be the font size plus any desired padding.
     // For example, if your font size is 16 and you want 8 points of padding on the top and bottom:
     height: fontSize.medium + 16, // Adjust this based on your actual font size and desired padding
@@ -98,15 +95,15 @@ const styles = StyleSheet.create({
   plantItem: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start', // align items to the start of the container
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start", // align items to the start of the container
     // other styles...
     marginVertical: 8,
     marginHorizontal: 16,
     minHeight: 120,
     padding: 16,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {
@@ -126,7 +123,7 @@ const styles = StyleSheet.create({
   textContainer: {
     flex: 1,
     paddingVertical: 0, // Adjust or remove padding if not needed
-    justifyContent: 'center', // This centers the text vertically in the container
+    justifyContent: "center", // This centers the text vertically in the container
   },
   text: {
     fontSize: fontSize.large,
@@ -139,15 +136,15 @@ const styles = StyleSheet.create({
     color: colors.textGrey,
   },
   roomSelectorContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 16, // Adjust as needed
   },
   roomNameText: {
     fontSize: fontSize.large, // Adjust as needed
     fontFamily: fonts.medium,
-    textAlign: 'center',
+    textAlign: "center",
   },
   arrowText: {
     fontSize: fontSize.large, // Adjust as needed

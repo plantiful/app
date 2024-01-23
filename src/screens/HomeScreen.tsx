@@ -189,6 +189,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 firstDay={1}
                 allowShadow={false}
                 onDayPress={onDaySelect}
+                date={selectedDate}
                 theme={{
                   todayTextColor: colors.primary,
                   selectedDayBackgroundColor: colors.primary,

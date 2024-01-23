@@ -129,144 +129,144 @@ export const App = () => {
     navigationProps: React.JSX.IntrinsicAttributes & LanguageSettingsScreenProps
   ) => <LanuageSetttingsScreen {...navigationProps} />;
 
-  // if (!loggedIn) {
-  //   return (
-  //     <NavigationContainer>
-  //       <StatusBar style="dark" />
-  //       <AuthStack.Navigator initialRouteName="Auth">
-  //         <AuthStack.Screen
-  //           name="Auth"
-  //           options={{ headerShown: false }}
-  //           component={AuthScreen}
-  //         />
-  //         <AuthStack.Screen
-  //           name="SignIn"
-  //           options={{ title: "SignIn", headerShown: false }}
-  //           component={SignInScreenWrapper}
-  //         />
-  //         <AuthStack.Screen
-  //           name="ForgotPassword"
-  //           options={{ title: "ForgotPassword", headerShown: false }}
-  //           component={ForgotPasswordScreenWrapper}
-  //         />
-  //         <AuthStack.Screen
-  //           name="SignUp"
-  //           options={{ title: "SignUp", headerShown: false }}
-  //           component={SignUpScreenWrapper}
-  //         />
-  //       </AuthStack.Navigator>
-  //     </NavigationContainer>
-  //   );
-  // } else {
-  const PlantStackNavigator = () => {
+  if (!loggedIn) {
     return (
-      <PlantStack.Navigator>
-        <PlantStack.Screen
-          name="PlantsScreen"
-          options={{ headerShown: false }}
-          component={PlantsScreen}
-        />
-        <PlantStack.Screen
-          name="PlantDetailScreen"
-          options={{ headerShown: false }}
-          component={PlantDetailScreen}
-        />
-      </PlantStack.Navigator>
+      <NavigationContainer>
+        <StatusBar style="dark" />
+        <AuthStack.Navigator initialRouteName="Auth">
+          <AuthStack.Screen
+            name="Auth"
+            options={{ headerShown: false }}
+            component={AuthScreen}
+          />
+          <AuthStack.Screen
+            name="SignIn"
+            options={{ title: "SignIn", headerShown: false }}
+            component={SignInScreenWrapper}
+          />
+          <AuthStack.Screen
+            name="ForgotPassword"
+            options={{ title: "ForgotPassword", headerShown: false }}
+            component={ForgotPasswordScreenWrapper}
+          />
+          <AuthStack.Screen
+            name="SignUp"
+            options={{ title: "SignUp", headerShown: false }}
+            component={SignUpScreenWrapper}
+          />
+        </AuthStack.Navigator>
+      </NavigationContainer>
     );
-  };
+  } else {
+    const PlantStackNavigator = () => {
+      return (
+        <PlantStack.Navigator>
+          <PlantStack.Screen
+            name="PlantsScreen"
+            options={{ headerShown: false }}
+            component={PlantsScreen}
+          />
+          <PlantStack.Screen
+            name="PlantDetailScreen"
+            options={{ headerShown: false }}
+            component={PlantDetailScreen}
+          />
+        </PlantStack.Navigator>
+      );
+    };
 
-  const HomeStackNavigator = () => {
+    const HomeStackNavigator = () => {
+      return (
+        <HomeStack.Navigator>
+          <HomeStack.Screen
+            name="Home"
+            options={{ headerShown: false }}
+            component={HomeScreen}
+          />
+          <HomeStack.Screen
+            name="Profile"
+            options={{ headerShown: false }}
+            component={ProfileScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="Settings"
+            options={{ headerShown: false }}
+            component={SettingsScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="ChangeName"
+            options={{ headerShown: false }}
+            component={ChangeNameScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="ChangeEmail"
+            options={{ headerShown: false }}
+            component={ChangeEmailScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="ChangePassword"
+            options={{ headerShown: false }}
+            component={ChangePasswordScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="NotificationSettings"
+            options={{ headerShown: false }}
+            component={NotificationSettingsScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="LanguageSettings"
+            options={{ headerShown: false }}
+            component={LanguageSettingsScreenWrapper}
+          />
+        </HomeStack.Navigator>
+      );
+    };
+
     return (
-      <HomeStack.Navigator>
-        <HomeStack.Screen
-          name="Home"
-          options={{ headerShown: false }}
-          component={HomeScreen}
-        />
-        <HomeStack.Screen
-          name="Profile"
-          options={{ headerShown: false }}
-          component={ProfileScreenWrapper}
-        />
-        <HomeStack.Screen
-          name="Settings"
-          options={{ headerShown: false }}
-          component={SettingsScreenWrapper}
-        />
-        <HomeStack.Screen
-          name="ChangeName"
-          options={{ headerShown: false }}
-          component={ChangeNameScreenWrapper}
-        />
-        <HomeStack.Screen
-          name="ChangeEmail"
-          options={{ headerShown: false }}
-          component={ChangeEmailScreenWrapper}
-        />
-        <HomeStack.Screen
-          name="ChangePassword"
-          options={{ headerShown: false }}
-          component={ChangePasswordScreenWrapper}
-        />
-        <HomeStack.Screen
-          name="NotificationSettings"
-          options={{ headerShown: false }}
-          component={NotificationSettingsScreenWrapper}
-        />
-        <HomeStack.Screen
-          name="LanguageSettings"
-          options={{ headerShown: false }}
-          component={LanguageSettingsScreenWrapper}
-        />
-      </HomeStack.Navigator>
+      <LanguageProvider>
+        <PlantProvider>
+          <NavigationContainer>
+            <StatusBar style="dark" />
+            <BottomTab.Navigator
+              initialRouteName="Homea"
+              screenOptions={({ route }) => ({
+                tabBarIcon: ({ color }) => {
+                  let iconName: any;
+
+                  if (route.name === "Homea") {
+                    iconName = "home-outline";
+                  } else if (route.name === "Scan") {
+                    iconName = "scan";
+                  } else if (route.name === "Plants") {
+                    iconName = "leaf-outline";
+                  }
+
+                  return <Ionicons name={iconName} size={30} color={color} />;
+                },
+                tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
+                tabBarActiveTintColor: "black",
+                tabBarInactiveTintColor: "#6A6A6A",
+              })}
+            >
+              <BottomTab.Screen
+                name="Homea"
+                options={{ headerShown: false }}
+                component={HomeStackNavigator}
+              />
+              <BottomTab.Screen
+                name="Scan"
+                options={{ headerShown: false }}
+                component={ScanScreen}
+              />
+              <BottomTab.Screen
+                name="Plants"
+                options={{ headerShown: false }}
+                component={PlantStackNavigator}
+              />
+            </BottomTab.Navigator>
+          </NavigationContainer>
+        </PlantProvider>
+      </LanguageProvider>
     );
-  };
-
-  return (
-    <LanguageProvider>
-      <PlantProvider>
-        <NavigationContainer>
-          <StatusBar style="dark" />
-          <BottomTab.Navigator
-            initialRouteName="Homea"
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ color }) => {
-                let iconName: any;
-
-                if (route.name === "Homea") {
-                  iconName = "home-outline";
-                } else if (route.name === "Scan") {
-                  iconName = "scan";
-                } else if (route.name === "Plants") {
-                  iconName = "leaf-outline";
-                }
-
-                return <Ionicons name={iconName} size={30} color={color} />;
-              },
-              tabBarLabelStyle: { display: "none" }, // Do not display text under the icons
-              tabBarActiveTintColor: "black",
-              tabBarInactiveTintColor: "#6A6A6A",
-            })}
-          >
-            <BottomTab.Screen
-              name="Homea"
-              options={{ headerShown: false }}
-              component={HomeStackNavigator}
-            />
-            <BottomTab.Screen
-              name="Scan"
-              options={{ headerShown: false }}
-              component={ScanScreen}
-            />
-            <BottomTab.Screen
-              name="Plants"
-              options={{ headerShown: false }}
-              component={PlantStackNavigator}
-            />
-          </BottomTab.Navigator>
-        </NavigationContainer>
-      </PlantProvider>
-    </LanguageProvider>
-  );
-  // }
+  }
 };

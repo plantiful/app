@@ -13,8 +13,17 @@ import { Dimensions } from "react-native";
 import { PlantContext, Plant } from "./PlantContext";
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import { useFocusEffect } from "@react-navigation/native";
-import i18n from "../../assets/translations/i18n";
 
+import i18n from "../../assets/translations/i18n";
+import {
+  addRoom,
+  addPlantt,
+  auth,
+  PlantInfo,
+  getCurrentUserId,
+  getRooms,
+  getPlantsInRoom,
+} from "../firebase";
 import { useLanguage } from "../utils/LanguageContext";
 
 // Components
@@ -150,31 +159,39 @@ export const ScanScreen = () => {
         data: data,
       };
 
-      const apiResponse = await axios(config);
+      const response = await axios(config);
 
-      console.log("API Response:", apiResponse.data);
+      // console.log("API Response:", response.data);
+      console.log("API Response received");
 
-      const suggestions = apiResponse.data.result.classification.suggestions;
-      const isPlant = apiResponse.data.result.is_plant.binary;
+      const suggestions = response.data.result.classification.suggestions;
+      const isPlant = response.data.result.is_plant.binary;
 
       if (!isPlant) {
         Alert.alert("No plant identified");
       } else {
         if (suggestions && suggestions.length > 0) {
-          suggestions.forEach((suggestion: any, index: number) => {
-            console.log(`Suggestion ${index + 1}:`, suggestion);
-          });
+          // suggestions.forEach((suggestion: any, index: number) => {
+          //   console.log(`Suggestion ${index + 1}:`, suggestion);
+          // });
 
           const topSuggestion = suggestions[0];
-          const plantName = topSuggestion.details.common_names[0];
+
+          const scientificName = topSuggestion.name;
           const probability = topSuggestion.probability;
-          const plantDescription = topSuggestion.details.description.value;
-          const plantClass = topSuggestion.details.taxonomy.class;
-          const plantGenus = topSuggestion.details.taxonomy.genus;
-          const plantOrder = topSuggestion.details.taxonomy.order;
-          const plantFamily = topSuggestion.details.taxonomy.family;
-          const plantPhylum = topSuggestion.details.taxonomy.phylum;
-          const plantKingdom = topSuggestion.details.taxonomy.kingdom;
+          const imageUrl = topSuggestion.similar_images[0].url;
+
+          const commonName = topSuggestion.details.common_names[0];
+          const taxonomyClass = topSuggestion.details.taxonomy.class;
+          const taxonomyGenus = topSuggestion.details.taxonomy.genus;
+          const taxonomyOrder = topSuggestion.details.taxonomy.order;
+          const taxonomyFamily = topSuggestion.details.taxonomy.family;
+          const taxonomyPhylum = topSuggestion.details.taxonomy.phylum;
+          const taxonomyKingdom = topSuggestion.details.taxonomy.kingdom;
+          const rank = topSuggestion.details.rank;
+          const description = topSuggestion.details.description.value;
+
+          // toto vsechno se muze oddelat, nebude to tady kvuli api, ale nechci to to rozbit
           const plantSunlight = "Not implemented.";
           const plantTemperature = "Not implemented.";
           const plantOrigin = "Not implemented.";
@@ -182,31 +199,26 @@ export const ScanScreen = () => {
           const lastWatered = 0;
           // leaving the variables as not implement, Valon can fix later
 
-          let plantWateringMin = "Not available.";
-          let plantWateringMax = "Not available.";
           let plantWatering = "Not available.";
-
 
           const plantData: Plant = {
             id: Math.floor(Math.random() * 1000000),
             roomId: 1,
-            commonName: plantName,
-            scientificName: plantGenus,
-            description: plantDescription,
-            imageUrl: topSuggestion.similar_images[0].url,
+            commonName: commonName,
+            scientificName: scientificName,
+            description: description,
+            imageUrl: imageUrl,
             watering: plantWatering,
             lastWatered: lastWatered,
             sunlight: plantSunlight,
             temperature: plantTemperature,
             origin: plantOrigin,
-            family: plantFamily,
+            family: taxonomyFamily,
             growthHabit: plantGrowthHabit,
           };
 
           if (topSuggestion.details.watering !== null) {
             plantWatering = topSuggestion.details.watering["max"];
-            //plantWateringMin = topSuggestion.details.watering.min;
-            //plantWateringMax = topSuggestion.details.watering.max;
           }
 
           let plantSynonyms = "";
@@ -224,23 +236,44 @@ export const ScanScreen = () => {
           }
 
           addPlant(plantData);
-          console.log("Added plant", plantData);
 
-          console.log(plantDescription);
-          console.log(plantClass);
-          console.log(plantGenus);
-          console.log(plantOrder);
-          console.log(plantFamily);
-          console.log(plantPhylum);
-          console.log(plantKingdom);
-          console.log(plantSynonyms);
-          console.log(plantWateringMin);
-          console.log(plantWateringMax);
-          console.log(plantWatering);
+          // Toto Robis je to, co se pridava do db (u tebe plantData)
+          const pd: PlantInfo = {
+            photo: imageUrl,
+            nickname: "Planty",
+            commonName: commonName,
+            scientificName: scientificName,
+            taxonomy: {
+              class: taxonomyClass,
+              genus: taxonomyGenus,
+              order: taxonomyOrder,
+              family: taxonomyFamily,
+              phylum: taxonomyPhylum,
+              kingdom: taxonomyKingdom,
+            },
+            rank: rank,
+            description: description,
+            watering: plantWatering,
+          };
 
+          // Pridani rostliny do db, pokud das do chatu ty funkce z firebase, tak on ti ukaze, jak se s tim pracuje
+          const userId = getCurrentUserId();
+          if (userId) {
+            addRoom(userId, "Living Room")
+              .then((roomId) => {
+                return addPlantt(userId, roomId, pd);
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          } else {
+            console.log("No user is currently logged in");
+          }
+
+          // Misto tohoto by te to melo hodit na ten plant detail screen (nebo treba na tu tvoji jinou)
           Alert.alert(
             "Plant Identified",
-            `Name: ${plantName}, Probability: ${(probability * 100).toFixed(
+            `Name: ${commonName}, Probability: ${(probability * 100).toFixed(
               2
             )}%`
           );

@@ -24,6 +24,41 @@ yarn start
 yarn add <package-name>
 ```
 
+## Database structure
+
+```
+{
+  "users": {
+    "userId": {
+      "rooms": {
+        "roomId": {
+          "roomName": "string",
+          "plants": {
+            "plantId": {
+              "photo": "string",
+              nickname: "string",
+              "commonName": "string",
+			        "scientificName: "string",
+              "taxonomy": {
+                "class": "string",
+                "genus": "string",
+                "order": "string",
+                "family": "string",
+                "phylum": "string",
+                "kingdom": "string",
+              },
+              "rank": "string",
+              "description": "string",
+              "watering" : "string",
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 ## TODO
 
 - [x] Finish CameraScreen - [tutorial](https://www.freecodecamp.org/news/how-to-create-a-camera-app-with-expo-and-react-native/), [code](https://github.com/hayanisaid/expo-camera-tutorial/blob/master/App.tsx)
@@ -48,7 +83,7 @@ yarn add <package-name>
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
 - [x] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
 - [ ] Add terms and privacy policy links on sign up screen - [docs](https://docs.expo.dev/versions/latest/sdk/webview/) - we dont have them yet
-- [ ] ** Add plant recognition results into variables, more info directly in code **
+- [ ] Add plant recognition results into variables, more info directly in code
   - `common (vernacular) name`
   - `scientific name`
   - `plant description`
@@ -80,3 +115,5 @@ yarn add <package-name>
 - [ ] Add calendar widget on home screen? - [dribbble](https://dribbble.com/shots/11360445-Plant-care-app/attachments/2972899?mode=media), [react-native-calendars](https://github.com/wix/react-native-calendars)
   - [x] Add progress indicator on home screen
 - [ ] Change checkbox rendering on the home screen in search settings to be able to use translations
+- [ ] Add watering widget on home screen
+- [ ] Add plant disease recognition - health assessment
