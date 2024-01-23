@@ -186,8 +186,10 @@ export const ScanScreen = () => {
           let plantWateringMax = "Not available.";
           let plantWatering = "Not available.";
 
+
           const plantData: Plant = {
             id: Math.floor(Math.random() * 1000000),
+            roomId: 1,
             commonName: plantName,
             scientificName: plantGenus,
             description: plantDescription,

@@ -18,39 +18,64 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
   navigation,
   onAuthChange,
 }) => {
-  const { plants } = useContext(PlantContext);
+  const { plants, rooms, currentRoomIndex, setCurrentRoomIndex } =
+    useContext(PlantContext);
 
-  const plantsRequiringSupport = useMemo(() => {
-    return plants.filter(plant => plant.lastWatered >= 4);
-  }, [plants]);
+  // Filter plants for the current room
+  const plantsInCurrentRoom = plants.filter(
+    (plant) => plant.roomId === rooms[currentRoomIndex].id
+  );
 
+  const goToPreviousRoom = () => {
+    if (currentRoomIndex > 0) {
+      setCurrentRoomIndex(currentRoomIndex - 1);
+    }
+    else if (currentRoomIndex == 0) {
+      setCurrentRoomIndex(rooms.length - 1);
+    }
+  };
+
+  const goToNextRoom = () => {
+    if (currentRoomIndex < rooms.length - 1) {
+      setCurrentRoomIndex(currentRoomIndex + 1);
+    }
+    else if (currentRoomIndex == rooms.length - 1) {
+      setCurrentRoomIndex(0);
+    }
+  };
   const renderPlantItem = ({ item }) => (
     <TouchableOpacity
       style={styles.plantItem}
-      onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
+      onPress={() => navigation.navigate('PlantDetailScreen', { plant: item })}
     >
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
       <SafeAreaView style={styles.textContainer}>
         <Text style={styles.text}>{item.commonName}</Text>
         <Text style={styles.subtext}>{item.scientificName}</Text>
         <Text style={styles.subtext}>{item.lastWatered} days ago</Text>
-        <Text style={[
-        styles.supportText,
-        item.lastWatered >= 4 ? {opacity: 1} : { opacity: 0 }
-      ]}>
-        Requiring support
-      </Text>
+        {item.lastWatered >= 4 && (
+          <Text style={styles.supportText}>Requiring support</Text>
+        )}
       </SafeAreaView>
     </TouchableOpacity>
   );
-  
+
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.roomSelectorContainer}>
+        <TouchableOpacity onPress={goToPreviousRoom}>
+          <Text style={styles.arrowText}>{'<'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.roomNameText}>{rooms[currentRoomIndex].name}</Text>
+        <TouchableOpacity onPress={goToNextRoom}>
+          <Text style={styles.arrowText}>{'>'}</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
-        data={plants}
+        data={plantsInCurrentRoom}
         renderItem={renderPlantItem}
         keyExtractor={(item) => item.id.toString()}
-        style={styles.container}
+        style={styles.list}
       />
     </SafeAreaView>
   );
@@ -112,6 +137,24 @@ const styles = StyleSheet.create({
     fontSize: fontSize.medium,
     fontFamily: fonts.light,
     color: colors.textGrey,
+  },
+  roomSelectorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16, // Adjust as needed
+  },
+  roomNameText: {
+    fontSize: fontSize.large, // Adjust as needed
+    fontFamily: fonts.medium,
+    textAlign: 'center',
+  },
+  arrowText: {
+    fontSize: fontSize.large, // Adjust as needed
+    fontFamily: fonts.medium,
+  },
+  list: {
+    flex: 1,
   },
 });
 
