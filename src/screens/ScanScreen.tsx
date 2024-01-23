@@ -297,7 +297,7 @@ export const ScanScreen = () => {
         Alert.alert("API Error", "No response received from the API.");
       } else {
         console.log("Error", error.message);
-        Alert.alert("API Error", `Error: ${error.message}`);
+        Alert.alert(t("error"), error.message);
       }
     } finally {
       setLoading(false);
