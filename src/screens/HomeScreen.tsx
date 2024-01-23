@@ -23,14 +23,22 @@ import ModalConfirm from "../components/ModalConfirm";
 import ButtonIcon from "../components/ButtonIcon";
 import { HomeScreenProps } from "../utils/types";
 import { useLanguage } from "../utils/LanguageContext";
-import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import Checkbox from "expo-checkbox";
 import ButtonWide from "../components/ButtonWide";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
-import Svg, { Circle } from "react-native-svg";
+import {
+  Calendar,
+  CalendarProvider,
+  WeekCalendar,
+} from "react-native-calendars";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+
   const searchInputRef = useRef<TextInput>(null!);
 
   const [searchText, setSearchText] = useState("");
@@ -103,6 +111,40 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
+  const toggleCalendar = () => {
+    setShowCalendar(!showCalendar);
+  };
+
+  const onDaySelect = (day) => {
+    setSelectedDate(day.dateString);
+  };
+
+  const getMarkedDates = () => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    let markedDates = {};
+
+    if (selectedDate) {
+      markedDates[selectedDate] = {
+        selected: true,
+        customStyles: {
+          container: { backgroundColor: colors.primary },
+          text: { color: colors.textWhite },
+        },
+      };
+    }
+
+    if (currentDate !== selectedDate) {
+      markedDates[currentDate] = {
+        customStyles: {
+          container: { backgroundColor: colors.background },
+          text: { color: colors.primary },
+        },
+      };
+    }
+
+    return markedDates;
+  };
+
   const navigateToSettings = () => {
     navigation.navigate("Settings");
   };
@@ -123,115 +165,188 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         />
 
         <View style={styles.topContainer}>
-          <ButtonIcon
-            iconSet="Ionicons"
-            iconName="settings-outline"
-            onPress={navigateToSettings}
-          />
-        </View>
+          <View style={styles.topButtonsContainer}>
+            <View style={{ marginRight: -defaultStyles.padding }}>
+              <ButtonIcon
+                backgroundColor="transparent"
+                iconSet="AntDesign"
+                iconName="calendar"
+                onPress={toggleCalendar}
+              />
+            </View>
 
-        <View style={styles.searchContainer}>
-          <View style={styles.searchRect}>
-            <Ionicons name="search-outline" size={24} color="black" />
-            <TextInput
-              placeholder={t("HomeScreen_search_bar_placeholder")}
-              placeholderTextColor={colors.textGrey}
-              keyboardType="default"
-              returnKeyType="search"
-              ref={searchInputRef}
-              onChangeText={(text) => setSearchText(text)}
-              style={styles.searchInput}
-            />
-          </View>
-
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.searchSettingsRect}
-            onPress={toggleSearchSettings}
-          >
             <ButtonIcon
               backgroundColor="transparent"
               iconSet="Ionicons"
-              iconName="options-outline"
-              iconSize={24}
-              onPress={toggleSearchSettings}
+              iconName="settings-outline"
+              onPress={navigateToSettings}
             />
-          </TouchableOpacity>
+          </View>
+
+          <View style={styles.calendarContainer}>
+            <CalendarProvider date={selectedDate}>
+              <WeekCalendar
+                firstDay={1}
+                allowShadow={false}
+                onDayPress={onDaySelect}
+                theme={{
+                  todayTextColor: colors.primary,
+                  selectedDayBackgroundColor: colors.primary,
+                  textDisabledColor: colors.textGrey,
+                  dayTextColor: colors.textGrey,
+                }}
+              />
+            </CalendarProvider>
+          </View>
         </View>
 
-        <View style={styles.progressBar}>
-          <AnimatedCircularProgress
-            backgroundColor="#F5F5F5"
-            size={200}
-            width={10}
-            fill={50}
-            tintColor={colors.primary}
-            lineCap="round"
-            // onAnimationComplete={() => console.log("onAnimationComplete")}
-          >
-            {(fill) => (
-              <Text style={styles.progressBarText}>
-                {Math.round(fill)}%{"\n"}done
-              </Text>
-            )}
-          </AnimatedCircularProgress>
-        </View>
+        <View style={{ borderBottomColor: "#f1f1f1", borderBottomWidth: 1 }} />
 
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={showSearchSettings}
-          onRequestClose={toggleSearchSettings}
-        >
-          <TouchableWithoutFeedback onPress={toggleSearchSettings}>
-            <View style={styles.searchSettingsModalOverlay}>
-              <TouchableWithoutFeedback>
-                <View style={styles.searchSettingsModalContainer}>
-                  <ScrollView>
-                    <Text style={styles.searchSettingsModalFilterTitle}>
-                      {t("HomeScreen_search_settings_watering_needs")}
-                    </Text>
-                    {renderCheckboxes(
-                      wateringNeeds,
-                      wateringNeeds,
-                      setWateringNeeds
-                    )}
-
-                    <Text style={styles.searchSettingsModalFilterTitle}>
-                      {t("HomeScreen_search_settings_size")}
-                    </Text>
-                    {renderCheckboxes(size, size, setSize)}
-
-                    <Text style={styles.searchSettingsModalFilterTitle}>
-                      {t("HomeScreen_search_settings_maintenance")}
-                    </Text>
-                    {renderCheckboxes(maintenance, maintenance, setMaintenance)}
-
-                    <Text style={styles.searchSettingsModalFilterTitle}>
-                      {t("HomeScreen_search_settings_special")}
-                    </Text>
-                    {renderCheckboxes(special, special, setSpecial)}
-
-                    <View style={{ height: defaultStyles.padding }} />
-
-                    <ButtonWide
-                      text={t("HomeScreen_search_settings_apply_filters")}
-                      onPress={toggleSearchSettings}
-                    />
-                  </ScrollView>
-                </View>
-              </TouchableWithoutFeedback>
+        <View style={styles.contentContainer}>
+          {/* <View style={styles.searchContainer}>
+            <View style={styles.searchRect}>
+              <Ionicons name="search-outline" size={24} color="black" />
+              <TextInput
+                placeholder={t("HomeScreen_search_bar_placeholder")}
+                placeholderTextColor={colors.textGrey}
+                keyboardType="default"
+                returnKeyType="search"
+                ref={searchInputRef}
+                onChangeText={(text) => setSearchText(text)}
+                style={styles.searchInput}
+              />
             </View>
-          </TouchableWithoutFeedback>
-        </Modal>
 
-        <ModalConfirm
-          title={t("error")}
-          text={errorMessage}
-          buttonText={t("try_again")}
-          isVisible={showError}
-          onClose={() => setShowError(false)}
-        />
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.searchSettingsRect}
+              onPress={toggleSearchSettings}
+            >
+              <ButtonIcon
+                backgroundColor="transparent"
+                iconSet="Ionicons"
+                iconName="options-outline"
+                iconSize={24}
+                onPress={toggleSearchSettings}
+              />
+            </TouchableOpacity>
+          </View> */}
+
+          <View style={styles.progressBar}>
+            <AnimatedCircularProgress
+              backgroundColor="#F5F5F5"
+              size={200}
+              width={10}
+              fill={50}
+              tintColor={colors.primary}
+              lineCap="round"
+              // onAnimationComplete={() => console.log("onAnimationComplete")}
+            >
+              {(fill) => (
+                <Text style={styles.progressBarText}>
+                  {Math.round(fill)}%{"\n"}done
+                </Text>
+              )}
+            </AnimatedCircularProgress>
+          </View>
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showCalendar}
+            onRequestClose={toggleCalendar}
+          >
+            <TouchableWithoutFeedback onPress={toggleCalendar}>
+              <View style={styles.modalOverlay}>
+                <Calendar
+                  onDayPress={onDaySelect}
+                  onDayLongPress={(day) => {
+                    console.log("selected day", day);
+                  }}
+                  onMonthChange={(month) => {
+                    console.log("month changed", month);
+                  }}
+                  hideExtraDays={true}
+                  firstDay={1}
+                  onPressArrowLeft={(subtractMonth) => subtractMonth()}
+                  onPressArrowRight={(addMonth) => addMonth()}
+                  enableSwipeMonths={true}
+                  current={selectedDate}
+                  markedDates={getMarkedDates()}
+                  markingType={"custom"}
+                  theme={{
+                    arrowColor: colors.primary,
+                    todayTextColor: colors.primary,
+                    //  todayBackgroundColor: colors.primary,
+                    // selectedDayBackgroundColor: colors.primary,
+                    textDisabledColor: colors.textGrey,
+                    dayTextColor: colors.textGrey,
+                  }}
+                />
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showSearchSettings}
+            onRequestClose={toggleSearchSettings}
+          >
+            <TouchableWithoutFeedback onPress={toggleSearchSettings}>
+              <View style={styles.modalOverlay}>
+                <TouchableWithoutFeedback>
+                  <View style={styles.searchSettingsModalContainer}>
+                    <ScrollView>
+                      <Text style={styles.searchSettingsModalFilterTitle}>
+                        {t("HomeScreen_search_settings_watering_needs")}
+                      </Text>
+                      {renderCheckboxes(
+                        wateringNeeds,
+                        wateringNeeds,
+                        setWateringNeeds
+                      )}
+
+                      <Text style={styles.searchSettingsModalFilterTitle}>
+                        {t("HomeScreen_search_settings_size")}
+                      </Text>
+                      {renderCheckboxes(size, size, setSize)}
+
+                      <Text style={styles.searchSettingsModalFilterTitle}>
+                        {t("HomeScreen_search_settings_maintenance")}
+                      </Text>
+                      {renderCheckboxes(
+                        maintenance,
+                        maintenance,
+                        setMaintenance
+                      )}
+
+                      <Text style={styles.searchSettingsModalFilterTitle}>
+                        {t("HomeScreen_search_settings_special")}
+                      </Text>
+                      {renderCheckboxes(special, special, setSpecial)}
+
+                      <View style={{ height: defaultStyles.padding }} />
+
+                      <ButtonWide
+                        text={t("HomeScreen_search_settings_apply_filters")}
+                        onPress={toggleSearchSettings}
+                      />
+                    </ScrollView>
+                  </View>
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+
+          <ModalConfirm
+            title={t("error")}
+            text={errorMessage}
+            buttonText={t("try_again")}
+            isVisible={showError}
+            onClose={() => setShowError(false)}
+          />
+        </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -241,12 +356,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: defaultStyles.padding,
     paddingTop: defaultStyles.padding,
   },
   topContainer: {
+    flex: 0.25,
+  },
+  topButtonsContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
+  },
+  calendarContainer: {
+    flex: 0.25,
+  },
+  contentContainer: {
+    paddingHorizontal: defaultStyles.padding,
   },
   searchContainer: {
     flexDirection: "row",
@@ -278,7 +401,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
     borderRadius: defaultStyles.rounding,
   },
-  searchSettingsModalOverlay: {
+  modalOverlay: {
     flex: 1,
     justifyContent: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
@@ -313,7 +436,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   progressBar: {
-    paddingTop: defaultStyles.padding * 2,
+    paddingTop: defaultStyles.padding,
     alignItems: "center",
   },
   progressBarText: {
