@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   StyleSheet,
   View,
@@ -20,8 +20,11 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
 }) => {
   const { plants } = useContext(PlantContext);
 
+  const plantsRequiringSupport = useMemo(() => {
+    return plants.filter(plant => plant.lastWatered >= 4);
+  }, [plants]);
+
   const renderPlantItem = ({ item }) => (
-    
     <TouchableOpacity
       style={styles.plantItem}
       onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
@@ -31,32 +34,52 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
         <Text style={styles.text}>{item.commonName}</Text>
         <Text style={styles.subtext}>{item.scientificName}</Text>
         <Text style={styles.subtext}>{item.lastWatered} days ago</Text>
+        <Text style={[
+        styles.supportText,
+        item.lastWatered >= 4 ? {opacity: 1} : { opacity: 0 }
+      ]}>
+        Requiring support
+      </Text>
       </SafeAreaView>
     </TouchableOpacity>
   );
-
+  
   return (
     <SafeAreaView style={styles.container}>
-    <FlatList
-      data={plants}
-      renderItem={renderPlantItem}
-      keyExtractor={(item) => item.id.toString()}
-      style={styles.container}
-    />
+      <FlatList
+        data={plants}
+        renderItem={renderPlantItem}
+        keyExtractor={(item) => item.id.toString()}
+        style={styles.container}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  supportText: {
+    fontSize: fontSize.medium,
+    fontFamily: fonts.medium,
+    color: 'red',
+    // Set the height to be the font size plus any desired padding.
+    // For example, if your font size is 16 and you want 8 points of padding on the top and bottom:
+    height: fontSize.medium + 16, // Adjust this based on your actual font size and desired padding
+    opacity: 0, // Default to transparent
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
   },
   plantItem: {
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start', // align items to the start of the container
+    // other styles...
     marginVertical: 8,
     marginHorizontal: 16,
+    minHeight: 120,
     padding: 16,
     backgroundColor: '#fff',
     borderRadius: 10,
@@ -77,6 +100,8 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    paddingVertical: 0, // Adjust or remove padding if not needed
+    justifyContent: 'center', // This centers the text vertically in the container
   },
   text: {
     fontSize: fontSize.large,
