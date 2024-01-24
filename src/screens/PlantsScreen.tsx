@@ -72,13 +72,19 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation, onAuthCha
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.roomSelectorContainer}>
-        <TouchableOpacity onPress={goToPreviousRoom}>
+        <TouchableOpacity
+          onPress={goToPreviousRoom}
+          style={styles.arrowButton}
+        >
           <Text style={styles.arrowText}>{"<"}</Text>
         </TouchableOpacity>
         <Text style={styles.roomNameText}>
-        {rooms.length > 0 && rooms[currentRoomIndex] ? rooms[currentRoomIndex].name : 'No Room Selected'}
+          {rooms.length > 0 && rooms[currentRoomIndex] ? rooms[currentRoomIndex].name : 'No Room Selected'}
         </Text>
-        <TouchableOpacity onPress={goToNextRoom}>
+        <TouchableOpacity
+          onPress={goToNextRoom}
+          style={styles.arrowButton}
+        >
           <Text style={styles.arrowText}>{">"}</Text>
         </TouchableOpacity>
       </View>
@@ -153,18 +159,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "center",
-    gap: 18,
+    gap: 20,
     padding: 16, // Adjust as needed
   },
   roomNameText: {
-    fontSize: fontSize.large, // Adjust as needed
-    fontFamily: fonts.medium,
+    fontSize: 18, // Adjust as needed
+    fontFamily: "OpenSans-Regular",
+    fontWeight: "400",
     textAlign: "center",
   },
   arrowText: {
-    fontSize: 20, // Adjust as needed
-    fontFamily: fonts.bold,
+    fontSize: 24, // Adjust as needed
+    fontFamily: "OpenSans-Regular",
 
+  },
+  arrowButton: {
+    padding: 10, // You can adjust this value to increase the tappable area
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   list: {
     flex: 1,
