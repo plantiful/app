@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useCallback } from "react";
+import React, { useContext, useEffect, useState} from "react";
 import {
   StyleSheet,
   View,
@@ -19,28 +19,29 @@ import {
   addPlantt as createPlant,
   PlantInfo // Importing the PlantInfo interface
 } from '../firebase'; // Adjust the import path
+import Swiper from 'react-native-swiper';
 
 
-
-export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation, onAuthChange }) => {
-  const { plants, setPlants, rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
-  const fetchPlantsForCurrentRoom = useCallback(async () => {
-    try {
-      const userId = getCurrentUserId();
-      if (userId && rooms.length > 0) {
-        const roomId = rooms[currentRoomIndex].id;
-        const fetchedPlants = await fetchPlantsInRoom(userId, roomId);
-        setPlants(fetchedPlants);
-      }
-    } catch (error) {
-      console.error("Error fetching plants:", error);
-      // Handle the error gracefully (e.g., show an error message to the user)
-    }
-  }, [currentRoomIndex, rooms, setPlants]);
+export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation }) => {
+  const { rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
+  const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(Array(rooms.length).fill([]));
 
   useEffect(() => {
-    fetchPlantsForCurrentRoom();
-  }, [fetchPlantsForCurrentRoom]);
+    async function fetchPlantsForAllRooms() {
+      const userId = getCurrentUserId();
+      if (userId) {
+        const newRoomPlants = await Promise.all(
+          rooms.map(async (room) => {
+            const fetchedPlants = await fetchPlantsInRoom(userId, room.id);
+            return fetchedPlants;
+          })
+        );
+        setRoomPlants(newRoomPlants);
+      }
+    }
+
+    fetchPlantsForAllRooms();
+  }, [rooms]);
 
   const goToPreviousRoom = () => {
     setCurrentRoomIndex(currentRoomIndex > 0 ? currentRoomIndex - 1 : rooms.length - 1);
@@ -49,55 +50,84 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation, onAuthCha
   const goToNextRoom = () => {
     setCurrentRoomIndex(currentRoomIndex < rooms.length - 1 ? currentRoomIndex + 1 : 0);
   };
-  const renderPlantItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.plantItem}
-      onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
-    >
-      <Image source={{ uri: item.photo }} style={styles.image} />
-      <SafeAreaView style={styles.textContainer}>
-        <Text style={styles.text}>{item.commonName}</Text>
-        <Text style={styles.subtext}>{item.scientificName}</Text>
-        <Text style={styles.subtext}>{item.lastWatered} days ago</Text>
-        <Text style={[
+
+  const renderRoom = (room, index) => {
+    // Render a FlatList for the current room
+    return (
+      <View key={room.id} style={styles.roomContainer}>
+        <FlatList
+          data={roomPlants[index]}
+          renderItem={renderPlantItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContentContainer}
+          style={styles.list}
+        />
+      </View>
+    );
+  };
+
+  const RoomIndicator = ({ rooms, currentRoomIndex }) => {
+  return (
+    <View style={styles.indicatorContainer}>
+      {rooms.map((_, index) => (
+        <View
+          key={index}
+          style={[
+            styles.bubble,
+            currentRoomIndex === index ? styles.activeBubble : styles.inactiveBubble,
+          ]}
+        />
+      ))}
+    </View>
+  );
+};
+
+
+const renderPlantItem = ({ item }) => (
+  <TouchableOpacity
+    style={styles.plantItem}
+    onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
+  >
+    <Image source={{ uri: item.photo }} style={styles.image} />
+    <SafeAreaView style={styles.textContainer}>
+      <Text style={styles.text}>{item.commonName}</Text>
+      <Text style={styles.subtext}>{item.scientificName}</Text>
+      <Text style={styles.subtext}>{item.lastWatered} days ago</Text>
+      <Text style={[
         styles.supportText,
         item.lastWatered >= 2 ? {opacity: 1} : { opacity: 0 }
       ]}>
         Requiring support
       </Text>
-      </SafeAreaView>
-    </TouchableOpacity>
-  );
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.roomSelectorContainer}>
-        <TouchableOpacity
-          onPress={goToPreviousRoom}
-          style={styles.arrowButton}
-        >
-          <Text style={styles.arrowText}>{"<"}</Text>
-        </TouchableOpacity>
-        <Text style={styles.roomNameText}>
-          {rooms.length > 0 && rooms[currentRoomIndex] ? rooms[currentRoomIndex].name : 'No Room Selected'}
-        </Text>
-        <TouchableOpacity
-          onPress={goToNextRoom}
-          style={styles.arrowButton}
-        >
-          <Text style={styles.arrowText}>{">"}</Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={plants}
-        renderItem={renderPlantItem}
-        keyExtractor={(item) => item.id.toString()}
-        style={styles.list}
-      />
     </SafeAreaView>
-  );
-};
+  </TouchableOpacity>
+);
 
+return (
+  <SafeAreaView style={styles.container}>
+    <Text style={styles.roomNameText}>
+      {rooms[currentRoomIndex] ? rooms[currentRoomIndex].name : 'No Room Selected'}
+    </Text>
+    <Swiper
+      loop={false}
+      showsPagination={false}
+      index={currentRoomIndex}
+      onIndexChanged={(index) => setCurrentRoomIndex(index)}
+    >
+      {rooms.map((room, index) => (
+        <FlatList
+          key={room.id}
+          data={roomPlants[index]}
+          renderItem={renderPlantItem}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.listContentContainer}
+        />
+      ))}
+    </Swiper>
+    <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
+  </SafeAreaView>
+);
+};
 const styles = StyleSheet.create({
   supportText: {
     fontSize: fontSize.medium,
@@ -113,16 +143,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   plantItem: {
-    paddingVertical: 16,
-    paddingHorizontal: 16,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-start", // align items to the start of the container
-    // other styles...
-    marginVertical: 8,
-    marginHorizontal: 16,
-    minHeight: 120,
-    padding: 16,
     backgroundColor: "#fff",
     borderRadius: 10,
     shadowColor: "#000",
@@ -133,12 +155,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    // Sizing adjustments
+    width: '90%', // Consider using a percentage or fixed width
+    minHeight: 120, // Adjust the minimum height as needed
   },
   image: {
     width: 100,
     height: 100,
     borderRadius: 10,
     marginRight: 16,
+  },
+  listContentContainer: {
+    // Style the container of the FlatList items
+    padding: 10, // Add padding if necessary
+    alignItems: 'flex-start', // Align items to the start of the FlatList
+    paddingBottom: 20, // Add padding to the bottom for scrollability
   },
   textContainer: {
     flex: 1,
@@ -174,12 +208,37 @@ const styles = StyleSheet.create({
 
   },
   arrowButton: {
-    padding: 10, // You can adjust this value to increase the tappable area
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  padding: 10, // You can adjust this value to increase the tappable area
+  justifyContent: 'center',
+  alignItems: 'center',
+},
   list: {
     flex: 1,
+  },
+  indicatorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  bubble: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    margin: 5,
+  },
+  activeBubble: {
+    backgroundColor: 'green',
+  },
+  inactiveBubble: {
+    backgroundColor: 'black',
+  },
+  roomContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Make sure the room container takes up the full size of the swiper view
+    width: '100%',
   },
 });
 
