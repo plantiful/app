@@ -64,6 +64,7 @@ export type HomeStackParamList = {
   NotificationSettings: undefined;
   LanguageSettings: undefined;
   ThemeSettings: undefined;
+  PlantsScreen: undefined;
 };
 export type PlantsScreenParamList = {
   PlantsScreen: undefined;

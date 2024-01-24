@@ -82,7 +82,7 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation }) => {
   );
 };
 
-
+ 
 const renderPlantItem = ({ item }) => (
   <TouchableOpacity
     style={styles.plantItem}

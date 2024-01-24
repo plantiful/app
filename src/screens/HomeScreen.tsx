@@ -125,6 +125,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const { plants } = useContext(PlantContext);
 
+  const [plantsRequiringSupport, setPlantsRequiringSupport] = useState([]);
+
+  useEffect(() => {
+    // Assuming `allPlants` is an array containing all plants from all rooms
+    const filteredPlants = plants.filter(plant => plant.lastWatered >= 2).slice(0, 3);
+    setPlantsRequiringSupport(filteredPlants);
+  }, [plants]); // You need to define how you get `allPlants` based on your app's logic
+
+
   // Fetch the watering history from Firebase on component mount
   useEffect(() => {
     const fetchWateringData = async () => {
@@ -230,7 +239,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return (
       <TouchableOpacity style={styles.requiringSupportPlantContainer}>
         <Image
-          source={{ uri: item.imageUrl }}
+          source={{ uri: item.photo }}
           style={styles.requiringSupportPlantImage}
         />
         <View style={{ flex: 1, paddingLeft: 10 }}>
@@ -390,14 +399,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 fontFamily={fonts.semiBold}
                 fontSize={fontSize.large}
                 alignSelf="center"
-                onPress={() => {}}
+                onPress={() => { }}
+                //onPress={() => navigation.navigate('PlantsScreen')}
               />
             </View>
             <FlatList
-              data={plants}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id.toString()}
-              style={{ flex: 1 }}
+              data={plantsRequiringSupport}
+              renderItem={renderItem} // Make sure to define this function based on your needs
+              keyExtractor={item => item.id.toString()}
             />
           </View>
 
