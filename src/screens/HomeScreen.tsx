@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import {
   Text,
   StyleSheet,
@@ -9,6 +9,8 @@ import {
   Modal,
   ScrollView,
   Animated,
+  Image,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,7 +18,7 @@ import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 
 // Firebase
-import { auth } from "../firebase";
+import { auth, getCurrentUserId, getWateringHistory } from "../firebase";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -32,6 +34,9 @@ import {
   CalendarProvider,
   WeekCalendar,
 } from "react-native-calendars";
+import { Ionicons } from "@expo/vector-icons";
+import ButtonText from "../components/ButtonText";
+import PlantContext from "./PlantContext";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [showCalendar, setShowCalendar] = useState(false);
@@ -115,8 +120,51 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     setShowCalendar(!showCalendar);
   };
 
-  const onDaySelect = (day) => {
+  const [wateringHistory, setWateringHistory] = useState({});
+  const [dailyPercentage, setDailyPercentage] = useState(0);
+
+  const { plants } = useContext(PlantContext);
+
+  // Fetch the watering history from Firebase on component mount
+  useEffect(() => {
+    const fetchWateringData = async () => {
+      const userId = getCurrentUserId();
+      if (userId) {
+        const history = await getWateringHistory(userId);
+        setWateringHistory(history);
+      }
+    };
+
+    fetchWateringData();
+  }, []);
+
+  useEffect(() => {
+    const calculateAndSetPercentage = async () => {
+      if (
+        wateringHistory &&
+        Object.keys(wateringHistory).length > 0 &&
+        plants.length > 0
+      ) {
+        const percentage = await calculateDailyWateredPercentage(
+          wateringHistory,
+          plants,
+          selectedDate
+        );
+        setDailyPercentage(percentage);
+      }
+    };
+
+    calculateAndSetPercentage();
+  }, [selectedDate, wateringHistory, plants]);
+
+  const onDaySelect = async (day) => {
     setSelectedDate(day.dateString);
+    const percentage = await calculateDailyWateredPercentage(
+      wateringHistory,
+      plants,
+      day.dateString
+    );
+    setDailyPercentage(percentage); // Update the daily percentage state
   };
 
   const getMarkedDates = () => {
@@ -143,6 +191,66 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
 
     return markedDates;
+  };
+
+  const calculateDailyWateredPercentage = (
+    wateringHistory,
+    plants,
+    selectedDate
+  ) => {
+    const dayStart = new Date(selectedDate);
+    dayStart.setHours(0, 0, 0, 0);
+
+    const dayEnd = new Date(dayStart);
+    dayEnd.setDate(dayEnd.getDate() + 1);
+
+    const wateredPlants = plants.filter((plant) => {
+      const events = wateringHistory[plant.id] || [];
+      return events.some((event) => {
+        const eventDate = new Date(event.timestamp);
+        return eventDate >= dayStart && eventDate < dayEnd;
+      });
+    });
+
+    return (wateredPlants.length / plants.length) * 100;
+  };
+
+  const wateredPlantsPercentage = calculateDailyWateredPercentage(
+    wateringHistory,
+    plants,
+    selectedDate
+  );
+
+  const needsWatering = (plant) => {
+    return plant.lastWatered < plant.watering;
+  };
+
+  const renderItem = ({ item }) => {
+    const daysSinceLastWatered = needsWatering(item.lastWatered);
+    return (
+      <TouchableOpacity style={styles.requiringSupportPlantContainer}>
+        <Image
+          source={{ uri: item.imageUrl }}
+          style={styles.requiringSupportPlantImage}
+        />
+        <View style={{ flex: 1, paddingLeft: 10 }}>
+          <Text style={styles.requiringSupportPlantName}>
+            {item.commonName}
+          </Text>
+          <Text style={styles.requiringSupportPlantRoom}>
+            {item.scientificName}
+          </Text>
+          <Text
+            style={styles.requiringSupportPlantWatering}
+          >{`${daysSinceLastWatered} days ago`}</Text>
+        </View>
+        <Ionicons
+          name="chevron-forward-outline"
+          size={30}
+          color={colors.primary}
+        />
+      </TouchableOpacity>
+    );
   };
 
   const navigateToSettings = () => {
@@ -238,7 +346,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               backgroundColor="#F5F5F5"
               size={200}
               width={10}
-              fill={50}
+              fill={dailyPercentage}
               tintColor={colors.primary}
               lineCap="round"
               // onAnimationComplete={() => console.log("onAnimationComplete")}
@@ -249,6 +357,48 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 </Text>
               )}
             </AnimatedCircularProgress>
+          </View>
+
+          <View style={{ height: defaultStyles.padding }} />
+
+          <View style={styles.requiringSupportContainer}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <Ionicons
+                  name="alert-circle-outline"
+                  size={30}
+                  color={colors.primary}
+                />
+                <Text style={styles.requiringSupportText}>
+                  {t("HomeScreen_requiring_support")}
+                </Text>
+              </View>
+
+              <ButtonText
+                text={t("HomeScreen_requiring_support_view_all")}
+                textColor={colors.primary}
+                fontFamily={fonts.semiBold}
+                fontSize={fontSize.large}
+                alignSelf="center"
+                onPress={() => {}}
+              />
+            </View>
+            <FlatList
+              data={plants}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id.toString()}
+              style={{ flex: 1 }}
+            />
           </View>
 
           <Modal
@@ -360,7 +510,7 @@ const styles = StyleSheet.create({
     paddingTop: defaultStyles.padding,
   },
   topContainer: {
-    flex: 0.25,
+    flex: 0.35,
   },
   topButtonsContainer: {
     flexDirection: "row",
@@ -401,6 +551,44 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: "#F5F5F5",
     borderRadius: defaultStyles.rounding,
+  },
+  requiringSupportContainer: {
+    backgroundColor: "#F5F5F5",
+    padding: defaultStyles.padding,
+    borderRadius: defaultStyles.rounding,
+  },
+  requiringSupportText: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.large,
+    color: colors.textGrey,
+    paddingLeft: defaultStyles.padding / 2,
+  },
+  requiringSupportPlantContainer: {
+    flexDirection: "row",
+    // alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 5,
+  },
+  requiringSupportPlantImage: {
+    width: 100,
+    height: 100,
+    borderRadius: defaultStyles.rounding,
+  },
+  requiringSupportPlantName: {
+    fontFamily: fonts.medium,
+    fontSize: fontSize.large,
+    color: colors.textBlack,
+    paddingVertical: 5,
+  },
+  requiringSupportPlantRoom: {
+    fontFamily: fonts.regular,
+    fontSize: fontSize.medium,
+    color: colors.textGrey,
+  },
+  requiringSupportPlantWatering: {
+    fontFamily: fonts.regular,
+    fontSize: fontSize.medium,
+    color: colors.textGrey,
   },
   modalOverlay: {
     flex: 1,

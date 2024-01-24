@@ -47,7 +47,6 @@ export default {
   error_user_not_found: "User not found",
   error_invalid_login_credentials: "Incorrect credentials",
   error_unknown: "Unknown error",
- 
 
   // Success Messages
   success: "Success",
@@ -110,6 +109,9 @@ export default {
   HomeScreen_search_settings_special_air_purifying: "Air Purifying",
 
   HomeScreen_search_settings_apply_filters: "Apply Filters",
+
+  HomeScreen_requiring_support: "Requiring Support",
+  HomeScreen_requiring_support_view_all: "View All",
 
   // ProfileScreen
   ProfileScreen_edit_profile_button_text: "Edit Profile",

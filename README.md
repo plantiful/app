@@ -36,7 +36,7 @@ yarn add <package-name>
           "plants": {
             "plantId": {
               "photo": "string",
-              nickname: "string",
+              "nickname": "string",
               "commonName": "string",
 			        "scientificName: "string",
               "taxonomy": {
@@ -49,7 +49,10 @@ yarn add <package-name>
               },
               "rank": "string",
               "description": "string",
-              "watering" : "string",
+              "watering" : "number",
+              "temperature": "string",
+              "sunlight": "string",
+              "lastWatered": "number",
             }
           }
         }

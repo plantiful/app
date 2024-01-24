@@ -1,5 +1,5 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Plant } from "../screens/PlantContext";
+import { PlantInfo } from "../firebase";
 
 export type BottomTabParamList = {
   Homea: undefined;
@@ -67,7 +67,7 @@ export type HomeStackParamList = {
 };
 export type PlantsScreenParamList = {
   PlantsScreen: undefined;
-  PlantDetailScreen: { plant: Plant };
+  PlantDetailScreen: { plant: PlantInfo };
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
@@ -148,5 +148,4 @@ type PlantScrenNavigationProp = StackNavigationProp<
 
 export type PlantScreenProps = {
   navigation: PlantScrenNavigationProp;
-  onAuthChange: (status: boolean) => void;
 };

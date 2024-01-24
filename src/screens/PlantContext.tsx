@@ -5,18 +5,18 @@ import {
   addRoom as createRoom,
   getPlantsInRoom as fetchPlantsInRoom,
   addPlantt as createPlant,
-  PlantInfo // Importing the PlantInfo interface
-} from '../firebase'; // Adjust the import path
+  PlantInfo,
+} from "../firebase";
 
 // Define the Room interface
 export interface Room {
-  id: string; // Each room should have a unique ID
+  id: string;
   name: string;
 }
 
 // Define the shape of the context data
 interface PlantContextType {
-  plants: PlantInfo[]; // Using PlantInfo here
+  plants: PlantInfo[];
   rooms: Room[];
   currentRoomIndex: number;
   setPlants: React.Dispatch<React.SetStateAction<PlantInfo[]>>; // Add this line
@@ -53,22 +53,24 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
   useEffect(() => {
     const userId = getCurrentUserId();
     if (userId) {
-        fetchRooms(userId).then(fetchedRooms => {
-            setRooms(fetchedRooms);
-            if (fetchedRooms.length > 0) {
-                fetchPlantsInRoom(userId, fetchedRooms[currentRoomIndex].id)
-                    .then(fetchedPlants => {
-                        setPlants(fetchedPlants);
-                    });
-            }
-        }).catch(error => {
-            console.error("Error fetching rooms:", error);
+      fetchRooms(userId)
+        .then((fetchedRooms) => {
+          setRooms(fetchedRooms);
+          if (fetchedRooms.length > 0) {
+            fetchPlantsInRoom(userId, fetchedRooms[currentRoomIndex].id).then(
+              (fetchedPlants) => {
+                setPlants(fetchedPlants);
+              }
+            );
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching rooms:", error);
         });
     }
-}, [currentRoomIndex]);
+  }, [currentRoomIndex]);
 
-
-  const addPlant = async (newPlant: PlantInfo, roomId : string) => {
+  const addPlant = async (newPlant: PlantInfo, roomId: string) => {
     const userId = getCurrentUserId();
     if (userId) {
       await createPlant(userId, roomId, newPlant);

@@ -50,7 +50,7 @@ export interface PlantInfo {
   };
   rank: string;
   description: string;
-  watering: string;
+  watering: number;
   temperature: string;
   sunlight: string;
   lastWatered: number;
@@ -85,9 +85,9 @@ export const getRooms = async (userId: string) => {
     const snapshot = await get(roomsRef);
     if (snapshot.exists()) {
       const roomsObj = snapshot.val();
-      const roomsArray = Object.keys(roomsObj).map(key => ({
+      const roomsArray = Object.keys(roomsObj).map((key) => ({
         id: key,
-        ...roomsObj[key]
+        ...roomsObj[key],
       }));
       return roomsArray;
     } else {
@@ -120,7 +120,7 @@ export const addPlantt = async (
     watering: plantInfo.watering || "default_watering",
     temperature: plantInfo.temperature || "default_temperature",
     sunlight: plantInfo.sunlight || "default_sunlight",
-    lastWatered: plantInfo.lastWatered || "default_last_watered"
+    lastWatered: plantInfo.lastWatered || "default_last_watered",
   };
 
   set(newPlantRef, plantData);
@@ -133,9 +133,9 @@ export const getPlantsInRoom = async (userId: string, roomId: string) => {
     const snapshot = await get(plantsRef);
     if (snapshot.exists()) {
       const plantsObj = snapshot.val();
-      const plantsArray = Object.keys(plantsObj).map(key => ({
+      const plantsArray = Object.keys(plantsObj).map((key) => ({
         id: key,
-        ...plantsObj[key]
+        ...plantsObj[key],
       }));
       return plantsArray;
     } else {
@@ -154,6 +154,36 @@ export const getCurrentUserId = () => {
     return user.uid;
   } else {
     return null;
+  }
+};
+
+export const addWateringEvent = async (
+  userId: string,
+  plantInfo: PlantInfo,
+  timestamp: number
+) => {
+  const db = getDatabase();
+  const wateringEventRef = ref(
+    db,
+    `users/${userId}/wateringEvents/${plantInfo}`
+  );
+  await set(push(wateringEventRef), { timestamp });
+};
+
+export const getWateringHistory = async (userId: string) => {
+  const db = getDatabase();
+  const wateringHistoryRef = ref(db, `users/${userId}/wateringEvents`);
+  try {
+    const snapshot = await get(wateringHistoryRef);
+    if (snapshot.exists()) {
+      return snapshot.val();
+    } else {
+      console.log("No watering history available");
+      return {};
+    }
+  } catch (error) {
+    console.error("Error fetching watering history:", error);
+    throw error;
   }
 };
 
