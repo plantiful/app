@@ -1,48 +1,36 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
+import {
+  getCurrentUserId,
+  getRooms as fetchRooms,
+  addRoom as createRoom,
+  getPlantsInRoom as fetchPlantsInRoom,
+  addPlantt as createPlant,
+  PlantInfo // Importing the PlantInfo interface
+} from '../firebase'; // Adjust the import path
 
-// Define the Plant interface with additional properties
-export interface Plant {
-  id: number;
-  roomId: number; // Added roomId to associate the plant with a room
-  commonName: string;
-  scientificName: string;
-  description: string;
-  imageUrl: string;
-  watering: string;
-  lastWatered: number;
-  sunlight: string;
-  temperature: string;
-  origin: string;
-  family: string;
-  growthHabit: string;
-}
-
-// Define a Room interface
+// Define the Room interface
 export interface Room {
-  id: number; // Each room should have a unique ID
+  id: string; // Each room should have a unique ID
   name: string;
 }
 
 // Define the shape of the context data
 interface PlantContextType {
-  plants: Plant[];
+  plants: PlantInfo[]; // Using PlantInfo here
   rooms: Room[];
   currentRoomIndex: number;
-  addPlant: (plant: Plant) => void;
+  setPlants: React.Dispatch<React.SetStateAction<PlantInfo[]>>; // Add this line
+  addPlant: (newPlant: PlantInfo, roomId: string) => void; // Update the type of addPlant
   setCurrentRoomIndex: (index: number) => void;
   addRoom: (room: Room) => void;
 }
 
 // Create an initial value
 const initialValue: PlantContextType = {
-  plants: [],
-  rooms: [
-    { id: 1, name: "Living Room" },
-    { id: 2, name: "Kid's Room" },
-    { id: 3, name: "Bedroom" },
-    // ... add more predefined rooms or an empty array if none
-  ],
+  plants: [], // This will be an array of PlantInfo objects
+  rooms: [],
   currentRoomIndex: 0,
+  setPlants: () => {}, // Add this line
   addPlant: () => {},
   setCurrentRoomIndex: () => {},
   addRoom: () => {},
@@ -58,69 +46,54 @@ interface PlantProviderProps {
 
 // Create the PlantProvider component
 export const PlantProvider = ({ children }: PlantProviderProps) => {
-  const [plants, setPlants] = useState<Plant[]>([
-    // Add a default plant with all the new properties
-    {
-      id: 1,
-      roomId: 1,
-      commonName: "Monstera",
-      scientificName: "Monstera Deliciosa",
-      description:
-        "Dříve nutný itinerář úřadů, dnes královna pokojovek. Je velmi nenáročná na pěstování a při správné péči se vám odmění typicky vyříznutými okrasnými listy, které během několika let dosáhnou opravdu monstrózních rozměrů.",
-      imageUrl:
-        "https://www.pokojovky.co/cdn/shop/products/XxDsKnCY_1391x1854.jpg?v=1667897784",
-      watering: "100 ml per day",
-      lastWatered: 2,
-      sunlight: "70% sunlight",
-      temperature: "23",
-      origin:
-        "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
-      family:
-        "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
-      growthHabit:
-        "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
-    },
-    {
-      id: 2,
-      roomId: 2,
-      commonName: "Bird of paradise",
-      scientificName: "Strelitzia nicolai",
-      description:
-        'Kus pralesa u vás doma! Stěží najdete exotičtější pokojovku, než právě "Bird of paradise" se svými lesklými, rozložitými listy. V pokojových podmínkách může vyrůst až tři metry. Navíc je skvělou volbou pro začátečníky a umí čistit vzduch.',
-      imageUrl:
-        "https://www.pokojovky.co/cdn/shop/products/ngqdQsp0_696x927.jpg?v=1670316319",
-      watering: "100 ml per day",
-      lastWatered: 7,
-      sunlight: "85% sunlight",
-      temperature: "18-25",
-      origin:
-        "Native to the tropical rainforests of Central America, particularly in countries like Mexico, Panama, and Costa Rica.",
-      family:
-        "Belongs to the Araceae family, which consists of various flowering plants often characterized by their distinctive, large leaves.",
-      growthHabit:
-        "A climbing, evergreen perennial with an aerial root system that allows it to attach to trees or other supports in its natural habitat.",
-    },
-  ]);
-  const [rooms, setRooms] = useState<Room[]>(initialValue.rooms);
-  const [currentRoomIndex, setCurrentRoomIndex] = useState<number>(
-    initialValue.currentRoomIndex
-  );
+  const [plants, setPlants] = useState<PlantInfo[]>([]); // Using PlantInfo here
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [currentRoomIndex, setCurrentRoomIndex] = useState<number>(0);
 
-  const addPlant = (newPlant: Plant) => {
-    setPlants((currentPlants) => [...currentPlants, newPlant]);
+  useEffect(() => {
+    const userId = getCurrentUserId();
+    if (userId) {
+        fetchRooms(userId).then(fetchedRooms => {
+            setRooms(fetchedRooms);
+            if (fetchedRooms.length > 0) {
+                fetchPlantsInRoom(userId, fetchedRooms[currentRoomIndex].id)
+                    .then(fetchedPlants => {
+                        setPlants(fetchedPlants);
+                    });
+            }
+        }).catch(error => {
+            console.error("Error fetching rooms:", error);
+        });
+    }
+}, [currentRoomIndex]);
+
+
+  const addPlant = async (newPlant: PlantInfo, roomId : string) => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      await createPlant(userId, roomId, newPlant);
+      // Refetch plants for the current room
+      const updatedPlants = await fetchPlantsInRoom(userId, roomId);
+      setPlants(updatedPlants);
+    }
   };
 
-  const addRoom = (newRoom: Room) => {
-    setRooms((currentRooms) => [...currentRooms, newRoom]);
+  const addRoom = async (newRoom: Room) => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      await createRoom(userId, newRoom.name);
+      // Refetch rooms or update state optimistically
+      // fetchRooms(userId).then(updatedRooms => setRooms(updatedRooms));
+    }
   };
 
-  // The context provider will now pass down the rooms, currentRoomIndex, and its setter function
   return (
     <PlantContext.Provider
       value={{
         plants,
         rooms,
         currentRoomIndex,
+        setPlants,
         setCurrentRoomIndex,
         addPlant,
         addRoom,
@@ -130,3 +103,5 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
     </PlantContext.Provider>
   );
 };
+
+export default PlantContext;

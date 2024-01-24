@@ -3,12 +3,12 @@ import { View, Text, Animated, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { Plant } from "./PlantContext";
+import { PlantInfo } from "../firebase";
 
 interface PlantDetailScreenProps {
   route: {
     params: {
-      plant: Plant;
+      plant: PlantInfo;
     };
   };
 }
@@ -39,7 +39,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
         bounces={false}
       >
         <Animated.Image
-          source={{ uri: plant.imageUrl }}
+          source={{ uri: plant.photo }}
           style={[styles.image, { height: headerHeight }]}
         />
         <View style={styles.detailsContainer}>
@@ -66,11 +66,17 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
             {/* Add more items as needed */}
           </ScrollView>
           <Text style={styles.header}>Origin</Text>
-          <Text style={styles.text}>{plant.origin}</Text>
-          <Text style={styles.header}>Plant Family</Text>
-          <Text style={styles.text}>{plant.family}</Text>
-          <Text style={styles.header}>Growth Habit</Text>
-          <Text style={styles.text}>{plant.growthHabit}</Text>
+          <Text style={styles.text}>{plant.taxonomy.class}</Text>
+          <Text style={styles.header}>Family</Text>
+          <Text style={styles.text}>{plant.taxonomy.family}</Text>
+          <Text style={styles.header}>Genus</Text>
+          <Text style={styles.text}>{plant.taxonomy.genus}</Text>
+          <Text style={styles.header}>Kingdom</Text>
+          <Text style={styles.text}>{plant.taxonomy.kingdom}</Text>
+          <Text style={styles.header}>Order</Text>
+          <Text style={styles.text}>{plant.taxonomy.order}</Text>
+          <Text style={styles.header}>Phylum</Text>
+          <Text style={styles.text}>{plant.taxonomy.phylum}</Text>
           <Text style={styles.header}>Description</Text>
           <Text style={styles.text}>{plant.description}</Text>
         </View>

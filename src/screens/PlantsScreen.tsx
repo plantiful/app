@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -7,52 +7,61 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { PlantContext } from "./PlantContext";
 import { colors, fonts, fontSize } from "../utils/colors";
 import { PlantScreenProps } from "../utils/types";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  getCurrentUserId,
+  getRooms as fetchRooms,
+  addRoom as createRoom,
+  getPlantsInRoom as fetchPlantsInRoom,
+  addPlantt as createPlant,
+  PlantInfo // Importing the PlantInfo interface
+} from '../firebase'; // Adjust the import path
 
-export const PlantsScreen: React.FC<PlantScreenProps> = ({
-  navigation,
-  onAuthChange,
-}) => {
-  const { plants, rooms, currentRoomIndex, setCurrentRoomIndex } =
-    useContext(PlantContext);
 
-  // Filter plants for the current room
-  const plantsInCurrentRoom = plants.filter(
-    (plant) => plant.roomId === rooms[currentRoomIndex].id
-  );
+
+export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation, onAuthChange }) => {
+  const { plants, setPlants, rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
+  useEffect(() => {
+
+    const fetchPlantsForCurrentRoom = async () => {
+      const userId = getCurrentUserId();
+      if (userId && rooms.length > 0) {
+        const roomId = rooms[currentRoomIndex].id;
+        const fetchedPlants = await fetchPlantsInRoom(userId, roomId);
+        setPlants(fetchedPlants);
+      }
+    };
+  
+    fetchPlantsForCurrentRoom();
+
+  }, [currentRoomIndex, rooms, plants]);
 
   const goToPreviousRoom = () => {
-    if (currentRoomIndex > 0) {
-      setCurrentRoomIndex(currentRoomIndex - 1);
-    } else if (currentRoomIndex == 0) {
-      setCurrentRoomIndex(rooms.length - 1);
-    }
+    setCurrentRoomIndex(currentRoomIndex > 0 ? currentRoomIndex - 1 : rooms.length - 1);
   };
 
   const goToNextRoom = () => {
-    if (currentRoomIndex < rooms.length - 1) {
-      setCurrentRoomIndex(currentRoomIndex + 1);
-    } else if (currentRoomIndex == rooms.length - 1) {
-      setCurrentRoomIndex(0);
-    }
+    setCurrentRoomIndex(currentRoomIndex < rooms.length - 1 ? currentRoomIndex + 1 : 0);
   };
   const renderPlantItem = ({ item }) => (
     <TouchableOpacity
       style={styles.plantItem}
       onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
     >
-      <Image source={{ uri: item.imageUrl }} style={styles.image} />
+      <Image source={{ uri: item.photo }} style={styles.image} />
       <SafeAreaView style={styles.textContainer}>
         <Text style={styles.text}>{item.commonName}</Text>
         <Text style={styles.subtext}>{item.scientificName}</Text>
         <Text style={styles.subtext}>{item.lastWatered} days ago</Text>
-        {item.lastWatered >= 4 && (
-          <Text style={styles.supportText}>Requiring support</Text>
-        )}
+        <Text style={[
+        styles.supportText,
+        item.lastWatered >= 2 ? {opacity: 1} : { opacity: 0 }
+      ]}>
+        Requiring support
+      </Text>
       </SafeAreaView>
     </TouchableOpacity>
   );
@@ -63,13 +72,15 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({
         <TouchableOpacity onPress={goToPreviousRoom}>
           <Text style={styles.arrowText}>{"<"}</Text>
         </TouchableOpacity>
-        <Text style={styles.roomNameText}>{rooms[currentRoomIndex].name}</Text>
+        <Text style={styles.roomNameText}>
+        {rooms.length > 0 && rooms[currentRoomIndex] ? rooms[currentRoomIndex].name : 'No Room Selected'}
+        </Text>
         <TouchableOpacity onPress={goToNextRoom}>
           <Text style={styles.arrowText}>{">"}</Text>
         </TouchableOpacity>
       </View>
       <FlatList
-        data={plantsInCurrentRoom}
+        data={plants}
         renderItem={renderPlantItem}
         keyExtractor={(item) => item.id.toString()}
         style={styles.list}

@@ -51,6 +51,9 @@ export interface PlantInfo {
   rank: string;
   description: string;
   watering: string;
+  temperature: string;
+  sunlight: string;
+  lastWatered: number;
 }
 
 export const addRoom = async (
@@ -81,11 +84,15 @@ export const getRooms = async (userId: string) => {
   try {
     const snapshot = await get(roomsRef);
     if (snapshot.exists()) {
-      // console.log(snapshot.val());
-      return snapshot.val();
+      const roomsObj = snapshot.val();
+      const roomsArray = Object.keys(roomsObj).map(key => ({
+        id: key,
+        ...roomsObj[key]
+      }));
+      return roomsArray;
     } else {
       console.log("No rooms available");
-      return {};
+      return [];
     }
   } catch (error) {
     console.error("Error fetching rooms:", error);
@@ -111,6 +118,9 @@ export const addPlantt = async (
     rank: plantInfo.rank || "default_rank",
     description: plantInfo.description || "default_description",
     watering: plantInfo.watering || "default_watering",
+    temperature: plantInfo.temperature || "default_temperature",
+    sunlight: plantInfo.sunlight || "default_sunlight",
+    lastWatered: plantInfo.lastWatered || "default_last_watered"
   };
 
   set(newPlantRef, plantData);
@@ -122,11 +132,15 @@ export const getPlantsInRoom = async (userId: string, roomId: string) => {
   try {
     const snapshot = await get(plantsRef);
     if (snapshot.exists()) {
-      // console.log(snapshot.val());
-      return snapshot.val();
+      const plantsObj = snapshot.val();
+      const plantsArray = Object.keys(plantsObj).map(key => ({
+        id: key,
+        ...plantsObj[key]
+      }));
+      return plantsArray;
     } else {
       console.log("No plants available in this room");
-      return {};
+      return [];
     }
   } catch (error) {
     console.error("Error fetching plants:", error);

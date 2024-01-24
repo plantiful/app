@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import axios from "axios";
 import { Dimensions } from "react-native";
-import { PlantContext, Plant } from "./PlantContext";
+import { PlantContext} from "./PlantContext";
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -49,6 +49,57 @@ export const ScanScreen = () => {
 
   const { addPlant } = useContext(PlantContext);
 
+  function generateRandomTemperature(): string {
+    // Generate a random number between 15 and 24
+    let firstNumber = Math.floor(Math.random() * 10) + 15;
+
+    // Decide whether to add or subtract 2 or 3
+    let change = Math.random() > 0.5 ? 2 : 3;
+    change = Math.random() > 0.5 ? change : -change;
+
+    // Calculate the second number and ensure it is within the 15-24 range
+    let secondNumber = firstNumber + change;
+    if (secondNumber < 15) {
+        secondNumber = firstNumber + Math.abs(change);
+    } else if (secondNumber > 24) {
+        secondNumber = firstNumber - Math.abs(change);
+    }
+
+    // Ensure the smaller number is first
+    let smallerNumber = Math.min(firstNumber, secondNumber);
+    let largerNumber = Math.max(firstNumber, secondNumber);
+
+    // Return the formatted string
+    return `${smallerNumber}-${largerNumber}`;
+}
+function generateRandomSunlight(): string {
+  // Generate a random number between 60 and 80
+  let firstNumber = Math.floor(Math.random() * 21) + 60;
+
+  // Possible differences
+  const differences = [5, 10, 15, 20];
+  // Select a random difference
+  let difference = differences[Math.floor(Math.random() * differences.length)];
+
+  // Decide whether to add or subtract the difference
+  let add = Math.random() > 0.5;
+  let secondNumber = add ? firstNumber + difference : firstNumber - difference;
+
+  // Adjust if out of range
+  if (secondNumber < 60) {
+      secondNumber = firstNumber + difference;
+  } else if (secondNumber > 80) {
+      secondNumber = firstNumber - difference;
+  }
+
+  // Ensure the smaller number is first
+  let smallerNumber = Math.min(firstNumber, secondNumber);
+  let largerNumber = Math.max(firstNumber, secondNumber);
+
+  // Return the formatted string
+  return `${smallerNumber}-${largerNumber}`;
+}
+
   async function getCameraPermission() {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
     if (cameraPermission.status === "granted") {
@@ -66,7 +117,7 @@ export const ScanScreen = () => {
   }, []);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       let isActive = true;
 
       const setupCamera = async () => {
@@ -201,22 +252,6 @@ export const ScanScreen = () => {
 
           let plantWatering = "Not available.";
 
-          const plantData: Plant = {
-            id: Math.floor(Math.random() * 1000000),
-            roomId: 1,
-            commonName: commonName,
-            scientificName: scientificName,
-            description: description,
-            imageUrl: imageUrl,
-            watering: plantWatering,
-            lastWatered: lastWatered,
-            sunlight: plantSunlight,
-            temperature: plantTemperature,
-            origin: plantOrigin,
-            family: taxonomyFamily,
-            growthHabit: plantGrowthHabit,
-          };
-
           if (topSuggestion.details.watering !== null) {
             plantWatering = topSuggestion.details.watering["max"];
           }
@@ -235,7 +270,7 @@ export const ScanScreen = () => {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
 
-          addPlant(plantData);
+
 
           // Toto Robis je to, co se pridava do db (u tebe plantData)
           const pd: PlantInfo = {
@@ -254,8 +289,10 @@ export const ScanScreen = () => {
             rank: rank,
             description: description,
             watering: plantWatering,
+            sunlight: generateRandomSunlight(),
+            temperature: generateRandomTemperature(),
+            lastWatered: Math.floor(Math.random() * 10),
           };
-
           // Pridani rostliny do db, pokud das do chatu ty funkce z firebase, tak on ti ukaze, jak se s tim pracuje
           const userId = getCurrentUserId();
           if (userId) {
