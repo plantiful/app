@@ -83,7 +83,7 @@ yarn add <package-name>
 - [ ] Fix auth screen svg icons (they are not properly exported) - figma
 - [x] Add custom SVG icons on login screen for socials - assets can be found in an old commit (~9 months ago)
 - [ ] Add terms and privacy policy links on sign up screen - [docs](https://docs.expo.dev/versions/latest/sdk/webview/) - we dont have them yet
-- [ ] Add plant recognition results into variables, more info directly in code
+- [x] Add plant recognition results into variables, more info directly in code
   - `common (vernacular) name`
   - `scientific name`
   - `plant description`

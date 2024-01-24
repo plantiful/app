@@ -47,6 +47,7 @@ export default {
   error_user_not_found: "User not found",
   error_invalid_login_credentials: "Incorrect credentials",
   error_unknown: "Unknown error",
+ 
 
   // Success Messages
   success: "Success",
