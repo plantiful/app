@@ -70,7 +70,7 @@ export const ScanScreen = () => {
     let largerNumber = Math.max(firstNumber, secondNumber);
 
     // Return the formatted string
-    return `${smallerNumber}-${largerNumber}`;
+    return `${smallerNumber} - ${largerNumber}`;
 }
 function generateRandomSunlight(): string {
   // Generate a random number between 60 and 80
@@ -97,7 +97,7 @@ function generateRandomSunlight(): string {
   let largerNumber = Math.max(firstNumber, secondNumber);
 
   // Return the formatted string
-  return `${smallerNumber}-${largerNumber}`;
+  return `${smallerNumber} - ${largerNumber}`;
 }
 
   async function getCameraPermission() {
@@ -296,7 +296,7 @@ function generateRandomSunlight(): string {
           // Pridani rostliny do db, pokud das do chatu ty funkce z firebase, tak on ti ukaze, jak se s tim pracuje
           const userId = getCurrentUserId();
           if (userId) {
-            addRoom(userId, "Living Room")
+            addRoom(userId, "Bedroom")
               .then((roomId) => {
                 return addPlantt(userId, roomId, pd);
               })

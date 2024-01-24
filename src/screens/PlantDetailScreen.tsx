@@ -57,7 +57,7 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
             </View>
             <View style={styles.iconContainer}>
               <Icon name="weather-sunny" size={24} color="#000" />
-              <Text style={styles.infoText}>{plant.sunlight}</Text>
+              <Text style={styles.infoText}>{`${plant.sunlight}%`}</Text>
             </View>
             <View style={styles.iconContainer}>
               <Icon name="thermometer" size={24} color="#000" />

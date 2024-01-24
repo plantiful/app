@@ -24,20 +24,23 @@ import {
 
 export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation, onAuthChange }) => {
   const { plants, setPlants, rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
-  useEffect(() => {
-
-    const fetchPlantsForCurrentRoom = async () => {
+  const fetchPlantsForCurrentRoom = useCallback(async () => {
+    try {
       const userId = getCurrentUserId();
       if (userId && rooms.length > 0) {
         const roomId = rooms[currentRoomIndex].id;
         const fetchedPlants = await fetchPlantsInRoom(userId, roomId);
         setPlants(fetchedPlants);
       }
-    };
-  
-    fetchPlantsForCurrentRoom();
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      // Handle the error gracefully (e.g., show an error message to the user)
+    }
+  }, [currentRoomIndex, rooms, setPlants]);
 
-  }, [currentRoomIndex, rooms, plants]);
+  useEffect(() => {
+    fetchPlantsForCurrentRoom();
+  }, [fetchPlantsForCurrentRoom]);
 
   const goToPreviousRoom = () => {
     setCurrentRoomIndex(currentRoomIndex > 0 ? currentRoomIndex - 1 : rooms.length - 1);
@@ -149,7 +152,8 @@ const styles = StyleSheet.create({
   roomSelectorContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    alignSelf: "center",
+    gap: 18,
     padding: 16, // Adjust as needed
   },
   roomNameText: {
@@ -158,8 +162,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   arrowText: {
-    fontSize: fontSize.large, // Adjust as needed
-    fontFamily: fonts.medium,
+    fontSize: 20, // Adjust as needed
+    fontFamily: fonts.bold,
+
   },
   list: {
     flex: 1,

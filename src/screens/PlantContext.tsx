@@ -84,6 +84,8 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
       await createRoom(userId, newRoom.name);
       // Refetch rooms or update state optimistically
       // fetchRooms(userId).then(updatedRooms => setRooms(updatedRooms));
+      const updatedRooms = await fetchRooms(userId);
+      setRooms(updatedRooms);
     }
   };
 
