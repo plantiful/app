@@ -57,6 +57,7 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
     const userId = getCurrentUserId();
     if (userId) {
       addPlantt(userId, roomId, plant);
+      onDecision(true);
       navigation.goBack();
     }
     setIsRoomSelectorVisible(false);
@@ -85,10 +86,6 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
     }
   };
 
-  const handleAdd = () => {
-    onDecision(true);
-    navigation.goBack();
-  };
 
   const handleDiscard = () => {
     onDecision(false);

@@ -23,9 +23,10 @@ import { Entypo } from "@expo/vector-icons";
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { set } from "firebase/database";
 
 export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
-  const { rooms, currentRoomIndex, setCurrentRoomIndex } =
+  const { rooms, currentRoomIndex, setCurrentRoomIndex, updateRooms } =
     useContext(PlantContext);
   const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(
     Array(rooms.length).fill([])
@@ -35,6 +36,8 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
     async function fetchPlantsForAllRooms() {
       const userId = getCurrentUserId();
       if (userId) {
+        const rooms = await fetchRooms(userId);
+        updateRooms(rooms);
         const newRoomPlants = await Promise.all(
           rooms.map(async (room) => {
             const fetchedPlants = await fetchPlantsInRoom(userId, room.id);
