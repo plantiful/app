@@ -18,7 +18,7 @@ import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 
 // Firebase
-import { auth, getCurrentUserId, getWateringHistory } from "../firebase";
+import { auth, getCurrentUserId, getPlantsInRoom, getWateringHistory, PlantInfo } from "../firebase";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -123,15 +123,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [wateringHistory, setWateringHistory] = useState({});
   const [dailyPercentage, setDailyPercentage] = useState(0);
 
-  const { plants } = useContext(PlantContext);
+  const { plants, rooms } = useContext(PlantContext);
 
-  const [plantsRequiringSupport, setPlantsRequiringSupport] = useState([]);
+  const [allPlants, setAllPlants] = useState<PlantInfo[]>([]);
 
   useEffect(() => {
-    // Assuming `allPlants` is an array containing all plants from all rooms
-    const filteredPlants = plants.filter(plant => plant.lastWatered >= 2).slice(0, 3);
-    setPlantsRequiringSupport(filteredPlants);
-  }, [plants]); // You need to define how you get `allPlants` based on your app's logic
+    async function fetchPlantsForAllRooms() {
+      const userId = getCurrentUserId();
+      if (userId) {
+        // Fetch plants for each room and store them in an array of arrays
+        const roomPlants = await Promise.all(
+          rooms.map(async (room) => {
+            const fetchedPlants = await getPlantsInRoom(userId, room.id);
+            return fetchedPlants;
+          })
+        );
+        // Flatten the array of arrays to get a single array with all plants
+        const flattenedPlants = roomPlants.flat();
+        const filteredPlants = flattenedPlants.filter(plant => plant.lastWatered >= 2).slice(0, 3);
+        setAllPlants(filteredPlants);
+      }
+    }
+  
+    fetchPlantsForAllRooms();
+  }, [rooms]); // Dependency array to re-run the effect when 'rooms' changes
+  
 
 
   // Fetch the watering history from Firebase on component mount
@@ -404,7 +420,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               />
             </View>
             <FlatList
-              data={plantsRequiringSupport}
+              data={allPlants}
               renderItem={renderItem} // Make sure to define this function based on your needs
               keyExtractor={item => item.id.toString()}
             />
