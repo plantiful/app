@@ -29,8 +29,10 @@ import { useLanguage } from "../utils/LanguageContext";
 // Components
 import ButtonIcon from "../components/ButtonIcon";
 import ButtonWide from "../components/ButtonWide";
+import { ScanScreenProps } from "../utils/types";
 
-export const ScanScreen = () => {
+export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
+
   const { t } = i18n;
 
   const { language } = useLanguage();
@@ -51,7 +53,7 @@ export const ScanScreen = () => {
 
   function generateRandomTemperature(): string {
     // Generate a random number between 15 and 24
-    let firstNumber = Math.floor(Math.random() * 10) + 15;
+    let firstNumber = Math.floor(Math.random() * 10) + 18;
 
     // Decide whether to add or subtract 2 or 3
     let change = Math.random() > 0.5 ? 2 : 3;
@@ -59,7 +61,7 @@ export const ScanScreen = () => {
 
     // Calculate the second number and ensure it is within the 15-24 range
     let secondNumber = firstNumber + change;
-    if (secondNumber < 15) {
+    if (secondNumber < 18) {
         secondNumber = firstNumber + Math.abs(change);
     } else if (secondNumber > 24) {
         secondNumber = firstNumber - Math.abs(change);
@@ -73,11 +75,12 @@ export const ScanScreen = () => {
     return `${smallerNumber} - ${largerNumber}`;
 }
 function generateRandomSunlight(): string {
-  // Generate a random number between 60 and 80
-  let firstNumber = Math.floor(Math.random() * 21) + 60;
+  // Generate a random number between 60 and 80 that is divisible by 5
+  let base = 60; // Starting point, divisible by 5
+  let firstNumber = base + Math.floor(Math.random() * 5) * 5; // Increment in steps of 5
 
-  // Possible differences
-  const differences = [5, 10, 15, 20];
+  // Possible differences, all divisible by 5
+  const differences = [10, 15, 20];
   // Select a random difference
   let difference = differences[Math.floor(Math.random() * differences.length)];
 
@@ -85,11 +88,11 @@ function generateRandomSunlight(): string {
   let add = Math.random() > 0.5;
   let secondNumber = add ? firstNumber + difference : firstNumber - difference;
 
-  // Adjust if out of range
+  // Adjust if out of range, ensuring result is still divisible by 5
   if (secondNumber < 60) {
-      secondNumber = firstNumber + difference;
+      secondNumber = firstNumber + difference; // This will still be divisible by 5
   } else if (secondNumber > 80) {
-      secondNumber = firstNumber - difference;
+      secondNumber = firstNumber - difference; // This will still be divisible by 5
   }
 
   // Ensure the smaller number is first
@@ -222,10 +225,6 @@ function generateRandomSunlight(): string {
         Alert.alert("No plant identified");
       } else {
         if (suggestions && suggestions.length > 0) {
-          // suggestions.forEach((suggestion: any, index: number) => {
-          //   console.log(`Suggestion ${index + 1}:`, suggestion);
-          // });
-
           const topSuggestion = suggestions[0];
 
           const scientificName = topSuggestion.name;
@@ -242,15 +241,7 @@ function generateRandomSunlight(): string {
           const rank = topSuggestion.details.rank;
           const description = topSuggestion.details.description.value;
 
-          // toto vsechno se muze oddelat, nebude to tady kvuli api, ale nechci to to rozbit
-          const plantSunlight = "Not implemented.";
-          const plantTemperature = "Not implemented.";
-          const plantOrigin = "Not implemented.";
-          const plantGrowthHabit = "Not implemented.";
-          const lastWatered = 0;
-          // leaving the variables as not implement, Valon can fix later
-
-          let plantWatering = "Not available.";
+          let plantWatering = 2;
 
           if (topSuggestion.details.watering !== null) {
             plantWatering = topSuggestion.details.watering["max"];
@@ -270,7 +261,7 @@ function generateRandomSunlight(): string {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
 
-
+          
 
           // Toto Robis je to, co se pridava do db (u tebe plantData)
           const pd: PlantInfo = {
@@ -293,28 +284,38 @@ function generateRandomSunlight(): string {
             temperature: generateRandomTemperature(),
             lastWatered: Math.floor(Math.random() * 10),
           };
-          // Pridani rostliny do db, pokud das do chatu ty funkce z firebase, tak on ti ukaze, jak se s tim pracuje
-          const userId = getCurrentUserId();
-          if (userId) {
-            addRoom(userId, "Bedroom")
-              .then((roomId) => {
-                return addPlantt(userId, roomId, pd);
-              })
-              .catch((error) => {
-                console.error("Error:", error);
-              });
-          } else {
-            console.log("No user is currently logged in");
-          }
 
-          // Misto tohoto by te to melo hodit na ten plant detail screen (nebo treba na tu tvoji jinou)
-          Alert.alert(
-            "Plant Identified",
-            `Name: ${commonName}, Probability: ${(probability * 100).toFixed(
-              2
-            )}%`
-          );
-        } else {
+          try {
+            navigation.navigate('PlantScanScreen', {
+              plant: pd,
+              onDecision: (decision) => {
+                if (decision) {
+                  const userId = getCurrentUserId();
+                  if (userId) {
+                    addRoom(userId, "Bedroom")
+                      .then((roomId) => {
+                        return addPlantt(userId, roomId, pd);
+                      })
+                      .catch((error) => {
+                        console.error("Error:", error);
+                      });
+                  } else {
+                    console.log("No user is currently logged in");
+                  }
+                  console.log("Add plant");
+                } else {
+                  // User chose to discard the plant
+                  console.log("Discard plant");
+                }
+              }
+            });
+
+          }
+           catch(error) {
+          console.log("Error:", error);
+        }
+      }
+        else {
           Alert.alert("Suggestions not found");
         }
       }

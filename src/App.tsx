@@ -6,6 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { onAuthStateChanged } from "firebase/auth";
 import { PlantProvider } from "./screens/PlantContext";
+import PlantScanScreen from "./screens/PlantScanScreen"; // Adjust the import path according to your project structure
 
 import { loadFonts } from "./utils/loadFonts";
 import {
@@ -23,6 +24,7 @@ import {
   ChangeEmailScreenProps,
   ChangePasswordScreenProps,
   PlantsScreenParamList,
+  ScanScreenParamList,
 } from "./utils/types";
 
 // Firebase
@@ -53,6 +55,7 @@ import { LanguageProvider } from "./utils/LanguageContext";
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const HomeStack = createStackNavigator<HomeStackParamList>();
 const PlantStack = createStackNavigator<PlantsScreenParamList>();
+const ScanStack = createStackNavigator<ScanScreenParamList>();
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -171,9 +174,33 @@ export const App = () => {
             options={{ headerShown: false }}
             component={PlantDetailScreen}
           />
+          <PlantStack.Screen
+            name="PlantScanScreen"
+            options={{ headerShown: false }}
+            component={PlantScanScreen} // Add PlantScanScreen to the stack navigator
+          />
+          <PlantStack.Screen
+            name="ScanScreen"
+            options={{ headerShown: false }}
+            component={ScanScreen}
+          />
         </PlantStack.Navigator>
       );
     };
+
+    const ScanStackNavigator = () => (
+      <ScanStack.Navigator screenOptions={{ headerShown: false }}>
+        <ScanStack.Screen name="ScanScreen" component={ScanScreen} />
+        <ScanStack.Screen name="PlantScanScreen" component={PlantScanScreen} />
+      </ScanStack.Navigator>
+    );
+
+// In your BottomTab.Navigator
+<BottomTab.Screen
+  name="Scan"
+  component={ScanStackNavigator} // Use ScanStackNavigator here
+/>
+
 
     const HomeStackNavigator = () => {
       return (
@@ -256,7 +283,7 @@ export const App = () => {
               <BottomTab.Screen
                 name="Scan"
                 options={{ headerShown: false }}
-                component={ScanScreen}
+                component={ScanStackNavigator}
               />
               <BottomTab.Screen
                 name="Plants"

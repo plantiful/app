@@ -1,20 +1,32 @@
 import React, { useRef } from "react";
-import { View, Text, Animated, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Animated, StyleSheet, ScrollView, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { PlantInfo } from "../firebase";
 
-interface PlantDetailScreenProps {
-  route: {
-    params: {
-      plant: PlantInfo;
+interface ScanScreenProps {
+    route: {
+      params: {
+        plant: PlantInfo;
+        onDecision: (decision: boolean) => void;
+      };
     };
-  };
-}
+      navigation: any;
+  }
 
-const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
-  const { plant } = route.params;
+const PlantDetailScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
+    const { plant, onDecision } = route.params;
+  
+    const handleAdd = () => {
+      onDecision(true);
+      navigation.goBack();
+    };
+  
+    const handleDiscard = () => {
+      onDecision(false);
+      navigation.goBack();
+    };
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const headerHeight = scrollY.interpolate({
@@ -63,7 +75,10 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
               <Icon name="thermometer" size={24} color="#000" />
               <Text style={styles.infoText}>{`${plant.temperature}°C`}</Text>
             </View>
-            {/* Add more items as needed */}
+            <View style={styles.buttonContainer}>
+                <Button title="Discard" onPress={handleDiscard} />
+                <Button title="Add" onPress={handleAdd} />
+            </View>
           </ScrollView>
           <Text style={styles.header}>Origin</Text>
           <Text style={styles.text}>{plant.taxonomy.class}</Text>
@@ -87,6 +102,11 @@ const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
 };
 
 const styles = StyleSheet.create({
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 20,
+    },
   container: {
     flex: 1,
   },
