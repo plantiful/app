@@ -609,6 +609,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 2 },
     shadowRadius: defaultStyles.rounding,
     elevation: 10,
+    width: "9 0%",
   },
   requiringSupportText: {
     fontFamily: fonts.semiBold,

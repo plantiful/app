@@ -1,4 +1,4 @@
-import React, { useRef,  useState } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,15 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { PlantInfo } from "../firebase";
+import { PlantInfo, addPlantt, addRoom, getCurrentUserId } from "../firebase";
+import PlantContext from "./PlantContext";
+import { colors, fontSize, fonts } from "../utils/colors";
+import { set } from "firebase/database";
 
 interface ScanScreenProps {
   route: {
@@ -23,10 +27,40 @@ interface ScanScreenProps {
   navigation: any;
 }
 
-
-
 const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
   const { plant, onDecision } = route.params;
+
+  const [isRoomSelectorVisible, setIsRoomSelectorVisible] = useState(false);
+  const { rooms } = useContext(PlantContext);
+  const [isTextInputVisible, setTextInputVisible] = useState(false);
+
+  const [roomName, setRoomName] = useState("");
+
+  const handleRoomNameChange = (name: string) => {
+    setRoomName(name);
+  };
+
+  const handleAddPlant = (roomId: string) => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      addPlantt(userId, roomId, plant);
+      navigation.goBack();
+    }
+    setIsRoomSelectorVisible(false);
+  };
+
+  const handleAddRoom = (roomName: string) => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      addRoom(userId, roomName);
+    }
+    setIsRoomSelectorVisible(false);
+  };
+
+  useEffect(() => {
+    setIsRoomSelectorVisible(false);
+    setIsRoomSelectorVisible(true);
+  }, [rooms]);
 
   const handleAdd = () => {
     onDecision(true);
@@ -112,41 +146,63 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
-      <Modal visible={isVisible} animationType="slide" transparent={true}>
-      <View style={styles.modalView}>
-        {rooms.map((room, index) => (
-          <TouchableOpacity key={index} onPress={() => handleRoomSelect(room)}>
-            <Text style={styles.roomText}>{room}</Text>
+      <Modal
+        visible={isRoomSelectorVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.roomSelectorModal}>
+          {rooms.map((room, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => handleAddPlant(room.id)}
+            >
+              <Text style={styles.roomName}>{room.name}</Text>
+            </TouchableOpacity>
+          ))}
+          {isTextInputVisible && (
+            <TextInput
+              style={styles.addRoomInput}
+              value={roomName}
+              onChangeText={handleRoomNameChange}
+              placeholder="Enter room name"
+            />
+          )}
+          <TouchableOpacity
+            onPress={() => setTextInputVisible(!isTextInputVisible)}
+          >
+            <Text style={styles.addRoomText}>Add a new room</Text>
           </TouchableOpacity>
-        ))}
-        <TouchableOpacity onPress={handleAddRoom}>
-          <Text style={styles.addRoomText}>Add a new room</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
+          {isTextInputVisible && (
+            <TouchableOpacity onPress={() => handleAddRoom(roomName)}>
+              <Text style={styles.addRoomText}>Confirm Add Room</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    position: "absolute", // Position the button container absolutely
-    bottom: 0, // Align it to the bottom
+    position: "absolute",
+    bottom: 0,
     flexDirection: "row",
     justifyContent: "space-around",
-    width: "100%", // Ensure it spans the full width
-    padding: 10, // Add some padding for aesthetic spacing
+    width: "100%",
+    padding: 10,
     backgroundColor: "transparent",
   },
   buttonStyle: {
     alignItems: "center",
-    backgroundColor: "#007AFF", // Example button color, adjust as needed
+    backgroundColor: "#007AFF",
     padding: 10,
-    borderRadius: 20, // Rounded corners
-    width: "40%", // Set button width
+    borderRadius: 20,
+    width: "40%",
   },
   buttonText: {
-    color: "#fff", // Button text color
+    color: "#fff",
     fontSize: 16,
   },
   container: {
@@ -157,14 +213,13 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    // height is now dynamic and controlled by animation
   },
 
   detailsContainer: {
     padding: 16,
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     marginTop: -20,
     overflow: "hidden",
     shadowColor: "#000",
@@ -185,7 +240,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "500",
-    color: "#000",
+    color: colors.textBlack,
     paddingTop: 8,
   },
   scientificName: {
@@ -193,7 +248,7 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     fontSize: 18,
     fontWeight: "100",
-    color: "#E3E3E3", // Set your desired color
+    color: "#E3E3E3",
     borderBottomWidth: 1.5,
     borderBottomColor: "#E3E3E3",
     paddingBottom: 8,
@@ -226,10 +281,35 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontFamily: "OpenSans-Regular",
-    color: "#000",
+    color: colors.textBlack,
     borderBottomWidth: 1,
     borderBottomColor: "#E3E3E3",
     paddingBottom: 10,
+  },
+  roomSelectorModal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  roomName: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
+  },
+  addRoomText: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
+  },
+  addRoomButton: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
+  },
+  addRoomInput: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
   },
 });
 
