@@ -55,6 +55,7 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   const renderRoom = (room, index) => {
     // Render a FlatList for the current room
     return (
+<<<<<<< HEAD
       <View key={room.id} style={styles.roomContainer}>
         <FlatList
           data={roomPlants[index]}
@@ -63,6 +64,20 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
           contentContainerStyle={styles.listContentContainer}
           style={styles.list}
         />
+=======
+      <View>
+        {rooms.map((index: number) => (
+          <View
+            key={index}
+            style={[
+              styles.bubble,
+              currentRoomIndex === index
+                ? { backgroundColor: "black" }
+                : { backgroundColor: colors.primary },
+            ]}
+          />
+        ))}
+>>>>>>> cc50498217b3c53c3823474ab9880f9852c5eb7c
       </View>
     );
   };
@@ -164,7 +179,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+<<<<<<< HEAD
     justifyContent: 'space-between', // Adjust based on layout needs
+=======
+    paddingHorizontal: defaultStyles.padding,
+    alignItems: "center",
+    justifyContent: "space-between", // Adjust based on layout needs
+>>>>>>> cc50498217b3c53c3823474ab9880f9852c5eb7c
   },
   plantItem: {
     flexDirection: "row",
@@ -195,7 +216,7 @@ const styles = StyleSheet.create({
   listContentContainer: {
     // Style the container of the FlatList items
     padding: 10, // Add padding if necessary
-    alignItems: 'flex-start', // Align items to the start of the FlatList
+    alignItems: "flex-start", // Align items to the start of the FlatList
     paddingBottom: 20, // Add padding to the bottom for scrollability
     backgroundColor: "transparent",
   },
@@ -226,14 +247,14 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans-Regular",
     fontWeight: "400",
     textAlign: "center",
-    backgroundColor: '#fff', // White background for the text bubble
+    backgroundColor: "#fff", // White background for the text bubble
     paddingHorizontal: 16, // Horizontal padding
     paddingVertical: 8, // Vertical padding
     borderRadius: 20, // Rounded corners
-    overflow: 'hidden', // Ensures the background doesn't bleed out of the corners
-    alignSelf: 'center', // Center the text bubble in the parent container
+    overflow: "hidden", // Ensures the background doesn't bleed out of the corners
+    alignSelf: "center", // Center the text bubble in the parent container
     marginTop: 50, // Space from the top or from the previous element
-    position: 'absolute', // Absolutely position the text
+    position: "absolute", // Absolutely position the text
     top: 10, // Adjust this value to position correctly in the view
     zIndex: 1, // Make sure this is above the Swiper's zIndex
     // iOS shadows
@@ -247,12 +268,10 @@ const styles = StyleSheet.create({
     // Android elevation
     elevation: 5,
   },
-  
-  
+
   arrowText: {
     fontSize: 24, // Adjust as needed
     fontFamily: "OpenSans-Regular",
-
   },
   arrowButton: {
   padding: 10, // You can adjust this value to increase the tappable area
@@ -263,24 +282,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   indicatorContainer: {
-    position: 'absolute', // Position the indicators absolutely
+    position: "absolute", // Position the indicators absolutely
     bottom: 10, // Position it at the bottom of the parent container, adjust as needed
     left: 0,
     right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0)', // Ensure background is transparent
-    
+    backgroundColor: "rgba(0, 0, 0, 0)", // Ensure background is transparent
   },
-  
+
   bubble: {
+<<<<<<< HEAD
     width: 10,
     height: 10,
     borderRadius: 5,
     margin: 5,
     backgroundColor: 'white', // Or any color you wish to have for the inactive bubble
+=======
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
+    margin: 10,
+    backgroundColor: "white", // Or any color you wish to have for the inactive bubble
+>>>>>>> cc50498217b3c53c3823474ab9880f9852c5eb7c
     // iOS shadows
     shadowColor: "#000",
     shadowOffset: {
@@ -292,19 +318,19 @@ const styles = StyleSheet.create({
     // Android elevation
     elevation: 5,
   },
-  
+
   activeBubble: {
-    backgroundColor: 'green',
+    backgroundColor: "green",
   },
   inactiveBubble: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
   },
   roomContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     // Make sure the room container takes up the full size of the swiper view
-    width: '100%',
+    width: "100%",
   },
   plantLastWateredContainer: {
     flexDirection: "row",
