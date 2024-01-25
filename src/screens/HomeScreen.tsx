@@ -18,7 +18,13 @@ import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
 
 // Firebase
-import { auth, getCurrentUserId, getPlantsInRoom, getWateringHistory, PlantInfo } from "../firebase";
+import {
+  auth,
+  getCurrentUserId,
+  getPlantsInRoom,
+  getWateringHistory,
+  PlantInfo,
+} from "../firebase";
 
 // Components
 import ModalConfirm from "../components/ModalConfirm";
@@ -140,15 +146,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         );
         // Flatten the array of arrays to get a single array with all plants
         const flattenedPlants = roomPlants.flat();
-        const filteredPlants = flattenedPlants.filter(plant => plant.lastWatered >= 2).slice(0, 3);
+        const filteredPlants = flattenedPlants
+          .filter((plant) => plant.lastWatered >= 2)
+          .slice(0, 3);
         setAllPlants(filteredPlants);
       }
     }
-  
+
     fetchPlantsForAllRooms();
   }, [rooms]); // Dependency array to re-run the effect when 'rooms' changes
-  
-
 
   // Fetch the watering history from Firebase on component mount
   useEffect(() => {
@@ -410,22 +416,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   </Text>
                 </View>
 
-              <ButtonText
-                text={t("HomeScreen_requiring_support_view_all")}
-                textColor={colors.primary}
-                fontFamily={fonts.semiBold}
-                fontSize={fontSize.large}
-                alignSelf="center"
-                onPress={() => { }}
-                //onPress={() => navigation.navigate('PlantsScreen')}
+                <ButtonText
+                  text={t("HomeScreen_requiring_support_view_all")}
+                  textColor={colors.primary}
+                  fontFamily={fonts.semiBold}
+                  fontSize={fontSize.large}
+                  alignSelf="center"
+                  onPress={() => {}}
+                  //onPress={() => navigation.navigate('PlantsScreen')}
+                />
+              </View>
+              <FlatList
+                data={allPlants}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
               />
             </View>
-            <FlatList
-              data={allPlants}
-              renderItem={renderItem} // Make sure to define this function based on your needs
-              keyExtractor={item => item.id.toString()}
-            />
-          </View>
+          </ScrollView>
 
           <Modal
             animationType="fade"

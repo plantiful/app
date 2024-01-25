@@ -1,5 +1,4 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
 import { PlantInfo } from "../firebase";
 
 export type BottomTabParamList = {
@@ -54,7 +53,7 @@ export type SignUpScreenProps = {
   onAuthChange: (status: boolean) => void;
 };
 
-// HomeScreen
+// HomeStackParamList
 export type HomeStackParamList = {
   Home: undefined;
   Profile: undefined;
@@ -66,22 +65,6 @@ export type HomeStackParamList = {
   LanguageSettings: undefined;
   ThemeSettings: undefined;
   PlantsScreen: undefined;
-};
-export type PlantsScreenParamList = {
-  PlantsScreen: undefined;
-  PlantDetailScreen: { plant: PlantInfo };
-  PlantScanScreen: {
-    plant: PlantInfo;
-    onDecision: (decision: boolean) => void;
-  };
-  ScanScreen: undefined;
-};
-export type ScanScreenParamList = {
-  PlantScanScreen: {
-    plant: PlantInfo;
-    onDecision: (decision: boolean) => void;
-  };
-  ScanScreen: undefined;
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
@@ -155,13 +138,55 @@ export type LanguageSettingsScreenProps = {
   navigation: LanguageSettingsScreenNavigationProp;
 };
 
-type PlantScrenNavigationProp = StackNavigationProp<
+// PlantsStackParamList
+export type PlantsScreenParamList = {
+  ScanScreen: undefined;
+  PlantScanScreen: {
+    plant: PlantInfo;
+    onDecision: (decision: boolean) => void;
+  };
+  PlantsScreen: undefined;
+  PlantDetailScreen: { plant: PlantInfo };
+  AddPlantScreen: {
+    roomId: string;
+  };
+};
+
+type ScanScreenNavigationProp = StackNavigationProp<
   PlantsScreenParamList,
-  "PlantDetailScreen"
+  "ScanScreen"
 >;
 
-export type PlantScreenProps = {
-  navigation: PlantScrenNavigationProp;
+export type ScanScreenProps = {
+  navigation: ScanScreenNavigationProp;
+};
+
+type PlantsScrenNavigationProp = StackNavigationProp<
+  PlantsScreenParamList,
+  "PlantsScreen"
+>;
+
+export type PlantsScreenProps = {
+  navigation: PlantsScrenNavigationProp;
+};
+
+type AddPlantScreenNavigationProp = StackNavigationProp<
+  PlantsScreenParamList,
+  "AddPlantScreen"
+>;
+
+export type AddPlantScreenProps = {
+  navigation: AddPlantScreenNavigationProp;
+  roomId: string;
+};
+
+// ScanStackParamList
+export type ScanScreenParamList = {
+  ScanScreen: undefined;
+  PlantScanScreen: {
+    plant: PlantInfo;
+    onDecision: (decision: boolean) => void;
+  };
 };
 
 type PlantScanScreenNavigationProp = StackNavigationProp<
@@ -171,13 +196,6 @@ type PlantScanScreenNavigationProp = StackNavigationProp<
 
 export type PlantScanScreenProps = {
   navigation: PlantScanScreenNavigationProp;
-  route: RouteProp<PlantsScreenParamList, "PlantScanScreen">;
-};
-type ScanScreenNavigationProp = StackNavigationProp<
-  PlantsScreenParamList,
-  "ScanScreen"
->;
-
-export type ScanScreenProps = {
-  navigation: ScanScreenNavigationProp;
+  plant: PlantInfo;
+  onDecision: (decision: boolean) => void;
 };

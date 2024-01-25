@@ -51,6 +51,8 @@ import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "./screens/ProfileScreen";
 
 import { LanguageProvider } from "./utils/LanguageContext";
+import AddPlantScreen from "./screens/addPlantScreen";
+import addPlantScreen from "./screens/addPlantScreen";
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -174,6 +176,7 @@ export const App = () => {
             component={PlantScanScreen}
           />
           <PlantStack.Screen name="ScanScreen" component={ScanScreen} />
+          <PlantStack.Screen name="AddPlantScreen" component={addPlantScreen} />
         </PlantStack.Navigator>
       );
     };
