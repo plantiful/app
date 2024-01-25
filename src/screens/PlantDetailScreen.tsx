@@ -11,11 +11,19 @@ interface PlantDetailScreenProps {
       plant: PlantInfo;
     };
   };
+  navigation: any;
 }
 
-const PlantDetailScreen = ({ route }: PlantDetailScreenProps) => {
+const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const { plant } = route.params;
   const scrollY = useRef(new Animated.Value(0)).current;
+
+  const goBack = () => {
+    navigation.goBack();
+  };
 
   const headerHeight = scrollY.interpolate({
     inputRange: [0, 100],
