@@ -1,176 +1,153 @@
-import React, { useContext, useEffect, useState} from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  Image,
-  TouchableOpacity,
+  View, Text, Animated, StyleSheet, ScrollView, TouchableOpacity, Modal, TextInput,
 } from "react-native";
-import { PlantContext } from "./PlantContext";
-import { PlantsScreenProps } from "../utils/types";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  getCurrentUserId,
-  getRooms as fetchRooms,
-  addRoom as createRoom,
-  getPlantsInRoom as fetchPlantsInRoom,
-  addPlantt as createPlant,
-  PlantInfo // Importing the PlantInfo interface
-} from '../firebase'; // Adjust the import path
-import Swiper from 'react-native-swiper';
-import { Entypo } from '@expo/vector-icons';
-import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
-import { AntDesign } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { PlantInfo, addPlantt, addRoom, getCurrentUserId } from "../firebase";
+import PlantContext from "./PlantContext";
+import { colors, fontSize, fonts } from "../utils/colors";
 
-export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
-  const { rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
-  const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(Array(rooms.length).fill([]));
+interface ScanScreenProps {
+  route: {
+    params: {
+      plant: PlantInfo;
+      onDecision: (decision: boolean) => void;
+    };
+  };
+  navigation: any;
+}
 
-  useEffect(() => {
-    async function fetchPlantsForAllRooms() {
-      const userId = getCurrentUserId();
-      if (userId) {
-        const newRoomPlants = await Promise.all(
-          rooms.map(async (room) => {
-            const fetchedPlants = await fetchPlantsInRoom(userId, room.id);
-            return fetchedPlants;
-          })
-        );
-        setRoomPlants(newRoomPlants);
-      }
+const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
+  const { plant, onDecision } = route.params;
+  const { rooms } = useContext(PlantContext); // Assuming you have addRoomToContext method in your context
+  const [isRoomSelectorVisible, setIsRoomSelectorVisible] = useState(false);
+  const [isTextInputVisible, setTextInputVisible] = useState(false);
+  const [roomName, setRoomName] = useState("");
+
+  const handleRoomNameChange = (name: string) => setRoomName(name);
+
+  const handleAddPlant = (roomId: string) => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      addPlantt(userId, roomId, plant);
+      navigation.goBack();
     }
-
-    fetchPlantsForAllRooms();
-  }, [rooms]);
-
-  const goToPreviousRoom = () => {
-    setCurrentRoomIndex(currentRoomIndex > 0 ? currentRoomIndex - 1 : rooms.length - 1);
+    setIsRoomSelectorVisible(false);
   };
 
-  const goToNextRoom = () => {
-    setCurrentRoomIndex(currentRoomIndex < rooms.length - 1 ? currentRoomIndex + 1 : 0);
+  const handleAddRoom = async (roomName: string) => {
+    const userId = getCurrentUserId();
+    if (userId) {
+      try {
+        await addRoom(userId, roomName.trim());
+        setRoomName('');
+        setIsRoomSelectorVisible(false);
+        setTextInputVisible(false);
+      } catch (error) {
+        console.error("Failed to add room:", error);
+      }
+    } else {
+      console.error("Failed to add room: User is not logged in");
+    }
   };
 
-  const renderRoom = (room, index) => {
-    // Render a FlatList for the current room
-    return (
-      <View key={room.id} style={styles.roomContainer}>
-        <FlatList
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
-          style={styles.list}
-        />
-      </View>
-    );
+  const handleOpenModal = () => setIsRoomSelectorVisible(true);
+  const handleCloseModal = () => {
+    setIsRoomSelectorVisible(false);
+    setTextInputVisible(false);
   };
 
-  const RoomIndicator = ({ rooms, currentRoomIndex }) => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [400, 200],
+    extrapolate: "clamp",
+  });
+
   return (
-    <View style={styles.indicatorContainer}>
-      {rooms.map((_, index) => (
-        <View
-          key={index}
-          style={[
-            styles.bubble,
-            currentRoomIndex === index ? styles.activeBubble : styles.inactiveBubble,
-          ]}
-        />
-      ))}
-    </View>
+    <SafeAreaView style={styles.container}>
+      {/* ScrollView and other components */}
+
+      <Modal
+        visible={isRoomSelectorVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={handleCloseModal}
+      >
+        <View style={styles.roomSelectorModal}>
+          {/* Existing rooms */}
+          {rooms.map((room, index) => (
+            <TouchableOpacity key={index} onPress={() => handleAddPlant(room.id)}>
+              <Text style={styles.roomName}>{room.name}</Text>
+            </TouchableOpacity>
+          ))}
+
+          {/* Add new room input and button */}
+          {isTextInputVisible && (
+            <TextInput
+              style={styles.addRoomInput}
+              value={roomName}
+              onChangeText={handleRoomNameChange}
+              placeholder="Enter room name"
+              autoFocus={true}
+            />
+          )}
+
+          {!isTextInputVisible ? (
+            <TouchableOpacity onPress={() => setTextInputVisible(true)}>
+              <Text style={styles.addRoomText}>Add a new room</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => handleAddRoom(roomName)}>
+              <Text style={styles.addRoomText}>Confirm Add Room</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 
 
-const renderPlantItem = ({ item }) => (
-  <TouchableOpacity
-    style={styles.plantItem}
-    onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
-  >
-    <Image source={{ uri: item.photo }} style={styles.image} />
-    <SafeAreaView style={styles.textContainer}>
-      <Text style={styles.text}>{item.commonName}</Text>
-      <Text style={styles.subtext}>{item.scientificName}</Text>
-      <View style={styles.plantLastWateredContainer}>
-          <Entypo
-            name="drop"
-            size={20}
-            color={item.lastWatered >= item.watering ? "red" : colors.primary}
-          />
-          <Text
-            style={[
-              styles.plantLastWatered,
-              item.lastWatered >= item.watering
-                ? { color: "red" }
-                : { color: colors.textGrey },
-            ]}
-          >
-            {item.lastWatered} {item.lastWatered === 1 ? "day" : "days"} ago{" "}
-          </Text>
-        </View>
-    </SafeAreaView>
-  </TouchableOpacity>
-);
-
-return (
-  <SafeAreaView style={styles.container}>
-      <Text style={styles.roomNameText}>
-        {rooms[currentRoomIndex]
-          ? rooms[currentRoomIndex].name
-          : "Add a room to get started!"}
-      </Text>
-    <Swiper
-      loop={false}
-      showsPagination={false}
-      index={currentRoomIndex}
-      onIndexChanged={(index) => setCurrentRoomIndex(index)}
-    >
-      {rooms.map((room, index) => (
-        <FlatList
-          key={room.id}
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
-        />
-      ))}
-      
-    </Swiper>
-    <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
-
-    <View style={styles.addPlantContainer}>
-        <TouchableOpacity
-          style={styles.addPlantButton}
-          onPress={() => navigation.navigate("AddPlantScreen")}
-        >
-          <AntDesign name="plus" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-  </SafeAreaView>
-);
-};
 const styles = StyleSheet.create({
-  supportText: {
-    fontSize: fontSize.medium,
-    fontFamily: fonts.medium,
-    color: "red",
-    // Set the height to be the font size plus any desired padding.
-    // For example, if your font size is 16 and you want 8 points of padding on the top and bottom:
-    height: fontSize.medium + 16, // Adjust this based on your actual font size and desired padding
-    opacity: 0, // Default to transparent
+  buttonContainer: {
+    position: "absolute",
+    bottom: 0,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    padding: 10,
+    backgroundColor: "transparent",
+  },
+  buttonStyle: {
+    alignItems: "center",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    borderRadius: 20,
+    width: "40%",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
   },
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-    justifyContent: 'space-between', // Adjust based on layout needs
   },
-  plantItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 10,
+  scrollView: {
+    backgroundColor: "transparent",
+  },
+  image: {
+    width: "100%",
+  },
+
+  detailsContainer: {
+    padding: 16,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+    backgroundColor: colors.background,
+    marginTop: -20,
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -179,159 +156,89 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    // Sizing adjustments
-    width: '90%', // Consider using a percentage or fixed width
-    minHeight: 120, // Adjust the minimum height as needed
   },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginRight: 16,
+  line: {
+    alignSelf: "center",
+    width: "30%",
+    height: 3,
+    backgroundColor: "#E3E3E3",
   },
-  listContentContainer: {
-    // Style the container of the FlatList items
-    padding: 10, // Add padding if necessary
-    alignItems: 'flex-start', // Align items to the start of the FlatList
-    paddingBottom: 20, // Add padding to the bottom for scrollability
-    backgroundColor: "transparent",
+  name: {
+    fontSize: 24,
+    fontWeight: "500",
+    color: colors.textBlack,
+    paddingTop: 8,
   },
-  textContainer: {
-    flex: 1,
-    paddingVertical: 0, // Adjust or remove padding if not needed
-    justifyContent: "center", // This centers the text vertically in the container
+  scientificName: {
+    fontFamily: "OpenSans-Regular",
+    fontStyle: "italic",
+    fontSize: 18,
+    fontWeight: "100",
+    color: "#E3E3E3",
+    borderBottomWidth: 1.5,
+    borderBottomColor: "#E3E3E3",
+    paddingBottom: 8,
+    marginBottom: 8,
+  },
+  infoSection: {
+    flexDirection: "row",
+    marginBottom: 16,
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    padding: 8,
+    marginRight: 8,
+  },
+  infoText: {
+    fontSize: 16,
+    color: "#000",
+    marginLeft: 4,
+  },
+  header: {
+    fontSize: 22,
+    fontWeight: "400",
+    color: "#000",
+    marginTop: 10,
+    marginBottom: 10,
   },
   text: {
-    fontSize: fontSize.large,
-    fontFamily: fonts.medium,
+    fontSize: 16,
+    fontFamily: "OpenSans-Regular",
+    color: colors.textBlack,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E3E3E3",
+    paddingBottom: 10,
+  },
+  roomSelectorModal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.background,
+  },
+  roomName: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
     color: colors.textBlack,
   },
-  subtext: {
-    fontSize: fontSize.medium,
-    fontFamily: fonts.light,
-    color: colors.textGrey,
+  addRoomText: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
   },
-  roomSelectorContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    alignSelf: "center",
-    gap: 20,
-    padding: 16, // Adjust as needed
+  addRoomButton: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
   },
-  roomNameText: {
-    fontSize: 18, // Adjust as needed
-    fontFamily: "OpenSans-Regular",
-    fontWeight: "400",
-    textAlign: "center",
-    backgroundColor: '#fff', // White background for the text bubble
-    paddingHorizontal: 16, // Horizontal padding
-    paddingVertical: 8, // Vertical padding
-    borderRadius: 20, // Rounded corners
-    overflow: 'hidden', // Ensures the background doesn't bleed out of the corners
-    alignSelf: 'center', // Center the text bubble in the parent container
-    marginTop: 50, // Space from the top or from the previous element
-    position: 'absolute', // Absolutely position the text
-    top: 10, // Adjust this value to position correctly in the view
-    zIndex: 1, // Make sure this is above the Swiper's zIndex
-    // iOS shadows
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    // Android elevation
-    elevation: 5,
-  },
-  
-  
-  arrowText: {
-    fontSize: 24, // Adjust as needed
-    fontFamily: "OpenSans-Regular",
-
-  },
-  arrowButton: {
-  padding: 10, // You can adjust this value to increase the tappable area
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-  list: {
-    flex: 1,
-  },
-  indicatorContainer: {
-    position: 'absolute', // Position the indicators absolutely
-    bottom: 10, // Position it at the bottom of the parent container, adjust as needed
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0)', // Ensure background is transparent
-    
-  },
-  
-  bubble: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    margin: 5,
-    backgroundColor: 'white', // Or any color you wish to have for the inactive bubble
-    // iOS shadows
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    // Android elevation
-    elevation: 5,
-  },
-  
-  activeBubble: {
-    backgroundColor: 'green',
-  },
-  inactiveBubble: {
-    backgroundColor: 'black',
-  },
-  roomContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // Make sure the room container takes up the full size of the swiper view
-    width: '100%',
-  },
-  plantLastWateredContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: defaultStyles.padding / 2,
-  },
-  plantLastWatered: {
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textGrey,
-    paddingLeft: 5,
-  },
-  addPlantContainer: {
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    alignItems: "flex-end",
-    paddingBottom: defaultStyles.padding,
-  },
-  addPlantButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.primary,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  addRoomInput: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    color: colors.textBlack,
   },
 });
 
-export default PlantsScreen;
+export default PlantScanScreen;
+

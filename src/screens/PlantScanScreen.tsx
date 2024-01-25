@@ -12,10 +12,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { PlantInfo, addPlantt, addRoom, getCurrentUserId } from "../firebase";
+import { PlantInfo, addPlantt, addRoom, getCurrentUserId, getPlantsInRoom, getRooms } from "../firebase";
 import PlantContext from "./PlantContext";
 import { colors, fontSize, fonts } from "../utils/colors";
-import { set } from "firebase/database";
+
 
 interface ScanScreenProps {
   route: {
@@ -36,6 +36,15 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
 
   const [roomName, setRoomName] = useState("");
 
+  const [modalKey, setModalKey] = useState(0);
+
+
+
+  const refreshModal = () => {
+    setModalKey(prevKey => prevKey + 1);
+  };
+
+
   const handleRoomNameChange = (name: string) => {
     setRoomName(name);
   };
@@ -52,15 +61,30 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
   const handleAddRoom = (roomName: string) => {
     const userId = getCurrentUserId();
     if (userId) {
-      addRoom(userId, roomName);
-    }
-    setIsRoomSelectorVisible(false);
-  };
+      addRoom(userId, roomName.trim()).then((newRoom) => {
+        console.log("Successfully added room:", newRoom);
+        setRoomName('');
+        getRooms(userId).then((rooms) => {
+          console.log("Successfully fetched rooms:", rooms);
+        }).catch(error => {
+          // Handle errors (e.g., display an error message)
+          console.error("Failed to fetch rooms:", error);
+        });
+        refreshModal();
+        setIsRoomSelectorVisible(false); // Hide the modal after adding
+        setTextInputVisible(false); // Hide the input field after adding
+        setIsRoomSelectorVisible(true); // Show the modal again to display the new room
 
-  useEffect(() => {
-    setIsRoomSelectorVisible(false);
-    setIsRoomSelectorVisible(true);
-  }, [rooms]);
+
+      }).catch(error => {
+        // Handle errors (e.g., display an error message)
+        console.error("Failed to add room:", error);
+      });
+    }
+    else {
+      console.error("Failed to add room: User is not logged in");
+    }
+  };
 
   const handleAdd = () => {
     onDecision(true);
@@ -71,6 +95,15 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
     onDecision(false);
     navigation.goBack();
   };
+
+  const handleOpenModal = () => {
+    setIsRoomSelectorVisible(true);
+  };
+  const handleCloseModal = () => {
+    setIsRoomSelectorVisible(false);
+    setTextInputVisible(false); // Hide the input field when the modal is closed
+  };
+
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const headerHeight = scrollY.interpolate({
@@ -78,6 +111,57 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
     outputRange: [400, 200],
     extrapolate: "clamp",
   });
+  const RoomSelectorModal = ({ isVisible, onClose, addRoom }) => {
+    const { rooms } = useContext(PlantContext); // Use rooms directly from context
+  
+    return (
+      <Modal
+      key={rooms.length}
+      visible={isRoomSelectorVisible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={handleCloseModal}
+      >
+  <View style={styles.roomSelectorModal}>
+    {/* Existing rooms */}
+    {rooms.map((room, index) => (
+      <TouchableOpacity
+        key={index}
+        onPress={() => handleAddPlant(room.id)}
+      >
+        <Text style={styles.roomName}>{room.name}</Text>
+      </TouchableOpacity>
+    ))}
+
+    {/* Input for adding a new room, shown only if isTextInputVisible is true */}
+    {isTextInputVisible && (
+      <TextInput
+        style={styles.addRoomInput}
+        value={roomName}
+        onChangeText={handleRoomNameChange}
+        placeholder="Enter room name"
+        autoFocus={true} // Automatically focus this input
+      />
+    )}
+
+    {/* Toggle "Add a new room" text and "Confirm Add Room" button based on isTextInputVisible */}
+    {!isTextInputVisible && (
+      <TouchableOpacity onPress={() => setTextInputVisible(true)}>
+        <Text style={styles.addRoomText}>Add a new room</Text>
+      </TouchableOpacity>
+    )}
+
+    {isTextInputVisible && (
+      <TouchableOpacity onPress={() => {
+        handleAddRoom(roomName);
+      }}>
+        <Text style={styles.addRoomText}>Confirm Add Room</Text>
+      </TouchableOpacity>
+    )}
+  </View>
+      </Modal>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -142,44 +226,55 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
         <TouchableOpacity style={styles.buttonStyle} onPress={handleDiscard}>
           <Text style={styles.buttonText}>Discard</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonStyle} onPress={handleAdd}>
-          <Text style={styles.buttonText}>Add</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonStyle} onPress={handleOpenModal}>
+        <Text style={styles.buttonText}>Add</Text>
+      </TouchableOpacity>
       </View>
       <Modal
-        visible={isRoomSelectorVisible}
-        animationType="slide"
-        transparent={true}
+  key={rooms.length}
+  visible={isRoomSelectorVisible}
+  animationType="slide"
+  transparent={true}
+  onRequestClose={handleCloseModal}
+>
+  <View style={styles.roomSelectorModal}>
+    {/* Existing rooms */}
+    {rooms.map((room, index) => (
+      <TouchableOpacity
+        key={index}
+        onPress={() => handleAddPlant(room.id)}
       >
-        <View style={styles.roomSelectorModal}>
-          {rooms.map((room, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => handleAddPlant(room.id)}
-            >
-              <Text style={styles.roomName}>{room.name}</Text>
-            </TouchableOpacity>
-          ))}
-          {isTextInputVisible && (
-            <TextInput
-              style={styles.addRoomInput}
-              value={roomName}
-              onChangeText={handleRoomNameChange}
-              placeholder="Enter room name"
-            />
-          )}
-          <TouchableOpacity
-            onPress={() => setTextInputVisible(!isTextInputVisible)}
-          >
-            <Text style={styles.addRoomText}>Add a new room</Text>
-          </TouchableOpacity>
-          {isTextInputVisible && (
-            <TouchableOpacity onPress={() => handleAddRoom(roomName)}>
-              <Text style={styles.addRoomText}>Confirm Add Room</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </Modal>
+        <Text style={styles.roomName}>{room.name}</Text>
+      </TouchableOpacity>
+    ))}
+
+    {/* Input for adding a new room, shown only if isTextInputVisible is true */}
+    {isTextInputVisible && (
+      <TextInput
+        style={styles.addRoomInput}
+        value={roomName}
+        onChangeText={handleRoomNameChange}
+        placeholder="Enter room name"
+        autoFocus={true} // Automatically focus this input
+      />
+    )}
+
+    {/* Toggle "Add a new room" text and "Confirm Add Room" button based on isTextInputVisible */}
+    {!isTextInputVisible && (
+      <TouchableOpacity onPress={() => setTextInputVisible(true)}>
+        <Text style={styles.addRoomText}>Add a new room</Text>
+      </TouchableOpacity>
+    )}
+
+    {isTextInputVisible && (
+      <TouchableOpacity onPress={() => {
+        handleAddRoom(roomName);
+      }}>
+        <Text style={styles.addRoomText}>Confirm Add Room</Text>
+      </TouchableOpacity>
+    )}
+  </View>
+</Modal>
     </SafeAreaView>
   );
 };
@@ -290,6 +385,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: colors.background,
   },
   roomName: {
     fontFamily: fonts.semiBold,
