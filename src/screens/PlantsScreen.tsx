@@ -55,7 +55,6 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   const renderRoom = (room, index) => {
     // Render a FlatList for the current room
     return (
-<<<<<<< HEAD
       <View key={room.id} style={styles.roomContainer}>
         <FlatList
           data={roomPlants[index]}
@@ -64,20 +63,6 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
           contentContainerStyle={styles.listContentContainer}
           style={styles.list}
         />
-=======
-      <View>
-        {rooms.map((index: number) => (
-          <View
-            key={index}
-            style={[
-              styles.bubble,
-              currentRoomIndex === index
-                ? { backgroundColor: "black" }
-                : { backgroundColor: colors.primary },
-            ]}
-          />
-        ))}
->>>>>>> cc50498217b3c53c3823474ab9880f9852c5eb7c
       </View>
     );
   };
@@ -179,13 +164,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-<<<<<<< HEAD
     justifyContent: 'space-between', // Adjust based on layout needs
-=======
-    paddingHorizontal: defaultStyles.padding,
-    alignItems: "center",
-    justifyContent: "space-between", // Adjust based on layout needs
->>>>>>> cc50498217b3c53c3823474ab9880f9852c5eb7c
   },
   plantItem: {
     flexDirection: "row",
@@ -294,19 +273,11 @@ const styles = StyleSheet.create({
   },
 
   bubble: {
-<<<<<<< HEAD
     width: 10,
     height: 10,
     borderRadius: 5,
     margin: 5,
     backgroundColor: 'white', // Or any color you wish to have for the inactive bubble
-=======
-    width: 15,
-    height: 15,
-    borderRadius: 7.5,
-    margin: 10,
-    backgroundColor: "white", // Or any color you wish to have for the inactive bubble
->>>>>>> cc50498217b3c53c3823474ab9880f9852c5eb7c
     // iOS shadows
     shadowColor: "#000",
     shadowOffset: {
