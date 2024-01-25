@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { PlantContext, Room } from "./PlantContext";
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
@@ -29,7 +30,7 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   );
 
   useEffect(() => {
-    async function fetchPlantsForAllRooms() {
+    const fetchPlantsForAllRooms = async () => {
       const userId = getCurrentUserId();
       if (userId) {
         const newRoomPlants = await Promise.all(
@@ -40,7 +41,7 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
         );
         setRoomPlants(newRoomPlants);
       }
-    }
+    };
 
     fetchPlantsForAllRooms();
   }, [rooms]);
@@ -68,7 +69,7 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
       style={styles.plantContainer}
       onPress={() => navigation.navigate("PlantDetailScreen", { plant: plant })}
     >
-      <Image source={{ uri: plant.photo }} style={styles.plantPhoto} />
+      <Image source={{ uri: plant.photo }} style={styles.plantImage} />
       <View style={styles.plantInfoContainer}>
         <Text style={styles.plantName}>
           {plant.nickname.length ? plant.nickname : plant.commonName}
@@ -108,14 +109,16 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
         index={currentRoomIndex}
         onIndexChanged={(index) => setCurrentRoomIndex(index)}
       >
-        {rooms.map((room: Room, index: number) => (
-          <FlatList
-            key={room.id}
-            data={roomPlants[index]}
-            renderItem={(plant) => renderPlant(plant.item)}
-            contentContainerStyle={styles.listContentContainer}
-          />
-        ))}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {rooms.map((room: Room, index: number) => (
+            <FlatList
+              key={room.id}
+              data={roomPlants[index]}
+              renderItem={(plant) => renderPlant(plant.item)}
+              contentContainerStyle={styles.listContentContainer}
+            />
+          ))}
+        </ScrollView>
       </Swiper>
       <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
 
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
     shadowRadius: defaultStyles.rounding,
     elevation: 5,
   },
-  plantPhoto: {
+  plantImage: {
     width: 100,
     height: 100,
     borderRadius: defaultStyles.rounding,

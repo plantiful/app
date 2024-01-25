@@ -50,7 +50,7 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
   const { addPlant } = useContext(PlantContext);
 
-  function generateRandomTemperature(): string {
+  const generateRandomTemperature = () => {
     // Generate a random number between 15 and 24
     let firstNumber = Math.floor(Math.random() * 10) + 18;
 
@@ -72,8 +72,9 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
     // Return the formatted string
     return `${smallerNumber} - ${largerNumber}`;
-  }
-  function generateRandomSunlight(): string {
+  };
+
+  const generateRandomSunlight = () => {
     // Generate a random number between 60 and 80 that is divisible by 5
     let base = 60; // Starting point, divisible by 5
     let firstNumber = base + Math.floor(Math.random() * 5) * 5; // Increment in steps of 5
@@ -103,9 +104,9 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
     // Return the formatted string
     return `${smallerNumber} - ${largerNumber}`;
-  }
+  };
 
-  async function getCameraPermission() {
+  const getCameraPermission = async () => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
     if (cameraPermission.status === "granted") {
       setCameraPermission(true);
@@ -115,7 +116,7 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
       setIsCameraReady(false);
       Alert.alert("Permission to access camera is required");
     }
-  }
+  };
 
   useEffect(() => {
     getCameraPermission();

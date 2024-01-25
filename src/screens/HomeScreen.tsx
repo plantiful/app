@@ -134,29 +134,29 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [allPlants, setAllPlants] = useState<PlantInfo[]>([]);
 
   useEffect(() => {
-    async function fetchPlantsForAllRooms() {
+    const fetchPlantsForAllRooms = async () => {
       const userId = getCurrentUserId();
       if (userId) {
-        // Fetch plants for each room and store them in an array of arrays
         const roomPlants = await Promise.all(
           rooms.map(async (room) => {
             const fetchedPlants = await getPlantsInRoom(userId, room.id);
-            return fetchedPlants;
+            return fetchedPlants.map((plant) => ({
+              ...plant,
+              roomName: room.name,
+            }));
           })
         );
-        // Flatten the array of arrays to get a single array with all plants
         const flattenedPlants = roomPlants.flat();
         const filteredPlants = flattenedPlants
-          .filter((plant) => plant.lastWatered >= 2)
+          .filter((plant) => plant.lastWatered >= plant.watering)
           .slice(0, 3);
         setAllPlants(filteredPlants);
       }
-    }
+    };
 
     fetchPlantsForAllRooms();
-  }, [rooms]); // Dependency array to re-run the effect when 'rooms' changes
+  }, [rooms, plants]);
 
-  // Fetch the watering history from Firebase on component mount
   useEffect(() => {
     const fetchWateringData = async () => {
       const userId = getCurrentUserId();
@@ -252,28 +252,24 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     selectedDate
   );
 
-  const needsWatering = (plant) => {
-    return plant.lastWatered < plant.watering;
-  };
-
-  const renderItem = ({ item }) => {
-    const daysSinceLastWatered = needsWatering(item.lastWatered);
+  const renderPlant = (plant: PlantInfo) => {
     return (
-      <TouchableOpacity style={styles.requiringSupportPlantContainer}>
+      <TouchableOpacity
+        style={styles.requiringSupportPlantContainer}
+        onPress={() => navigateToPlantDetailScreen(plant)}
+      >
         <Image
-          source={{ uri: item.photo }}
+          source={{ uri: plant.photo }}
           style={styles.requiringSupportPlantImage}
         />
-        <View style={{ flex: 1, paddingLeft: 10 }}>
+        <View style={{ flex: 1, paddingLeft: defaultStyles.padding }}>
           <Text style={styles.requiringSupportPlantName}>
-            {item.commonName}
+            {plant.nickname.length ? plant.nickname : plant.commonName}
           </Text>
-          <Text style={styles.requiringSupportPlantRoom}>
-            {item.scientificName}
+          <Text style={styles.requiringSupportPlantRoom}>{plant.roomName}</Text>
+          <Text style={styles.requiringSupportPlantWatering}>
+            {plant.lastWatered} {plant.lastWatered === 1 ? "day" : "days"} ago{" "}
           </Text>
-          <Text
-            style={styles.requiringSupportPlantWatering}
-          >{`${daysSinceLastWatered} days ago`}</Text>
         </View>
         <Ionicons
           name="chevron-forward-outline"
@@ -290,6 +286,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const toggleSearchSettings = () => {
     setShowSearchSettings(!showSearchSettings);
+  };
+
+  const navigateToPlantsScreen = () => {
+    navigation.navigate("PlantsScreen");
+  };
+
+  // This works, lol
+  const navigateToPlantDetailScreen = (plant: PlantInfo) => {
+    navigation.navigate("Plants", {
+      screen: "PlantDetailScreen",
+      params: { plant: plant },
+    });
   };
 
   return (
@@ -343,7 +351,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <View style={{ borderBottomColor: "#f1f1f1", borderBottomWidth: 1 }} />
 
         <View style={styles.contentContainer}>
-          <ScrollView>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {/* <View style={styles.searchContainer}>
             <View style={styles.searchRect}>
               <Ionicons name="search-outline" size={24} color="black" />
@@ -422,14 +430,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   fontFamily={fonts.semiBold}
                   fontSize={fontSize.large}
                   alignSelf="center"
-                  onPress={() => {}}
-                  //onPress={() => navigation.navigate('PlantsScreen')}
+                  onPress={navigateToPlantsScreen}
                 />
               </View>
               <FlatList
                 data={allPlants}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
+                renderItem={(plant) => renderPlant(plant.item)}
               />
             </View>
           </ScrollView>
@@ -587,9 +593,14 @@ const styles = StyleSheet.create({
     borderRadius: defaultStyles.rounding,
   },
   requiringSupportContainer: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: colors.background,
     padding: defaultStyles.padding,
     borderRadius: defaultStyles.rounding,
+    shadowOpacity: 0.5,
+    shadowColor: "#000000",
+    shadowOffset: { width: 2, height: 2 },
+    shadowRadius: defaultStyles.rounding,
+    elevation: 10,
   },
   requiringSupportText: {
     fontFamily: fonts.semiBold,
@@ -599,9 +610,9 @@ const styles = StyleSheet.create({
   },
   requiringSupportPlantContainer: {
     flexDirection: "row",
-    // alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: 5,
+    alignItems: "center",
+    borderRadius: defaultStyles.rounding,
+    padding: defaultStyles.padding / 2,
   },
   requiringSupportPlantImage: {
     width: 100,
@@ -610,9 +621,8 @@ const styles = StyleSheet.create({
   },
   requiringSupportPlantName: {
     fontFamily: fonts.medium,
-    fontSize: fontSize.large,
+    fontSize: fontSize.largePlus,
     color: colors.textBlack,
-    paddingVertical: 5,
   },
   requiringSupportPlantRoom: {
     fontFamily: fonts.regular,
