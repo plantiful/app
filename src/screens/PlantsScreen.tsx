@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -7,24 +7,26 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { PlantContext } from "./PlantContext";
-import { colors, fonts, fontSize } from "../utils/colors";
-import { PlantScreenProps } from "../utils/types";
+import { PlantContext, Room } from "./PlantContext";
+import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
+import { PlantsScreenProps } from "../utils/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getCurrentUserId,
-  getRooms as fetchRooms,
-  addRoom as createRoom,
-  getPlantsInRoom as fetchPlantsInRoom,
-  addPlantt as createPlant,
-  PlantInfo // Importing the PlantInfo interface
-} from '../firebase'; // Adjust the import path
-import Swiper from 'react-native-swiper';
+  getPlantsInRoom,
+  addPlantt,
+  PlantInfo,
+} from "../firebase";
+import Swiper from "react-native-swiper";
+import { Entypo } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
-
-export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation }) => {
-  const { rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
-  const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(Array(rooms.length).fill([]));
+export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
+  const { rooms, currentRoomIndex, setCurrentRoomIndex } =
+    useContext(PlantContext);
+  const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(
+    Array(rooms.length).fill([])
+  );
 
   useEffect(() => {
     async function fetchPlantsForAllRooms() {
@@ -32,8 +34,8 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation }) => {
       if (userId) {
         const newRoomPlants = await Promise.all(
           rooms.map(async (room) => {
-            const fetchedPlants = await fetchPlantsInRoom(userId, room.id);
-            return fetchedPlants;
+            const plantsInRoom = await getPlantsInRoom(userId, room.id);
+            return plantsInRoom;
           })
         );
         setRoomPlants(newRoomPlants);
@@ -43,132 +45,124 @@ export const PlantsScreen: React.FC<PlantScreenProps> = ({ navigation }) => {
     fetchPlantsForAllRooms();
   }, [rooms]);
 
-  const goToPreviousRoom = () => {
-    setCurrentRoomIndex(currentRoomIndex > 0 ? currentRoomIndex - 1 : rooms.length - 1);
-  };
-
-  const goToNextRoom = () => {
-    setCurrentRoomIndex(currentRoomIndex < rooms.length - 1 ? currentRoomIndex + 1 : 0);
-  };
-
-  const renderRoom = (room, index) => {
-    // Render a FlatList for the current room
+  const RoomIndicator = ({ rooms, currentRoomIndex }) => {
     return (
-      <View key={room.id} style={styles.roomContainer}>
-        <FlatList
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
-          style={styles.list}
-        />
+      <View>
+        {rooms.map((index: number) => (
+          <View
+            key={index}
+            style={[
+              styles.bubble,
+              currentRoomIndex === index
+                ? { backgroundColor: "black" }
+                : { backgroundColor: "green" },
+            ]}
+          />
+        ))}
       </View>
     );
   };
 
-  const RoomIndicator = ({ rooms, currentRoomIndex }) => {
+  const renderPlant = (plant: PlantInfo) => (
+    <TouchableOpacity
+      style={styles.plantContainer}
+      onPress={() => navigation.navigate("PlantDetailScreen", { plant: plant })}
+    >
+      <Image source={{ uri: plant.photo }} style={styles.plantPhoto} />
+      <View style={styles.plantInfoContainer}>
+        <Text style={styles.plantName}>
+          {plant.nickname.length ? plant.nickname : plant.commonName}
+        </Text>
+        <Text style={styles.plantScientificName}>{plant.scientificName}</Text>
+        <View style={styles.plantLastWateredContainer}>
+          <Entypo
+            name="drop"
+            size={20}
+            color={plant.lastWatered >= plant.watering ? "red" : colors.primary}
+          />
+          <Text
+            style={[
+              styles.plantLastWatered,
+              plant.lastWatered >= plant.watering
+                ? { color: "red" }
+                : { color: colors.textGrey },
+            ]}
+          >
+            {plant.lastWatered} {plant.lastWatered === 1 ? "day" : "days"} ago{" "}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
-    <View style={styles.indicatorContainer}>
-      {rooms.map((_, index) => (
-        <View
-          key={index}
-          style={[
-            styles.bubble,
-            currentRoomIndex === index ? styles.activeBubble : styles.inactiveBubble,
-          ]}
-        />
-      ))}
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.roomNameText}>
+        {rooms[currentRoomIndex]
+          ? rooms[currentRoomIndex].name
+          : "Add a room to get started!"}
+      </Text>
+      <Swiper
+        loop={false}
+        showsPagination={false}
+        index={currentRoomIndex}
+        onIndexChanged={(index) => setCurrentRoomIndex(index)}
+      >
+        {rooms.map((room: Room, index: number) => (
+          <FlatList
+            key={room.id}
+            data={roomPlants[index]}
+            renderItem={(plant) => renderPlant(plant.item)}
+            contentContainerStyle={styles.listContentContainer}
+          />
+        ))}
+      </Swiper>
+      <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
+
+      <View style={styles.addPlantContainer}>
+        <TouchableOpacity
+          style={styles.addPlantButton}
+          onPress={() => navigation.navigate("AddPlantScreen")}
+        >
+          <AntDesign name="plus" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 };
-
-
-const renderPlantItem = ({ item }) => (
-  <TouchableOpacity
-    style={styles.plantItem}
-    onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
-  >
-    <Image source={{ uri: item.photo }} style={styles.image} />
-    <SafeAreaView style={styles.textContainer}>
-      <Text style={styles.text}>{item.commonName}</Text>
-      <Text style={styles.subtext}>{item.scientificName}</Text>
-      <Text style={styles.subtext}>{item.lastWatered} days ago</Text>
-      <Text style={[
-        styles.supportText,
-        item.lastWatered >= 2 ? {opacity: 1} : { opacity: 0 }
-      ]}>
-        Requiring support
-      </Text>
-    </SafeAreaView>
-  </TouchableOpacity>
-);
-
-return (
-  <SafeAreaView style={styles.container}>
-    <Text style={styles.roomNameText}>
-      {rooms[currentRoomIndex] ? rooms[currentRoomIndex].name : 'No Room Selected'}
-    </Text>
-    <Swiper
-      loop={false}
-      showsPagination={false}
-      index={currentRoomIndex}
-      onIndexChanged={(index) => setCurrentRoomIndex(index)}
-    >
-      {rooms.map((room, index) => (
-        <FlatList
-          key={room.id}
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
-        />
-      ))}
-      
-    </Swiper>
-    <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
-  </SafeAreaView>
-);
-};
 const styles = StyleSheet.create({
-  supportText: {
-    fontSize: fontSize.medium,
-    fontFamily: fonts.medium,
-    color: "red",
-    // Set the height to be the font size plus any desired padding.
-    // For example, if your font size is 16 and you want 8 points of padding on the top and bottom:
-    height: fontSize.medium + 16, // Adjust this based on your actual font size and desired padding
-    opacity: 0, // Default to transparent
-  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
+    paddingHorizontal: defaultStyles.padding,
+    alignItems: "center",
     justifyContent: 'space-between', // Adjust based on layout needs
   },
-  plantItem: {
+  roomName: {
+    fontFamily: fonts.semiBold,
+    fontSize: fontSize.largePlus,
+    textAlign: "center",
+    paddingTop: defaultStyles.padding,
+    paddingBottom: defaultStyles.padding,
+  },
+  plantContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    borderRadius: defaultStyles.rounding,
+    padding: defaultStyles.padding / 2,
+    width: "100%",
+    marginBottom: defaultStyles.padding,
+    shadowOpacity: 0.15,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: defaultStyles.rounding,
     elevation: 5,
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    // Sizing adjustments
-    width: '90%', // Consider using a percentage or fixed width
-    minHeight: 120, // Adjust the minimum height as needed
   },
-  image: {
+  plantPhoto: {
     width: 100,
     height: 100,
-    borderRadius: 10,
-    marginRight: 16,
+    borderRadius: defaultStyles.rounding,
   },
   listContentContainer: {
     // Style the container of the FlatList items
@@ -179,25 +173,28 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    paddingVertical: 0, // Adjust or remove padding if not needed
-    justifyContent: "center", // This centers the text vertically in the container
+    paddingLeft: defaultStyles.padding,
   },
-  text: {
-    fontSize: fontSize.large,
+  plantName: {
     fontFamily: fonts.medium,
+    fontSize: fontSize.largePlus,
     color: colors.textBlack,
   },
-  subtext: {
+  plantScientificName: {
+    fontFamily: fonts.regular,
     fontSize: fontSize.medium,
-    fontFamily: fonts.light,
     color: colors.textGrey,
   },
-  roomSelectorContainer: {
+  plantLastWateredContainer: {
     flexDirection: "row",
     alignItems: "center",
-    alignSelf: "center",
-    gap: 20,
-    padding: 16, // Adjust as needed
+    paddingTop: defaultStyles.padding / 2,
+  },
+  plantLastWatered: {
+    fontFamily: fonts.regular,
+    fontSize: fontSize.medium,
+    color: colors.textGrey,
+    paddingLeft: 5,
   },
   roomNameText: {
     fontSize: 18, // Adjust as needed
@@ -232,13 +229,20 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans-Regular",
 
   },
-  arrowButton: {
-  padding: 10, // You can adjust this value to increase the tappable area
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-  list: {
-    flex: 1,
+  addPlantContainer: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    alignItems: "flex-end",
+    paddingBottom: defaultStyles.padding,
+  },
+  addPlantButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   indicatorContainer: {
     position: 'absolute', // Position the indicators absolutely
@@ -254,9 +258,9 @@ const styles = StyleSheet.create({
   },
   
   bubble: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
     margin: 5,
     backgroundColor: 'white', // Or any color you wish to have for the inactive bubble
     // iOS shadows
@@ -276,6 +280,10 @@ const styles = StyleSheet.create({
   },
   inactiveBubble: {
     backgroundColor: 'black',
+  },
+  plantInfoContainer: {
+    flex: 1,
+    paddingLeft: defaultStyles.padding,
   },
   roomContainer: {
     flex: 1,

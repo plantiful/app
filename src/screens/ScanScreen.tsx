@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Camera, CameraType, FlashMode } from "expo-camera";
 import axios from "axios";
 import { Dimensions } from "react-native";
-import { PlantContext} from "./PlantContext";
+import { PlantContext } from "./PlantContext";
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -32,7 +32,6 @@ import ButtonWide from "../components/ButtonWide";
 import { ScanScreenProps } from "../utils/types";
 
 export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
-
   const { t } = i18n;
 
   const { language } = useLanguage();
@@ -62,9 +61,9 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
     // Calculate the second number and ensure it is within the 15-24 range
     let secondNumber = firstNumber + change;
     if (secondNumber < 18) {
-        secondNumber = firstNumber + Math.abs(change);
+      secondNumber = firstNumber + Math.abs(change);
     } else if (secondNumber > 24) {
-        secondNumber = firstNumber - Math.abs(change);
+      secondNumber = firstNumber - Math.abs(change);
     }
 
     // Ensure the smaller number is first
@@ -73,35 +72,38 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
     // Return the formatted string
     return `${smallerNumber} - ${largerNumber}`;
-}
-function generateRandomSunlight(): string {
-  // Generate a random number between 60 and 80 that is divisible by 5
-  let base = 60; // Starting point, divisible by 5
-  let firstNumber = base + Math.floor(Math.random() * 5) * 5; // Increment in steps of 5
-
-  // Possible differences, all divisible by 5
-  const differences = [10, 15, 20];
-  // Select a random difference
-  let difference = differences[Math.floor(Math.random() * differences.length)];
-
-  // Decide whether to add or subtract the difference
-  let add = Math.random() > 0.5;
-  let secondNumber = add ? firstNumber + difference : firstNumber - difference;
-
-  // Adjust if out of range, ensuring result is still divisible by 5
-  if (secondNumber < 60) {
-      secondNumber = firstNumber + difference; // This will still be divisible by 5
-  } else if (secondNumber > 80) {
-      secondNumber = firstNumber - difference; // This will still be divisible by 5
   }
+  function generateRandomSunlight(): string {
+    // Generate a random number between 60 and 80 that is divisible by 5
+    let base = 60; // Starting point, divisible by 5
+    let firstNumber = base + Math.floor(Math.random() * 5) * 5; // Increment in steps of 5
 
-  // Ensure the smaller number is first
-  let smallerNumber = Math.min(firstNumber, secondNumber);
-  let largerNumber = Math.max(firstNumber, secondNumber);
+    // Possible differences, all divisible by 5
+    const differences = [10, 15, 20];
+    // Select a random difference
+    let difference =
+      differences[Math.floor(Math.random() * differences.length)];
 
-  // Return the formatted string
-  return `${smallerNumber} - ${largerNumber}`;
-}
+    // Decide whether to add or subtract the difference
+    let add = Math.random() > 0.5;
+    let secondNumber = add
+      ? firstNumber + difference
+      : firstNumber - difference;
+
+    // Adjust if out of range, ensuring result is still divisible by 5
+    if (secondNumber < 60) {
+      secondNumber = firstNumber + difference; // This will still be divisible by 5
+    } else if (secondNumber > 80) {
+      secondNumber = firstNumber - difference; // This will still be divisible by 5
+    }
+
+    // Ensure the smaller number is first
+    let smallerNumber = Math.min(firstNumber, secondNumber);
+    let largerNumber = Math.max(firstNumber, secondNumber);
+
+    // Return the formatted string
+    return `${smallerNumber} - ${largerNumber}`;
+  }
 
   async function getCameraPermission() {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -253,7 +255,6 @@ function generateRandomSunlight(): string {
             topSuggestion.details.synonyms &&
             topSuggestion.details.synonyms.length > 0
           ) {
-            // Get up to the first three synonyms
             plantSynonyms = topSuggestion.details.synonyms
               .slice(0, 3)
               .join(", ");
@@ -261,12 +262,9 @@ function generateRandomSunlight(): string {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
 
-          
-
-          // Toto Robis je to, co se pridava do db (u tebe plantData)
           const pd: PlantInfo = {
             photo: imageUrl,
-            nickname: "Planty",
+            nickname: "",
             commonName: commonName,
             scientificName: scientificName,
             taxonomy: {
@@ -286,7 +284,7 @@ function generateRandomSunlight(): string {
           };
 
           try {
-            navigation.navigate('PlantScanScreen', {
+            navigation.navigate("PlantScanScreen", {
               plant: pd,
               onDecision: (decision) => {
                 if (decision) {
@@ -304,18 +302,14 @@ function generateRandomSunlight(): string {
                   }
                   console.log("Add plant");
                 } else {
-                  // User chose to discard the plant
                   console.log("Discard plant");
                 }
-              }
+              },
             });
-
+          } catch (error) {
+            console.log("Error:", error);
           }
-           catch(error) {
-          console.log("Error:", error);
-        }
-      }
-        else {
+        } else {
           Alert.alert("Suggestions not found");
         }
       }
@@ -384,8 +378,6 @@ function generateRandomSunlight(): string {
   if (loading) {
     return (
       <View style={styles.container}>
-        {/* Your component content */}
-
         {loading && (
           <View style={styles.overlay}>
             <ActivityIndicator size="large" color={colors.primary} />
@@ -444,7 +436,6 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: "row",
     paddingHorizontal: defaultStyles.padding,
-    // marginBottom: defaultStyles.padding,
   },
   text: {
     textAlign: "center",
