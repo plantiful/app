@@ -15,15 +15,7 @@ import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import { useFocusEffect } from "@react-navigation/native";
 
 import i18n from "../../assets/translations/i18n";
-import {
-  addRoom,
-  addPlantt,
-  auth,
-  PlantInfo,
-  getCurrentUserId,
-  getRooms,
-  getPlantsInRoom,
-} from "../firebase";
+import { addRoom, addPlantt, PlantInfo, getCurrentUserId } from "../firebase";
 import { useLanguage } from "../utils/LanguageContext";
 
 // Components
@@ -263,7 +255,7 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
 
-          const pd: PlantInfo = {
+          const plant: PlantInfo = {
             photo: imageUrl,
             nickname: "",
             commonName: commonName,
@@ -286,14 +278,14 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
 
           try {
             navigation.navigate("PlantScanScreen", {
-              plant: pd,
+              plant: plant,
               onDecision: (decision) => {
                 if (decision) {
                   const userId = getCurrentUserId();
                   if (userId) {
                     addRoom(userId, "Livin Room")
                       .then((roomId) => {
-                        return addPlantt(userId, roomId, pd);
+                        return addPlantt(userId, roomId, plant);
                       })
                       .catch((error) => {
                         console.error("Error:", error);

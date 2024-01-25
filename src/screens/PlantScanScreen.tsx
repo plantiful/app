@@ -10,13 +10,21 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { PlantScanScreenProps } from "../utils/types";
+import { PlantInfo } from "../firebase";
 
-const PlantScanScreen: React.FC<PlantScanScreenProps> = ({
-  navigation,
-  plant,
-  onDecision,
-}) => {
+interface ScanScreenProps {
+  route: {
+    params: {
+      plant: PlantInfo;
+      onDecision: (decision: boolean) => void;
+    };
+  };
+  navigation: any;
+}
+
+const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
+  const { plant, onDecision } = route.params;
+
   const handleAdd = () => {
     onDecision(true);
     navigation.goBack();
