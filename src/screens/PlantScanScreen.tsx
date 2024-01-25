@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef,  useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -21,6 +22,8 @@ interface ScanScreenProps {
   };
   navigation: any;
 }
+
+
 
 const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
   const { plant, onDecision } = route.params;
@@ -109,6 +112,18 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
           <Text style={styles.buttonText}>Add</Text>
         </TouchableOpacity>
       </View>
+      <Modal visible={isVisible} animationType="slide" transparent={true}>
+      <View style={styles.modalView}>
+        {rooms.map((room, index) => (
+          <TouchableOpacity key={index} onPress={() => handleRoomSelect(room)}>
+            <Text style={styles.roomText}>{room}</Text>
+          </TouchableOpacity>
+        ))}
+        <TouchableOpacity onPress={handleAddRoom}>
+          <Text style={styles.addRoomText}>Add a new room</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
     </SafeAreaView>
   );
 };
