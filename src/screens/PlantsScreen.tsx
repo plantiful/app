@@ -98,7 +98,7 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.roomName}>
+      <Text style={styles.roomNameText}>
         {rooms[currentRoomIndex]
           ? rooms[currentRoomIndex].name
           : "Add a room to get started!"}
@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     paddingHorizontal: defaultStyles.padding,
-    justifyContent: "center",
     alignItems: "center",
+    justifyContent: 'space-between', // Adjust based on layout needs
   },
   roomName: {
     fontFamily: fonts.semiBold,
@@ -167,7 +167,14 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: defaultStyles.rounding,
   },
-  plantInfoContainer: {
+  listContentContainer: {
+    // Style the container of the FlatList items
+    padding: 10, // Add padding if necessary
+    alignItems: 'flex-start', // Align items to the start of the FlatList
+    paddingBottom: 20, // Add padding to the bottom for scrollability
+    backgroundColor: "transparent",
+  },
+  textContainer: {
     flex: 1,
     paddingLeft: defaultStyles.padding,
   },
@@ -192,9 +199,38 @@ const styles = StyleSheet.create({
     color: colors.textGrey,
     paddingLeft: 5,
   },
-  listContentContainer: {
-    padding: 10,
-    paddingBottom: 20,
+  roomNameText: {
+    fontSize: 18, // Adjust as needed
+    fontFamily: "OpenSans-Regular",
+    fontWeight: "400",
+    textAlign: "center",
+    backgroundColor: '#fff', // White background for the text bubble
+    paddingHorizontal: 16, // Horizontal padding
+    paddingVertical: 8, // Vertical padding
+    borderRadius: 20, // Rounded corners
+    overflow: 'hidden', // Ensures the background doesn't bleed out of the corners
+    alignSelf: 'center', // Center the text bubble in the parent container
+    marginTop: 50, // Space from the top or from the previous element
+    position: 'absolute', // Absolutely position the text
+    top: 10, // Adjust this value to position correctly in the view
+    zIndex: 1, // Make sure this is above the Swiper's zIndex
+    // iOS shadows
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    // Android elevation
+    elevation: 5,
+  },
+  
+  
+  arrowText: {
+    fontSize: 24, // Adjust as needed
+    fontFamily: "OpenSans-Regular",
+
   },
   addPlantContainer: {
     position: "absolute",
@@ -211,11 +247,53 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
   },
+  indicatorContainer: {
+    position: 'absolute', // Position the indicators absolutely
+    bottom: 10, // Position it at the bottom of the parent container, adjust as needed
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0)', // Ensure background is transparent
+    
+  },
+  
   bubble: {
     width: 15,
     height: 15,
     borderRadius: 7.5,
-    margin: 15,
+    margin: 5,
+    backgroundColor: 'white', // Or any color you wish to have for the inactive bubble
+    // iOS shadows
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    // Android elevation
+    elevation: 5,
+  },
+  
+  activeBubble: {
+    backgroundColor: 'green',
+  },
+  inactiveBubble: {
+    backgroundColor: 'black',
+  },
+  plantInfoContainer: {
+    flex: 1,
+    paddingLeft: defaultStyles.padding,
+  },
+  roomContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // Make sure the room container takes up the full size of the swiper view
+    width: '100%',
   },
 });
 
