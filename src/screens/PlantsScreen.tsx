@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -16,16 +16,19 @@ import {
   addRoom as createRoom,
   getPlantsInRoom as fetchPlantsInRoom,
   addPlantt as createPlant,
-  PlantInfo // Importing the PlantInfo interface
-} from '../firebase'; // Adjust the import path
-import Swiper from 'react-native-swiper';
-import { Entypo } from '@expo/vector-icons';
+  PlantInfo, // Importing the PlantInfo interface
+} from "../firebase"; // Adjust the import path
+import Swiper from "react-native-swiper";
+import { Entypo } from "@expo/vector-icons";
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import { AntDesign } from "@expo/vector-icons";
 
 export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
-  const { rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
-  const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(Array(rooms.length).fill([]));
+  const { rooms, currentRoomIndex, setCurrentRoomIndex } =
+    useContext(PlantContext);
+  const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(
+    Array(rooms.length).fill([])
+  );
 
   useEffect(() => {
     async function fetchPlantsForAllRooms() {
@@ -45,32 +48,33 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   }, [rooms]);
 
   const RoomIndicator = ({ rooms, currentRoomIndex }) => {
-  return (
-    <View style={styles.indicatorContainer}>
-      {rooms.map((_, index) => (
-        <View
-          key={index}
-          style={[
-            styles.bubble,
-            currentRoomIndex === index ? styles.activeBubble : styles.inactiveBubble,
-          ]}
-        />
-      ))}
-    </View>
-  );
-};
+    return (
+      <View style={styles.indicatorContainer}>
+        {rooms.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.bubble,
+              currentRoomIndex === index
+                ? styles.activeBubble
+                : styles.inactiveBubble,
+            ]}
+          />
+        ))}
+      </View>
+    );
+  };
 
-
-const renderPlantItem = ({ item }) => (
-  <TouchableOpacity
-    style={styles.plantItem}
-    onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
-  >
-    <Image source={{ uri: item.photo }} style={styles.image} />
-    <SafeAreaView style={styles.textContainer}>
-      <Text style={styles.text}>{item.commonName}</Text>
-      <Text style={styles.subtext}>{item.scientificName}</Text>
-      <View style={styles.plantLastWateredContainer}>
+  const renderPlantItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.plantItem}
+      onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
+    >
+      <Image source={{ uri: item.photo }} style={styles.image} />
+      <SafeAreaView style={styles.textContainer}>
+        <Text style={styles.text}>{item.commonName}</Text>
+        <Text style={styles.subtext}>{item.scientificName}</Text>
+        <View style={styles.plantLastWateredContainer}>
           <Entypo
             name="drop"
             size={20}
@@ -87,37 +91,36 @@ const renderPlantItem = ({ item }) => (
             {item.lastWatered} {item.lastWatered === 1 ? "day" : "days"} ago{" "}
           </Text>
         </View>
-    </SafeAreaView>
-  </TouchableOpacity>
-);
+      </SafeAreaView>
+    </TouchableOpacity>
+  );
 
-return (
-  <SafeAreaView style={styles.container}>
+  return (
+    <SafeAreaView style={styles.container}>
       <Text style={styles.roomNameText}>
         {rooms[currentRoomIndex]
           ? rooms[currentRoomIndex].name
           : "Add a room to get started!"}
       </Text>
-    <Swiper
-      loop={false}
-      showsPagination={false}
-      index={currentRoomIndex}
-      onIndexChanged={(index) => setCurrentRoomIndex(index)}
-    >
-      {rooms.map((room, index) => (
-        <FlatList
-          key={room.id}
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
-        />
-      ))}
-      
-    </Swiper>
-    <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
+      <Swiper
+        loop={false}
+        showsPagination={false}
+        index={currentRoomIndex}
+        onIndexChanged={(index) => setCurrentRoomIndex(index)}
+      >
+        {rooms.map((room, index) => (
+          <FlatList
+            key={room.id}
+            data={roomPlants[index]}
+            renderItem={renderPlantItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContentContainer}
+          />
+        ))}
+      </Swiper>
+      <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
 
-    <View style={styles.addPlantContainer}>
+      <View style={styles.addPlantContainer}>
         <TouchableOpacity
           style={styles.addPlantButton}
           onPress={() => navigation.navigate("AddPlantScreen")}
@@ -125,8 +128,8 @@ return (
           <AntDesign name="plus" size={24} color="white" />
         </TouchableOpacity>
       </View>
-  </SafeAreaView>
-);
+    </SafeAreaView>
+  );
 };
 const styles = StyleSheet.create({
   supportText: {
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    justifyContent: 'space-between', // Adjust based on layout needs
+    justifyContent: "space-between", // Adjust based on layout needs
   },
   plantItem: {
     flexDirection: "row",
@@ -160,7 +163,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
     // Sizing adjustments
-    width: '90%', // Consider using a percentage or fixed width
+    width: "90%", // Consider using a percentage or fixed width
     minHeight: 120, // Adjust the minimum height as needed
   },
   image: {
@@ -230,10 +233,10 @@ const styles = StyleSheet.create({
     fontFamily: "OpenSans-Regular",
   },
   arrowButton: {
-  padding: 10, // You can adjust this value to increase the tappable area
-  justifyContent: 'center',
-  alignItems: 'center',
-},
+    padding: 10, // You can adjust this value to increase the tappable area
+    justifyContent: "center",
+    alignItems: "center",
+  },
   list: {
     flex: 1,
   },
@@ -254,7 +257,7 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     margin: 5,
-    backgroundColor: 'white', // Or any color you wish to have for the inactive bubble
+    backgroundColor: "white", // Or any color you wish to have for the inactive bubble
     // iOS shadows
     shadowColor: "#000",
     shadowOffset: {
