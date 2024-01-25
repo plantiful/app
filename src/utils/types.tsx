@@ -1,5 +1,5 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp } from "@react-navigation/native";
 import { PlantInfo } from "../firebase";
 
 export type BottomTabParamList = {
@@ -70,11 +70,17 @@ export type HomeStackParamList = {
 export type PlantsScreenParamList = {
   PlantsScreen: undefined;
   PlantDetailScreen: { plant: PlantInfo };
-  PlantScanScreen: { plant: PlantInfo; onDecision: (decision: boolean) => void };
+  PlantScanScreen: {
+    plant: PlantInfo;
+    onDecision: (decision: boolean) => void;
+  };
   ScanScreen: undefined;
 };
 export type ScanScreenParamList = {
-  PlantScanScreen: { plant: PlantInfo; onDecision: (decision: boolean) => void };
+  PlantScanScreen: {
+    plant: PlantInfo;
+    onDecision: (decision: boolean) => void;
+  };
   ScanScreen: undefined;
 };
 
@@ -167,7 +173,10 @@ export type PlantScanScreenProps = {
   navigation: PlantScanScreenNavigationProp;
   route: RouteProp<PlantsScreenParamList, "PlantScanScreen">;
 };
-type ScanScreenNavigationProp = StackNavigationProp<PlantsScreenParamList, 'ScanScreen'>;
+type ScanScreenNavigationProp = StackNavigationProp<
+  PlantsScreenParamList,
+  "ScanScreen"
+>;
 
 export type ScanScreenProps = {
   navigation: ScanScreenNavigationProp;

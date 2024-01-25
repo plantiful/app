@@ -163,27 +163,17 @@ export const App = () => {
   } else {
     const PlantStackNavigator = () => {
       return (
-        <PlantStack.Navigator>
-          <PlantStack.Screen
-            name="PlantsScreen"
-            options={{ headerShown: false }}
-            component={PlantsScreen}
-          />
+        <PlantStack.Navigator screenOptions={{ headerShown: false }}>
+          <PlantStack.Screen name="PlantsScreen" component={PlantsScreen} />
           <PlantStack.Screen
             name="PlantDetailScreen"
-            options={{ headerShown: false }}
             component={PlantDetailScreen}
           />
           <PlantStack.Screen
             name="PlantScanScreen"
-            options={{ headerShown: false }}
-            component={PlantScanScreen} // Add PlantScanScreen to the stack navigator
+            component={PlantScanScreen}
           />
-          <PlantStack.Screen
-            name="ScanScreen"
-            options={{ headerShown: false }}
-            component={ScanScreen}
-          />
+          <PlantStack.Screen name="ScanScreen" component={ScanScreen} />
         </PlantStack.Navigator>
       );
     };
@@ -195,54 +185,30 @@ export const App = () => {
       </ScanStack.Navigator>
     );
 
-// In your BottomTab.Navigator
-<BottomTab.Screen
-  name="Scan"
-  component={ScanStackNavigator} // Use ScanStackNavigator here
-/>
-
-
     const HomeStackNavigator = () => {
       return (
-        <HomeStack.Navigator>
-          <HomeStack.Screen
-            name="Home"
-            options={{ headerShown: false }}
-            component={HomeScreen}
-          />
-          <HomeStack.Screen
-            name="Profile"
-            options={{ headerShown: false }}
-            component={ProfileScreenWrapper}
-          />
-          <HomeStack.Screen
-            name="Settings"
-            options={{ headerShown: false }}
-            component={SettingsScreenWrapper}
-          />
+        <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+          <HomeStack.Screen name="Home" component={HomeScreen} />
+          <HomeStack.Screen name="Profile" component={ProfileScreenWrapper} />
+          <HomeStack.Screen name="Settings" component={SettingsScreenWrapper} />
           <HomeStack.Screen
             name="ChangeName"
-            options={{ headerShown: false }}
             component={ChangeNameScreenWrapper}
           />
           <HomeStack.Screen
             name="ChangeEmail"
-            options={{ headerShown: false }}
             component={ChangeEmailScreenWrapper}
           />
           <HomeStack.Screen
             name="ChangePassword"
-            options={{ headerShown: false }}
             component={ChangePasswordScreenWrapper}
           />
           <HomeStack.Screen
             name="NotificationSettings"
-            options={{ headerShown: false }}
             component={NotificationSettingsScreenWrapper}
           />
           <HomeStack.Screen
             name="LanguageSettings"
-            options={{ headerShown: false }}
             component={LanguageSettingsScreenWrapper}
           />
         </HomeStack.Navigator>

@@ -129,10 +129,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     // Assuming `allPlants` is an array containing all plants from all rooms
-    const filteredPlants = plants.filter(plant => plant.lastWatered >= 2).slice(0, 3);
+    const filteredPlants = plants
+      .filter((plant) => plant.lastWatered >= 2)
+      .slice(0, 3);
     setPlantsRequiringSupport(filteredPlants);
   }, [plants]); // You need to define how you get `allPlants` based on your app's logic
-
 
   // Fetch the watering history from Firebase on component mount
   useEffect(() => {
@@ -321,7 +322,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <View style={{ borderBottomColor: "#f1f1f1", borderBottomWidth: 1 }} />
 
         <View style={styles.contentContainer}>
-          {/* <View style={styles.searchContainer}>
+          <ScrollView>
+            {/* <View style={styles.searchContainer}>
             <View style={styles.searchRect}>
               <Ionicons name="search-outline" size={24} color="black" />
               <TextInput
@@ -350,65 +352,66 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             </TouchableOpacity>
           </View> */}
 
-          <View style={styles.progressBar}>
-            <AnimatedCircularProgress
-              backgroundColor="#F5F5F5"
-              size={200}
-              width={10}
-              fill={dailyPercentage}
-              tintColor={colors.primary}
-              lineCap="round"
-              // onAnimationComplete={() => console.log("onAnimationComplete")}
-            >
-              {(fill) => (
-                <Text style={styles.progressBarText}>
-                  {Math.round(fill)}%{"\n"}done
-                </Text>
-              )}
-            </AnimatedCircularProgress>
-          </View>
+            <View style={styles.progressBar}>
+              <AnimatedCircularProgress
+                backgroundColor="#F5F5F5"
+                size={200}
+                width={10}
+                fill={dailyPercentage}
+                tintColor={colors.primary}
+                lineCap="round"
+                // onAnimationComplete={() => console.log("onAnimationComplete")}
+              >
+                {(fill) => (
+                  <Text style={styles.progressBarText}>
+                    {Math.round(fill)}%{"\n"}done
+                  </Text>
+                )}
+              </AnimatedCircularProgress>
+            </View>
 
-          <View style={{ height: defaultStyles.padding }} />
+            <View style={{ height: defaultStyles.padding }} />
 
-          <View style={styles.requiringSupportContainer}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+            <View style={styles.requiringSupportContainer}>
               <View
                 style={{
                   flexDirection: "row",
-                  alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
-                <Ionicons
-                  name="alert-circle-outline"
-                  size={30}
-                  color={colors.primary}
-                />
-                <Text style={styles.requiringSupportText}>
-                  {t("HomeScreen_requiring_support")}
-                </Text>
-              </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Ionicons
+                    name="alert-circle-outline"
+                    size={30}
+                    color={colors.primary}
+                  />
+                  <Text style={styles.requiringSupportText}>
+                    {t("HomeScreen_requiring_support")}
+                  </Text>
+                </View>
 
-              <ButtonText
-                text={t("HomeScreen_requiring_support_view_all")}
-                textColor={colors.primary}
-                fontFamily={fonts.semiBold}
-                fontSize={fontSize.large}
-                alignSelf="center"
-                onPress={() => { }}
-                //onPress={() => navigation.navigate('PlantsScreen')}
+                <ButtonText
+                  text={t("HomeScreen_requiring_support_view_all")}
+                  textColor={colors.primary}
+                  fontFamily={fonts.semiBold}
+                  fontSize={fontSize.large}
+                  alignSelf="center"
+                  onPress={() => {}}
+                  //onPress={() => navigation.navigate('PlantsScreen')}
+                />
+              </View>
+              <FlatList
+                data={plantsRequiringSupport}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.id.toString()}
               />
             </View>
-            <FlatList
-              data={plantsRequiringSupport}
-              renderItem={renderItem} // Make sure to define this function based on your needs
-              keyExtractor={item => item.id.toString()}
-            />
-          </View>
+          </ScrollView>
 
           <Modal
             animationType="fade"
@@ -519,16 +522,17 @@ const styles = StyleSheet.create({
     paddingTop: defaultStyles.padding,
   },
   topContainer: {
-    flex: 0.35,
+    flex: 1,
   },
   topButtonsContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
   },
   calendarContainer: {
-    flex: 0.25,
+    flex: 1,
   },
   contentContainer: {
+    flex: 6,
     paddingHorizontal: defaultStyles.padding,
   },
   searchContainer: {
