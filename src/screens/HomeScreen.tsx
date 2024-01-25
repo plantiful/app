@@ -275,6 +275,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           name="chevron-forward-outline"
           size={30}
           color={colors.primary}
+          style={styles.chevronIcon}
         />
       </TouchableOpacity>
     );
@@ -543,6 +544,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  chevronIcon: {
+    // Adjustments for the chevron icon to ensure it's aligned properly
+    color: colors.primary,
+    backgroundColor: "#E3E3E3",
+    padding: 3,
+    borderRadius: 50,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,

@@ -22,6 +22,7 @@ import Swiper from 'react-native-swiper';
 import { Entypo } from '@expo/vector-icons';
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   const { rooms, currentRoomIndex, setCurrentRoomIndex } = useContext(PlantContext);
@@ -66,38 +67,41 @@ const renderPlantItem = ({ item }) => (
     style={styles.plantItem}
     onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
   >
-    <Image source={{ uri: item.photo }} style={styles.image} />
-    <SafeAreaView style={styles.textContainer}>
+    <View style={styles.imageContainer}>
+      <Image source={{ uri: item.photo }} style={styles.image} />
+    </View>
+    <View style={styles.textContainer}>
       <Text style={styles.text}>{item.commonName}</Text>
       <Text style={styles.subtext}>{item.scientificName}</Text>
       <View style={styles.plantLastWateredContainer}>
-          <Entypo
-            name="drop"
-            size={20}
-            color={item.lastWatered >= item.watering ? "red" : colors.primary}
-          />
-          <Text
-            style={[
-              styles.plantLastWatered,
-              item.lastWatered >= item.watering
-                ? { color: "red" }
-                : { color: colors.textGrey },
-            ]}
-          >
-            {item.lastWatered} {item.lastWatered === 1 ? "day" : "days"} ago{" "}
-          </Text>
-        </View>
-    </SafeAreaView>
+        <Entypo
+          name="drop"
+          size={20}
+          color={item.lastWatered >= item.watering ? "red" : colors.primary}
+        />
+        <Text
+          style={[
+            styles.plantLastWatered,
+            item.lastWatered >= item.watering
+              ? { color: "red" }
+              : { color: colors.textGrey },
+          ]}
+        >
+          {item.lastWatered} {item.lastWatered === 1 ? "day" : "days"} ago
+        </Text>
+      </View>
+    </View>
+    <Ionicons
+      name="chevron-forward-outline"
+      size={30}
+      color={colors.primary}
+      style={styles.chevronIcon}
+    />
   </TouchableOpacity>
 );
 
 return (
   <SafeAreaView style={styles.container}>
-      <Text style={styles.roomNameText}>
-        {rooms[currentRoomIndex]
-          ? rooms[currentRoomIndex].name
-          : "Add a room to get started!"}
-      </Text>
     <Swiper
       loop={false}
       showsPagination={false}
@@ -115,6 +119,11 @@ return (
       ))}
       
     </Swiper>
+    <Text style={styles.roomNameText}>
+        {rooms[currentRoomIndex]
+          ? rooms[currentRoomIndex].name
+          : "Add a room to get started!"}
+      </Text>
     <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
 
     <View style={styles.addPlantContainer}>
@@ -129,6 +138,42 @@ return (
 );
 };
 const styles = StyleSheet.create({
+  plantItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    padding: 8,
+    paddingLeft: 16,
+    paddingRight: 16,
+    right: 25,
+    marginHorizontal: 16,
+    width: '90%', // Consider using a percentage or fixed width
+    minHeight: 120, // Adjust the minimum height as needed
+    justifyContent: "space-between", // This will space out your image, text container, and chevron icon
+  },
+  imageContainer: {
+    // Container for the image to help with alignment
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: "center", // Center the text vertically
+    marginLeft: 16, // Add some space between the image and the text
+  },
+  chevronIcon: {
+    // Adjustments for the chevron icon to ensure it's aligned properly
+    left: 35, // Ensure there's some space between the text and the icon
+    color: colors.primary,
+    backgroundColor: "#E3E3E3",
+    padding: 3,
+    borderRadius: 50,
+  },
   supportText: {
     fontSize: fontSize.medium,
     fontFamily: fonts.medium,
@@ -143,43 +188,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
     justifyContent: 'space-between', // Adjust based on layout needs
   },
-  plantItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    padding: 16,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    // Sizing adjustments
-    width: '90%', // Consider using a percentage or fixed width
-    minHeight: 120, // Adjust the minimum height as needed
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    marginRight: 16,
-  },
   listContentContainer: {
     // Style the container of the FlatList items
     padding: 10, // Add padding if necessary
     alignItems: "flex-start", // Align items to the start of the FlatList
     paddingBottom: 20, // Add padding to the bottom for scrollability
     backgroundColor: "transparent",
-  },
-  textContainer: {
-    flex: 1,
-    paddingVertical: 0, // Adjust or remove padding if not needed
-    justifyContent: "center", // This centers the text vertically in the container
   },
   text: {
     fontSize: fontSize.large,
@@ -211,7 +225,7 @@ const styles = StyleSheet.create({
     alignSelf: "center", // Center the text bubble in the parent container
     marginTop: 50, // Space from the top or from the previous element
     position: "absolute", // Absolutely position the text
-    top: 10, // Adjust this value to position correctly in the view
+    bottom: 35, // Adjust this value to position correctly in the view
     zIndex: 1, // Make sure this is above the Swiper's zIndex
     // iOS shadows
     shadowColor: "#000",
@@ -239,7 +253,7 @@ const styles = StyleSheet.create({
   },
   indicatorContainer: {
     position: "absolute", // Position the indicators absolutely
-    bottom: 10, // Position it at the bottom of the parent container, adjust as needed
+    bottom: 0, // Position it at the bottom of the parent container, adjust as needed
     left: 0,
     right: 0,
     flexDirection: "row",
@@ -304,6 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     width: 60,
     height: 60,
+    right: 20,
     borderRadius: 30,
   },
 });
