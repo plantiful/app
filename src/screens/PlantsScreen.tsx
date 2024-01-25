@@ -44,29 +44,6 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
     fetchPlantsForAllRooms();
   }, [rooms]);
 
-  const goToPreviousRoom = () => {
-    setCurrentRoomIndex(currentRoomIndex > 0 ? currentRoomIndex - 1 : rooms.length - 1);
-  };
-
-  const goToNextRoom = () => {
-    setCurrentRoomIndex(currentRoomIndex < rooms.length - 1 ? currentRoomIndex + 1 : 0);
-  };
-
-  const renderRoom = (room, index) => {
-    // Render a FlatList for the current room
-    return (
-      <View key={room.id} style={styles.roomContainer}>
-        <FlatList
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
-          style={styles.list}
-        />
-      </View>
-    );
-  };
-
   const RoomIndicator = ({ rooms, currentRoomIndex }) => {
   return (
     <View style={styles.indicatorContainer}>
