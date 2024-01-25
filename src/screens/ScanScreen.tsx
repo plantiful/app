@@ -291,7 +291,7 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
                 if (decision) {
                   const userId = getCurrentUserId();
                   if (userId) {
-                    addRoom(userId, "Bedroom")
+                    addRoom(userId, "Livin Room")
                       .then((roomId) => {
                         return addPlantt(userId, roomId, pd);
                       })
