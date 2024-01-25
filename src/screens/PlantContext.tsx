@@ -23,6 +23,7 @@ interface PlantContextType {
   addPlant: (newPlant: PlantInfo, roomId: string) => void; // Update the type of addPlant
   setCurrentRoomIndex: (index: number) => void;
   addRoom: (room: Room) => void;
+  updateRooms: React.Dispatch<React.SetStateAction<Room[]>>; // Add this line
 }
 
 // Create an initial value
@@ -34,6 +35,7 @@ const initialValue: PlantContextType = {
   addPlant: () => {},
   setCurrentRoomIndex: () => {},
   addRoom: () => {},
+  updateRooms: () => {}, // Add this line
 };
 
 // Create the context
@@ -101,6 +103,7 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
         setCurrentRoomIndex,
         addPlant,
         addRoom,
+        updateRooms: setRooms, // Expose setRooms as updateRooms for clarity
       }}
     >
       {children}

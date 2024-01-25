@@ -31,12 +31,16 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
   const { plant, onDecision } = route.params;
 
   const [isRoomSelectorVisible, setIsRoomSelectorVisible] = useState(false);
-  const { rooms } = useContext(PlantContext);
+  var { rooms } = useContext(PlantContext);
   const [isTextInputVisible, setTextInputVisible] = useState(false);
 
   const [roomName, setRoomName] = useState("");
 
   const [modalKey, setModalKey] = useState(0);
+
+  useEffect(() => {
+    console.log('Updated rooms:', rooms);
+  }, [rooms]); // This effect depends on `rooms` and runs whenever `rooms
 
 
 
@@ -58,30 +62,25 @@ const PlantScanScreen: React.FC<ScanScreenProps> = ({ navigation, route }) => {
     setIsRoomSelectorVisible(false);
   };
 
+  const { updateRooms } = useContext(PlantContext);
+
   const handleAddRoom = (roomName: string) => {
     const userId = getCurrentUserId();
-    if (userId) {
+    if (userId && roomName.trim().length > 0){
       addRoom(userId, roomName.trim()).then((newRoom) => {
         console.log("Successfully added room:", newRoom);
         setRoomName('');
-        getRooms(userId).then((rooms) => {
-          console.log("Successfully fetched rooms:", rooms);
+        setTextInputVisible(false);
+        getRooms(userId).then((newRooms) => {
+          console.log("Successfully fetched rooms:", newRooms);
+          updateRooms(newRooms); // Update the context's rooms state
         }).catch(error => {
-          // Handle errors (e.g., display an error message)
           console.error("Failed to fetch rooms:", error);
         });
-        refreshModal();
-        setIsRoomSelectorVisible(false); // Hide the modal after adding
-        setTextInputVisible(false); // Hide the input field after adding
-        setIsRoomSelectorVisible(true); // Show the modal again to display the new room
-
-
       }).catch(error => {
-        // Handle errors (e.g., display an error message)
         console.error("Failed to add room:", error);
       });
-    }
-    else {
+    } else {
       console.error("Failed to add room: User is not logged in");
     }
   };
