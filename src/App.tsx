@@ -23,6 +23,7 @@ import {
   ChangeNameScreenProps,
   ChangeEmailScreenProps,
   ChangePasswordScreenProps,
+  PlantDetailScreenProps,
   PlantsScreenParamList,
   ScanScreenParamList,
 } from "./utils/types";
@@ -134,6 +135,10 @@ export const App = () => {
     navigationProps: React.JSX.IntrinsicAttributes & LanguageSettingsScreenProps
   ) => <LanuageSetttingsScreen {...navigationProps} />;
 
+  const PlantDetailScreenWrapper = (
+    navigationProps: React.JSX.IntrinsicAttributes & PlantDetailScreenProps
+  ) => <PlantDetailScreen {...navigationProps} />;
+
   if (!loggedIn) {
     return (
       <NavigationContainer>
@@ -213,6 +218,10 @@ export const App = () => {
           <HomeStack.Screen
             name="LanguageSettings"
             component={LanguageSettingsScreenWrapper}
+          />
+          <HomeStack.Screen
+            name="PlantDetailScreen"
+            component={PlantDetailScreenWrapper}
           />
         </HomeStack.Navigator>
       );

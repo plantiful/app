@@ -1,5 +1,6 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import { PlantInfo } from "../firebase";
+import { RouteProp } from '@react-navigation/native';
 
 export type BottomTabParamList = {
   Homea: undefined;
@@ -65,6 +66,7 @@ export type HomeStackParamList = {
   LanguageSettings: undefined;
   ThemeSettings: undefined;
   PlantsScreen: undefined;
+  PlantDetailScreen: { plant: PlantInfo };
 };
 
 type HomeScreenNavigationProp = StackNavigationProp<HomeStackParamList, "Home">;
@@ -78,9 +80,27 @@ type ProfileScreenNavigationProp = StackNavigationProp<
   "Profile"
 >;
 
+export type PlantDetailScreenProps = {
+  navigation: PlantDetailScreenNavigationProp;
+  route: PlantDetailScreenRouteProp; // Include this line to define the 'route' prop
+};
+
+type PlantDetailScreenNavigationProp = StackNavigationProp<
+  HomeStackParamList,
+  "PlantDetailScreen"
+>;
+type PlantDetailScreenRouteProp = RouteProp<HomeStackParamList, 'PlantDetailScreen'> & {
+  params: {
+    plant: PlantInfo; // Make sure `plant` is always expected
+  };
+};
+
+
 export type ProfileScreenProps = {
   navigation: ProfileScreenNavigationProp;
 };
+
+
 
 type SettingsScreenNavigationProp = StackNavigationProp<
   HomeStackParamList,

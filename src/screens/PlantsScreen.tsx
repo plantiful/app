@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   View,
@@ -28,18 +28,24 @@ import { set } from "firebase/database";
 export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   const { rooms, currentRoomIndex, setCurrentRoomIndex, updateRooms } =
     useContext(PlantContext);
+    const roomsRef = useRef(rooms);
   const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(
     Array(rooms.length).fill([])
   );
 
   useEffect(() => {
     async function fetchPlantsForAllRooms() {
+      console.log("Entered fetchPlantsForAllRooms");
       const userId = getCurrentUserId();
       if (userId) {
-        const rooms = await fetchRooms(userId);
-        updateRooms(rooms);
+        const fetchedRooms = await fetchRooms(userId);
+        if (JSON.stringify(fetchedRooms) !== JSON.stringify(roomsRef.current)) {
+          roomsRef.current = fetchedRooms; // Update the ref, but not the state
+          updateRooms(fetchedRooms); // Update the state only if necessary
+        }
         const newRoomPlants = await Promise.all(
-          rooms.map(async (room) => {
+          fetchedRooms.map(async (room) => {
+            console.log("fetching plants for room", room.id);
             const fetchedPlants = await fetchPlantsInRoom(userId, room.id);
             return fetchedPlants;
           })
@@ -47,9 +53,9 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
         setRoomPlants(newRoomPlants);
       }
     }
-
+    console.log("rooms changed");
     fetchPlantsForAllRooms();
-  }, [rooms]);
+  }, [rooms.length]);
 
   const RoomIndicator = ({ rooms, currentRoomIndex }) => {
     return (

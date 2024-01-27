@@ -139,7 +139,7 @@ export const getPlantsInRoom = async (userId: string, roomId: string) => {
       }));
       return plantsArray;
     } else {
-      console.log("No plants available in this room");
+      console.log("No plants available in this room",);
       return [];
     }
   } catch (error) {

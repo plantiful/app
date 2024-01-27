@@ -102,6 +102,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [currentLanguage, setCurrentLanguage] = useState(language);
   const { t } = i18n;
 
+  interface PlantInfoWithRoom extends PlantInfo {
+    roomName: string;
+  }
+
+
   useEffect(() => {
     // checkEmailVerification();
 
@@ -131,7 +136,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const { plants, rooms } = useContext(PlantContext);
 
-  const [allPlants, setAllPlants] = useState<PlantInfo[]>([]);
+  const [allPlants, setAllPlants] = useState<PlantInfoWithRoom[]>([]);
 
   useEffect(() => {
     const fetchPlantsForAllRooms = async () => {
@@ -139,23 +144,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       if (userId) {
         const roomPlants = await Promise.all(
           rooms.map(async (room) => {
-            const fetchedPlants = await getPlantsInRoom(userId, room.id);
+            const fetchedPlants: PlantInfoWithRoom[] = await getPlantsInRoom(userId, room.id);
             return fetchedPlants.map((plant) => ({
               ...plant,
               roomName: room.name,
             }));
           })
         );
-        const flattenedPlants = roomPlants.flat();
-        const filteredPlants = flattenedPlants
-          .filter((plant) => plant.lastWatered >= plant.watering)
-          .slice(0, 3);
-        setAllPlants(filteredPlants);
+        const flattenedPlants: PlantInfoWithRoom[] = roomPlants.flat();
+        setAllPlants(flattenedPlants); // Assuming setAllPlants is expecting PlantInfoWithRoom[]
       }
     };
 
     fetchPlantsForAllRooms();
-  }, [rooms, plants]);
+  }, [rooms.length, plants]);
 
   useEffect(() => {
     const fetchWateringData = async () => {
@@ -252,7 +254,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     selectedDate
   );
 
-  const renderPlant = (plant: PlantInfo) => {
+  const renderPlant = (plant: PlantInfoWithRoom) => {
     return (
       <TouchableOpacity
         style={styles.requiringSupportPlantContainer}
@@ -295,10 +297,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   // This works, lol
   const navigateToPlantDetailScreen = (plant: PlantInfo) => {
-    navigation.navigate("Plants", {
-      screen: "PlantDetailScreen",
-      params: { plant: plant },
-    });
+    navigation.navigate("PlantDetailScreen", { plant: plant },
+    );
   };
 
   return (
@@ -436,7 +436,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               </View>
               <FlatList
                 data={allPlants}
-                renderItem={(plant) => renderPlant(plant.item)}
+                renderItem={(item) => renderPlant(item.item)}
               />
             </View>
           </ScrollView>

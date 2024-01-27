@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { PlantInfo, addPlantt, addRoom, getCurrentUserId, getPlantsInRoom, getRooms } from "../firebase";
+import { PlantInfo, addPlantt, addRoom, getCurrentUserId, getRooms } from "../firebase";
 import PlantContext from "./PlantContext";
 import { colors, fontSize, fonts } from "../utils/colors";
 
