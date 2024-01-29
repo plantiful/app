@@ -55,7 +55,7 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
     }
     console.log("rooms changed");
     fetchPlantsForAllRooms();
-  }, [rooms.length]);
+  }, [rooms]);
 
   const RoomIndicator = ({ rooms, currentRoomIndex }) => {
     return (
