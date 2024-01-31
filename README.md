@@ -1,8 +1,11 @@
 # Plantiful
 
-[Expo Documentation](https://docs.expo.dev/)
-
-### [Useful](https://reactnativeexample.com/)
+## Links
+- Bunch of react native examples, really useful - [link](https://reactnativeexample.com/)
+- Google drive folder - [link](https://drive.google.com/drive/folders/1Sp9AiDdHx-pm55fWUR_0IheVuXPDPiJ_?usp=drive_link)
+- Figma project - [link](https://www.figma.com/files/team/1223656016002077883)
+- First promo video for JA EXPO - [youtube](https://youtu.be/nLVRXiDevZY)
+- Second promo video for JA national finals - [youtube](https://youtu.be/zZ-SUUvdznc)
 
 ## Setup
 
@@ -10,7 +13,13 @@
 ./setup-<platform>.sh
 ```
 
-Or just install [yarn](https://classic.yarnpkg.com/lang/en/docs/install) and [Node.js](https://nodejs.org), then run `yarn install` and start the app.
+Or just install [yarn](https://classic.yarnpkg.com/lang/en/docs/install) and [Node.js](https://nodejs.org)
+
+In both cases run before start
+
+```sh
+yarn install
+```
 
 ### Start
 
@@ -120,3 +129,4 @@ yarn add <package-name>
 - [ ] Change checkbox rendering on the home screen in search settings to be able to use translations
 - [ ] Add watering widget on home screen
 - [ ] Add plant disease recognition - health assessment
+- [ ] Update database structure in readme
