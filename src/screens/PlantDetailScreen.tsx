@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { View, Text, Animated, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Animated, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -31,6 +31,14 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
     extrapolate: "clamp",
   });
 
+  const GreenButton = ({ iconName, label, onPress}) => {
+    return (
+      <TouchableOpacity style={styles.greenButton} onPress={onPress}>
+        <Icon name={iconName} size={20} color="#205950" opacity={100} />
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Animated.ScrollView
@@ -53,12 +61,33 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
         <View style={styles.detailsContainer}>
           <View style={styles.line}></View>
           <Text style={styles.name}>{plant.commonName}</Text>
+          <View style={styles.buttonContainer}>
+            <GreenButton iconName="heart-outline" label="Like" onPress={() => {}} />
+            <GreenButton iconName="cart-outline" label="Cart" onPress={() => {}} />
+            <GreenButton iconName="plus" label="More" onPress={() => {}} />
+          </View>
           <Text style={styles.scientificName}>{plant.scientificName}</Text>
+
           <ScrollView
             horizontal
             style={styles.infoSection}
             showsHorizontalScrollIndicator={false}
           >
+            <View style={styles.iconContainer}>
+              <Icon name="water-outline" size={30} paddingBottom={3} color="#205950" />
+              <Text style={styles.subInfoText}>Per Week</Text>
+              <Text style={styles.infoText}>{plant.watering}</Text>
+            </View>
+            <View style={styles.iconContainer}>
+              <Icon name="weather-sunny" size={30} paddingBottom={3} color="#205950" />
+              <Text style={styles.subInfoText}>Sun Exposure</Text>
+              <Text style={styles.infoText}>{`${plant.sunlight}%`}</Text>
+            </View>
+            <View style={styles.iconContainer}>
+              <Icon name="thermometer-low" size={30} paddingBottom={3} color="#205950" />
+              <Text style={styles.subInfoText}>Ideal Temp</Text>
+              <Text style={styles.infoText}>{`${plant.temperature}°C`}</Text>
+            </View>
             <View style={styles.iconContainer}>
               <Icon name="water-outline" size={30} paddingBottom={3} color="#205950" />
               <Text style={styles.subInfoText}>Per Week</Text>
@@ -131,21 +160,22 @@ const styles = StyleSheet.create({
     backgroundColor: "#E3E3E3",
   },
   name: {
-    fontSize: 28,
-    fontWeight: "500",
+    fontSize: 24,
+    fontFamily: "OpenSans-Regular",
+    fontWeight:"700",
     color: "#000",
     paddingTop: 8,
   },
   scientificName: {
     fontFamily: "OpenSans-Regular",
     fontStyle: "italic",
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "100",
     color: "#E3E3E3", // Set your desired color
     borderBottomWidth: 1.5,
     borderBottomColor: "#E3E3E3",
     paddingBottom: 8,
-    marginBottom: 8,
+    marginBottom: 24, // Increased to create space for the button container
   },
   infoSection: {
     flexDirection: "row",
@@ -176,7 +206,8 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   header: {
-    fontSize: 22,
+    fontFamily: "OpenSans-Regular",
+    fontSize: 19,
     fontWeight: "400",
     color: "#000",
     marginTop: 10,
@@ -189,6 +220,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#E3E3E3",
     paddingBottom: 10,
+  },
+  greenButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(32, 89, 80, 0.2)',
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    margin: 4, // Adjust spacing between buttons
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    marginLeft: 8, // Space between icon and text
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    position: 'absolute', // Use absolute positioning
+    top: 30, // Adjust this value to align with the scientific name
+    right: 16, // Adjust this value to position from the right edge
+    // Remove the 'left' property if using 'right' for positioning
   },
 });
 
