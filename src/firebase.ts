@@ -1,11 +1,6 @@
 // https://medium.com/@sajadshafi/implementing-firebase-auth-in-react-js-typescript-vite-js-88465ac84170
-import { initializeApp, getApp, getApps, FirebaseApp } from "firebase/app";
-import {
-  getAuth,
-  initializeAuth,
-  getReactNativePersistence,
-  Auth,
-} from "firebase/auth";
+import { initializeApp } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 import { get, getDatabase, push, ref, set } from "firebase/database";
 
@@ -20,20 +15,10 @@ const firebaseConfig = {
   appId: "1:966781437314:web:60418a2194fb8d9761bb9b",
 };
 
-let app: FirebaseApp;
-if (!getApps().length) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApp();
-}
-
-let auth: Auth = getAuth(app);
-if (!auth) {
-  initializeAuth(app, {
-    persistence: getReactNativePersistence(ReactNativeAsyncStorage),
-  });
-  auth = getAuth(app);
-}
+const app = initializeApp(firebaseConfig);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 
 export interface PlantInfo {
   photo: string;
@@ -139,7 +124,7 @@ export const getPlantsInRoom = async (userId: string, roomId: string) => {
       }));
       return plantsArray;
     } else {
-      console.log("No plants available in this room",);
+      console.log("No plants available in this room");
       return [];
     }
   } catch (error) {

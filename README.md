@@ -41,7 +41,7 @@ yarn add <package-name>
     "userId": {
       "rooms": {
         "roomId": {
-          "roomName": "string",
+          "name": "string",
           "plants": {
             "plantId": {
               "photo": "string",
@@ -129,4 +129,5 @@ yarn add <package-name>
 - [ ] Change checkbox rendering on the home screen in search settings to be able to use translations
 - [ ] Add watering widget on home screen
 - [ ] Add plant disease recognition - health assessment
-- [ ] Update database structure in readme
+- [x] Update database structure in readme
+- [ ] Edit back button design on PlantDetailScreen

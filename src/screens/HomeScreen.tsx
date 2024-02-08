@@ -33,7 +33,6 @@ import { HomeScreenProps } from "../utils/types";
 import { useLanguage } from "../utils/LanguageContext";
 import { TextInput } from "react-native-gesture-handler";
 import Checkbox from "expo-checkbox";
-import ButtonWide from "../components/ButtonWide";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import {
   Calendar,
@@ -50,47 +49,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     new Date().toISOString().split("T")[0]
   );
 
-  const searchInputRef = useRef<TextInput>(null!);
-
-  const [searchText, setSearchText] = useState("");
-  const [showSearchSettings, setShowSearchSettings] = useState(false);
-
-  const [wateringNeeds, setWateringNeeds] = useState({
-    Low: false,
-    Medium: false,
-    High: false,
-  });
-  const [size, setSize] = useState({
-    Small: false, // up to 1 ft
-    Medium: false, // 1-3 ft
-    Large: false, // 3-6 ft
-  });
-  const [maintenance, setMaintenance] = useState({
-    LowMaintenance: false,
-    MediumMaintenance: false,
-    HighMaintenance: false,
-  });
-  const [special, setSpecial] = useState({
-    PetFriendly: false,
-    AirPurifying: false,
-  });
-
-  const renderCheckboxes = (category, state, setState) => {
-    return Object.keys(category).map((key) => (
-      <View key={key} style={styles.searchSettingsModalCheckboxContainer}>
-        <Text style={styles.searchSettingsModalCheckboxLabel}>
-          {key.replace(/([A-Z])/g, " $1").trim()}
-        </Text>
-        <Checkbox
-          style={styles.searchSettingsModalCheckbox}
-          color={state[key] ? colors.primary : undefined}
-          value={state[key]}
-          onValueChange={() => setState({ ...state, [key]: !state[key] })}
-        />
-      </View>
-    ));
-  };
-
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -105,7 +63,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   interface PlantInfoWithRoom extends PlantInfo {
     roomName: string;
   }
-
 
   useEffect(() => {
     // checkEmailVerification();
@@ -144,7 +101,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       if (userId) {
         const roomPlants = await Promise.all(
           rooms.map(async (room) => {
-            const fetchedPlants: PlantInfoWithRoom[] = await getPlantsInRoom(userId, room.id);
+            const fetchedPlants: PlantInfoWithRoom[] = await getPlantsInRoom(
+              userId,
+              room.id
+            );
             return fetchedPlants.map((plant) => ({
               ...plant,
               roomName: room.name,
@@ -152,7 +112,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           })
         );
         const flattenedPlants: PlantInfoWithRoom[] = roomPlants.flat();
-        setAllPlants(flattenedPlants); // Assuming setAllPlants is expecting PlantInfoWithRoom[]
+        setAllPlants(flattenedPlants);
       }
     };
 
@@ -197,7 +157,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       plants,
       day.dateString
     );
-    setDailyPercentage(percentage); // Update the daily percentage state
+    setDailyPercentage(percentage);
   };
 
   const getMarkedDates = () => {
@@ -273,12 +233,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             {plant.lastWatered} {plant.lastWatered === 1 ? "day" : "days"} ago{" "}
           </Text>
         </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={30}
-          color={colors.primary}
-          style={styles.chevronIcon}
-        />
+        <View style={styles.requiringSupportButton}>
+          <Ionicons
+            name="chevron-forward-outline"
+            size={26}
+            color={colors.textBlack}
+          />
+        </View>
       </TouchableOpacity>
     );
   };
@@ -287,18 +248,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     navigation.navigate("Settings");
   };
 
-  const toggleSearchSettings = () => {
-    setShowSearchSettings(!showSearchSettings);
-  };
-
   const navigateToPlantsScreen = () => {
     navigation.navigate("PlantsScreen");
   };
 
   // This works, lol
   const navigateToPlantDetailScreen = (plant: PlantInfo) => {
-    navigation.navigate("PlantDetailScreen", { plant: plant },
-    );
+    navigation.navigate("PlantDetailScreen", { plant: plant });
   };
 
   return (
@@ -349,39 +305,17 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
         </View>
 
-        <View style={{ borderBottomColor: "#f1f1f1", borderBottomWidth: 1 }} />
+        {/* Line under the top calendar */}
+        <View
+          style={{
+            borderBottomColor: "#000",
+            opacity: 0.1,
+            borderBottomWidth: 1,
+          }}
+        />
 
         <View style={styles.contentContainer}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {/* <View style={styles.searchContainer}>
-            <View style={styles.searchRect}>
-              <Ionicons name="search-outline" size={24} color="black" />
-              <TextInput
-                placeholder={t("HomeScreen_search_bar_placeholder")}
-                placeholderTextColor={colors.textGrey}
-                keyboardType="default"
-                returnKeyType="search"
-                ref={searchInputRef}
-                onChangeText={(text) => setSearchText(text)}
-                style={styles.searchInput}
-              />
-            </View>
-
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.searchSettingsRect}
-              onPress={toggleSearchSettings}
-            >
-              <ButtonIcon
-                backgroundColor="transparent"
-                iconSet="Ionicons"
-                iconName="options-outline"
-                iconSize={24}
-                onPress={toggleSearchSettings}
-              />
-            </TouchableOpacity>
-          </View> */}
-
             <View style={styles.progressBar}>
               <AnimatedCircularProgress
                 backgroundColor="#F5F5F5"
@@ -417,7 +351,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 >
                   <Ionicons
                     name="alert-circle-outline"
-                    size={30}
+                    size={36}
                     color={colors.primary}
                   />
                   <Text style={styles.requiringSupportText}>
@@ -428,12 +362,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 <ButtonText
                   text={t("HomeScreen_requiring_support_view_all")}
                   textColor={colors.primary}
-                  fontFamily={fonts.semiBold}
+                  fontFamily={fonts.regular}
                   fontSize={fontSize.large}
                   alignSelf="center"
                   onPress={navigateToPlantsScreen}
                 />
               </View>
+
+              <View style={{ height: defaultStyles.padding / 2 }} />
               <FlatList
                 data={allPlants}
                 renderItem={(item) => renderPlant(item.item)}
@@ -468,64 +404,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   theme={{
                     arrowColor: colors.primary,
                     todayTextColor: colors.primary,
-                    //  todayBackgroundColor: colors.primary,
-                    // selectedDayBackgroundColor: colors.primary,
                     textDisabledColor: colors.textGrey,
                     dayTextColor: colors.textGrey,
                   }}
                 />
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={showSearchSettings}
-            onRequestClose={toggleSearchSettings}
-          >
-            <TouchableWithoutFeedback onPress={toggleSearchSettings}>
-              <View style={styles.modalOverlay}>
-                <TouchableWithoutFeedback>
-                  <View style={styles.searchSettingsModalContainer}>
-                    <ScrollView>
-                      <Text style={styles.searchSettingsModalFilterTitle}>
-                        {t("HomeScreen_search_settings_watering_needs")}
-                      </Text>
-                      {renderCheckboxes(
-                        wateringNeeds,
-                        wateringNeeds,
-                        setWateringNeeds
-                      )}
-
-                      <Text style={styles.searchSettingsModalFilterTitle}>
-                        {t("HomeScreen_search_settings_size")}
-                      </Text>
-                      {renderCheckboxes(size, size, setSize)}
-
-                      <Text style={styles.searchSettingsModalFilterTitle}>
-                        {t("HomeScreen_search_settings_maintenance")}
-                      </Text>
-                      {renderCheckboxes(
-                        maintenance,
-                        maintenance,
-                        setMaintenance
-                      )}
-
-                      <Text style={styles.searchSettingsModalFilterTitle}>
-                        {t("HomeScreen_search_settings_special")}
-                      </Text>
-                      {renderCheckboxes(special, special, setSpecial)}
-
-                      <View style={{ height: defaultStyles.padding }} />
-
-                      <ButtonWide
-                        text={t("HomeScreen_search_settings_apply_filters")}
-                        onPress={toggleSearchSettings}
-                      />
-                    </ScrollView>
-                  </View>
-                </TouchableWithoutFeedback>
               </View>
             </TouchableWithoutFeedback>
           </Modal>
@@ -544,13 +426,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  chevronIcon: {
-    // Adjustments for the chevron icon to ensure it's aligned properly
-    color: colors.primary,
-    backgroundColor: "#E3E3E3",
-    padding: 3,
-    borderRadius: 50,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -570,50 +445,21 @@ const styles = StyleSheet.create({
     flex: 6,
     paddingHorizontal: defaultStyles.padding,
   },
-  searchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: defaultStyles.padding,
-  },
-  searchRect: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "80%",
-    height: 60,
-    borderRadius: defaultStyles.rounding,
-    paddingHorizontal: defaultStyles.padding,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    backgroundColor: "#F5F5F5",
-  },
-  searchInput: {
-    flex: 1,
-    fontFamily: fonts.regular,
-    fontSize: fontSize.medium,
-    color: colors.textBlack,
-    paddingHorizontal: defaultStyles.padding,
-  },
-  searchSettingsRect: {
-    justifyContent: "center",
-    height: 60,
-    backgroundColor: "#F5F5F5",
-    borderRadius: defaultStyles.rounding,
-  },
   requiringSupportContainer: {
     backgroundColor: colors.background,
     padding: defaultStyles.padding,
     borderRadius: defaultStyles.rounding,
-    shadowOpacity: 0.5,
-    shadowColor: "#000000",
-    shadowOffset: { width: 2, height: 2 },
+    borderWidth: 0.1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 1,
     shadowRadius: defaultStyles.rounding,
-    elevation: 10,
-    width: "100%",
+    borderColor: "#E0E0E0",
+    elevation: 5,
   },
   requiringSupportText: {
     fontFamily: fonts.semiBold,
-    fontSize: fontSize.large,
+    fontSize: fontSize.largePlus,
     color: colors.textGrey,
     paddingLeft: defaultStyles.padding / 2,
   },
@@ -624,8 +470,8 @@ const styles = StyleSheet.create({
     padding: defaultStyles.padding / 2,
   },
   requiringSupportPlantImage: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     borderRadius: defaultStyles.rounding,
   },
   requiringSupportPlantName: {
@@ -643,39 +489,22 @@ const styles = StyleSheet.create({
     fontSize: fontSize.medium,
     color: colors.textGrey,
   },
+  requiringSupportButton: {
+    color: colors.primary,
+    backgroundColor: colors.background,
+    width: 40,
+    height: 40,
+    borderColor: "#E3E3E3",
+    borderRadius: 20,
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
     paddingHorizontal: defaultStyles.padding,
-  },
-  searchSettingsModalContainer: {
-    backgroundColor: colors.background,
-    padding: defaultStyles.padding,
-    borderRadius: defaultStyles.rounding,
-    width: "100%",
-  },
-  searchSettingsModalFilterTitle: {
-    fontFamily: fonts.bold,
-    fontSize: fontSize.largePlus,
-    color: colors.textGrey,
-    paddingVertical: 5,
-  },
-  searchSettingsModalCheckboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  searchSettingsModalCheckboxLabel: {
-    fontFamily: fonts.medium,
-    fontSize: fontSize.large,
-    color: colors.textGrey,
-  },
-  searchSettingsModalCheckbox: {
-    width: 24,
-    height: 24,
-    borderColor: colors.primary,
-    marginVertical: 2,
   },
   progressBar: {
     paddingTop: defaultStyles.padding,
