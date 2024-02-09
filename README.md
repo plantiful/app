@@ -65,6 +65,15 @@ yarn add <package-name>
             }
           }
         }
+      },
+      "wateringEvents": {
+        "eventId": {
+          "date": "number",
+          "amount": "number" // how many plants were watered
+          "plants": {
+            "plantId": "boolean" // if the plant was watered
+          }
+        },
       }
     }
   }
@@ -87,8 +96,6 @@ yarn add <package-name>
 - [x] Add loading indicator for plant recognition - first try make it async
 - [x] Add all translations (now it is only in english) - easy s chatgpt
 - [x] Add recognized plants from ScanScreen to PlantScreen (there is one Example Plant always added for now)
-- [ ] Finish PlantScreen
-- [ ] FInish PlantDetailScreen
 - [x] Create template PlantDetailScreen design with all the info
 - [x] Link PlantScreen and PlantDetailScreen together
 - [ ] Fix splash screen image size (it shouldnt overflow the screen) - in app.json

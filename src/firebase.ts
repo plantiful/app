@@ -41,6 +41,12 @@ export interface PlantInfo {
   lastWatered: number;
 }
 
+export interface WateringEvent {
+  date: number;
+  amount: number;
+  plants: { [plantId: string]: boolean };
+}
+
 export const addRoom = async (
   userId: string,
   roomName: string
@@ -138,36 +144,41 @@ export const getCurrentUserId = () => {
   if (user) {
     return user.uid;
   } else {
+    console.error("No user is currently logged in");
     return null;
   }
 };
 
 export const addWateringEvent = async (
   userId: string,
-  plantInfo: PlantInfo,
-  timestamp: number
+  wateringEvent: WateringEvent
 ) => {
   const db = getDatabase();
-  const wateringEventRef = ref(
-    db,
-    `users/${userId}/wateringEvents/${plantInfo}`
-  );
-  await set(push(wateringEventRef), { timestamp });
+  const wateringEventsRef = ref(db, `users/${userId}/wateringEvents`);
+  const newWateringEventRef = push(wateringEventsRef);
+  await set(newWateringEventRef, wateringEvent);
 };
 
-export const getWateringHistory = async (userId: string) => {
+export const getWateringHistory = async (
+  userId: string
+): Promise<WateringEvent[]> => {
   const db = getDatabase();
-  const wateringHistoryRef = ref(db, `users/${userId}/wateringEvents`);
+  const wateringEventsRef = ref(db, `users/${userId}/wateringEvents`);
   try {
-    const snapshot = await get(wateringHistoryRef);
+    const snapshot = await get(wateringEventsRef);
     if (snapshot.exists()) {
-      return snapshot.val();
+      const wateringEventsObj = snapshot.val();
+      const wateringEventsArray = Object.keys(wateringEventsObj).map((key) => ({
+        id: key,
+        ...wateringEventsObj[key],
+      }));
+      return wateringEventsArray;
     } else {
-      console.log("No watering history available");
-      return {};
+      console.log("No watering events available");
+      return [];
     }
   } catch (error) {
-    console.error("Error fetching watering history:", error);
+    console.error("Error fetching watering events:", error);
     throw error;
   }
 };

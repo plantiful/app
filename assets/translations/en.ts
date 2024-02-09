@@ -112,6 +112,7 @@ export default {
 
   HomeScreen_requiring_support: "Requiring Support",
   HomeScreen_requiring_support_view_all: "View All",
+  HomeScreen_requiring_support_no_plants: "No plants available",
 
   // ProfileScreen
   ProfileScreen_edit_profile_button_text: "Edit Profile",

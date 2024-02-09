@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Text,
   StyleSheet,
@@ -10,7 +10,6 @@ import {
   ScrollView,
   Animated,
   Image,
-  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,6 +23,7 @@ import {
   getPlantsInRoom,
   getWateringHistory,
   PlantInfo,
+  WateringEvent,
 } from "../firebase";
 
 // Components
@@ -31,8 +31,6 @@ import ModalConfirm from "../components/ModalConfirm";
 import ButtonIcon from "../components/ButtonIcon";
 import { HomeScreenProps } from "../utils/types";
 import { useLanguage } from "../utils/LanguageContext";
-import { TextInput } from "react-native-gesture-handler";
-import Checkbox from "expo-checkbox";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import {
   Calendar,
@@ -88,7 +86,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     setShowCalendar(!showCalendar);
   };
 
-  const [wateringHistory, setWateringHistory] = useState({});
+  const [wateringHistory, setWateringHistory] = useState<WateringEvent[]>([]);
   const [dailyPercentage, setDailyPercentage] = useState(0);
 
   const { plants, rooms } = useContext(PlantContext);
@@ -123,8 +121,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     const fetchWateringData = async () => {
       const userId = getCurrentUserId();
       if (userId) {
-        const history = await getWateringHistory(userId);
-        setWateringHistory(history);
+        const wateringData = await getWateringHistory(userId);
+        setWateringHistory(wateringData);
       }
     };
 
@@ -324,7 +322,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 fill={dailyPercentage}
                 tintColor={colors.primary}
                 lineCap="round"
-                // onAnimationComplete={() => console.log("onAnimationComplete")}
               >
                 {(fill) => (
                   <Text style={styles.progressBarText}>
@@ -336,44 +333,50 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
             <View style={{ height: defaultStyles.padding }} />
 
-            <View style={styles.requiringSupportContainer}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
+            <View style={styles.requiringSupportContainerShadow}>
+              <View style={styles.requiringSupportContainer}>
                 <View
                   style={{
                     flexDirection: "row",
-                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Ionicons
-                    name="alert-circle-outline"
-                    size={36}
-                    color={colors.primary}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Ionicons
+                      name="alert-circle-outline"
+                      size={36}
+                      color={colors.primary}
+                    />
+                    <Text style={styles.requiringSupportText}>
+                      {t("HomeScreen_requiring_support")}
+                    </Text>
+                  </View>
+
+                  <ButtonText
+                    text={t("HomeScreen_requiring_support_view_all")}
+                    textColor={colors.primary}
+                    fontFamily={fonts.regular}
+                    fontSize={fontSize.large}
+                    alignSelf="center"
+                    onPress={navigateToPlantsScreen}
                   />
-                  <Text style={styles.requiringSupportText}>
-                    {t("HomeScreen_requiring_support")}
-                  </Text>
                 </View>
 
-                <ButtonText
-                  text={t("HomeScreen_requiring_support_view_all")}
-                  textColor={colors.primary}
-                  fontFamily={fonts.regular}
-                  fontSize={fontSize.large}
-                  alignSelf="center"
-                  onPress={navigateToPlantsScreen}
-                />
-              </View>
+                <View style={{ height: defaultStyles.padding / 2 }} />
 
-              <View style={{ height: defaultStyles.padding / 2 }} />
-              <FlatList
-                data={allPlants}
-                renderItem={(item) => renderPlant(item.item)}
-              />
+                {allPlants.length > 0 ? (
+                  allPlants.map((plant) => renderPlant(plant))
+                ) : (
+                  <Text style={styles.requiringSupportNoPlantsText}>
+                    {t("HomeScreen_requiring_support_no_plants")}
+                  </Text>
+                )}
+              </View>
             </View>
           </ScrollView>
 
@@ -445,23 +448,35 @@ const styles = StyleSheet.create({
     flex: 6,
     paddingHorizontal: defaultStyles.padding,
   },
+  requiringSupportContainerShadow: {
+    borderRadius: defaultStyles.rounding,
+    backgroundColor: "transparent",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 4,
+  },
   requiringSupportContainer: {
     backgroundColor: colors.background,
     padding: defaultStyles.padding,
     borderRadius: defaultStyles.rounding,
-    borderWidth: 0.1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 1,
-    shadowRadius: defaultStyles.rounding,
-    borderColor: "#E0E0E0",
-    elevation: 5,
+    overflow: "hidden",
   },
   requiringSupportText: {
     fontFamily: fonts.semiBold,
     fontSize: fontSize.largePlus,
     color: colors.textGrey,
     paddingLeft: defaultStyles.padding / 2,
+  },
+  requiringSupportNoPlantsText: {
+    fontFamily: fonts.medium,
+    fontSize: fontSize.medium,
+    color: colors.textGrey,
+    textAlign: "center",
   },
   requiringSupportPlantContainer: {
     flexDirection: "row",
