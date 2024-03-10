@@ -1,5 +1,11 @@
 import React, { useRef } from "react";
-import { View, Text, Animated, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Animated,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -34,6 +40,19 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
     extrapolate: "clamp",
   });
 
+  const GreenButton = ({ iconName, label, onPress }) => {
+    return (
+      <TouchableOpacity style={styles.greenButton} onPress={onPress}>
+        <MaterialCommunityIcons
+          name={iconName}
+          size={20}
+          color="#205950"
+          opacity={100}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   const displayCareInfo = (
     iconName: any,
     text: string,
@@ -46,7 +65,7 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
           name={iconName}
           size={26}
           paddingBottom={5}
-          color={colors.textWhite}
+          color={colors.primary}
         />
         <Text style={styles.careInfoText}>{text}</Text>
         <Text style={styles.careInfoValue}>
@@ -86,6 +105,15 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
           <Text style={styles.plantCommonName}>{plant.commonName}</Text>
           <Text style={styles.plantScientificName}>{plant.scientificName}</Text>
 
+          <View style={styles.buttonContainer}>
+            <GreenButton
+              iconName="heart-outline"
+              label="Like"
+              onPress={() => {}}
+            />
+            <GreenButton iconName="plus" label="Plus" onPress={() => {}} />
+          </View>
+
           <View style={styles.careInfoContainer}>
             {displayCareInfo("weather-sunny", "SUN LIGHT", plant.sunlight, "%")}
 
@@ -104,6 +132,12 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
             )}
           </View>
 
+          <Text style={styles.sectionTitle}>About</Text>
+          <View style={styles.infoTextDelimiterLine} />
+
+          <Text style={styles.sectionHeader}>Description</Text>
+          <Text style={styles.sectionText}>{plant.description}</Text>
+
           <Text style={styles.sectionTitle}>Taxonomy</Text>
           <View style={styles.infoTextDelimiterLine} />
 
@@ -119,12 +153,6 @@ const PlantDetailScreen: React.FC<PlantDetailScreenProps> = ({
           <Text style={styles.sectionText}>{plant.taxonomy.order}</Text>
           <Text style={styles.sectionHeader}>Phylum</Text>
           <Text style={styles.sectionText}>{plant.taxonomy.phylum}</Text>
-
-          <Text style={styles.sectionTitle}>Description</Text>
-          <View style={styles.infoTextDelimiterLine} />
-
-          <Text style={styles.sectionHeader}>Description</Text>
-          <Text style={styles.sectionText}>{plant.description}</Text>
         </View>
       </Animated.ScrollView>
     </SafeAreaView>
@@ -161,29 +189,48 @@ const styles = StyleSheet.create({
     color: colors.textGrey,
     paddingBottom: defaultStyles.padding,
   },
+  // TODO: Change from absolute
+  buttonContainer: {
+    flexDirection: "row",
+    position: "absolute",
+    top: 45,
+    right: defaultStyles.padding,
+  },
+  greenButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "rgba(32, 89, 80, 0.2)",
+    width: 40,
+    height: 40,
+    borderRadius: defaultStyles.rounding,
+    margin: 4,
+  },
   careInfoContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: colors.primary,
-    borderRadius: defaultStyles.rounding,
+    backgroundColor: colors.background,
     marginBottom: defaultStyles.padding,
-    paddingHorizontal: defaultStyles.padding,
   },
   careInfo: {
     justifyContent: "center",
-    alignItems: "center",
+    borderRadius: defaultStyles.rounding,
+    borderColor: colors.textGrey,
+    borderWidth: 0.5,
+    marginRight: defaultStyles.padding / 2,
+    paddingHorizontal: defaultStyles.padding / 2,
     height: 100,
+    width: 110,
   },
   careInfoText: {
-    fontFamily: fonts.semiBold,
+    fontFamily: fonts.medium,
     fontSize: fontSize.small,
-    color: colors.textWhite,
+    color: colors.textGrey,
     paddingBottom: 5,
   },
   careInfoValue: {
     fontFamily: fonts.semiBold,
-    fontSize: fontSize.small + 1,
-    color: colors.textWhite,
+    fontSize: fontSize.medium,
+    color: colors.textBlack,
   },
   sectionTitle: {
     fontFamily: fonts.medium,

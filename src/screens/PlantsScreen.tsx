@@ -13,22 +13,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getCurrentUserId,
   getRooms as fetchRooms,
-  addRoom as createRoom,
   getPlantsInRoom as fetchPlantsInRoom,
-  addPlantt as createPlant,
-  PlantInfo, // Importing the PlantInfo interface
-} from "../firebase"; // Adjust the import path
+  PlantInfo,
+} from "../firebase";
 import Swiper from "react-native-swiper";
 import { Entypo } from "@expo/vector-icons";
 import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { set } from "firebase/database";
 
 export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
   const { rooms, currentRoomIndex, setCurrentRoomIndex, updateRooms } =
     useContext(PlantContext);
-    const roomsRef = useRef(rooms);
+  const roomsRef = useRef(rooms);
   const [roomPlants, setRoomPlants] = useState<PlantInfo[][]>(
     Array(rooms.length).fill([])
   );
@@ -75,70 +72,69 @@ export const PlantsScreen: React.FC<PlantsScreenProps> = ({ navigation }) => {
     );
   };
 
-
-const renderPlantItem = ({ item }) => (
-  <TouchableOpacity
-    style={styles.plantItem}
-    onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
-  >
-    <View style={styles.imageContainer}>
-      <Image source={{ uri: item.photo }} style={styles.image} />
-    </View>
-    <View style={styles.textContainer}>
-      <Text style={styles.text}>{item.commonName}</Text>
-      <Text style={styles.subtext}>{item.scientificName}</Text>
-      <View style={styles.plantLastWateredContainer}>
-        <Entypo
-          name="drop"
-          size={20}
-          color={item.lastWatered >= item.watering ? "red" : colors.primary}
-        />
-        <Text
-          style={[
-            styles.plantLastWatered,
-            item.lastWatered >= item.watering
-              ? { color: "red" }
-              : { color: colors.textGrey },
-          ]}
-        >
-          {item.lastWatered} {item.lastWatered === 1 ? "day" : "days"} ago
-        </Text>
-      </View>
-    </View>
-    <Ionicons
-      name="chevron-forward-outline"
-      size={30}
-      color={colors.primary}
-      style={styles.chevronIcon}
-    />
-  </TouchableOpacity>
-);
-
-return (
-  <SafeAreaView style={styles.container}>
-    <Swiper
-      loop={false}
-      showsPagination={false}
-      index={currentRoomIndex}
-      onIndexChanged={(index) => setCurrentRoomIndex(index)}
+  const renderPlantItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.plantItem}
+      onPress={() => navigation.navigate("PlantDetailScreen", { plant: item })}
     >
-      {rooms.map((room, index) => (
-        <FlatList
-          key={room.id}
-          data={roomPlants[index]}
-          renderItem={renderPlantItem}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.listContentContainer}
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: item.photo }} style={styles.image} />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>{item.commonName}</Text>
+        <Text style={styles.subtext}>{item.scientificName}</Text>
+        <View style={styles.plantLastWateredContainer}>
+          <Entypo
+            name="drop"
+            size={20}
+            color={item.lastWatered >= item.watering ? "red" : colors.primary}
+          />
+          <Text
+            style={[
+              styles.plantLastWatered,
+              item.lastWatered >= item.watering
+                ? { color: "red" }
+                : { color: colors.textGrey },
+            ]}
+          >
+            {item.lastWatered} {item.lastWatered === 1 ? "day" : "days"} ago
+          </Text>
+        </View>
+      </View>
+      <View style={styles.requiringSupportButton}>
+        <Ionicons
+          name="chevron-forward-outline"
+          size={26}
+          color={colors.textBlack}
         />
-      ))}
-      
-    </Swiper>
-    <Text style={styles.roomNameText}>
+      </View>
+    </TouchableOpacity>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Swiper
+        loop={false}
+        showsPagination={false}
+        index={currentRoomIndex}
+        onIndexChanged={(index) => setCurrentRoomIndex(index)}
+      >
+        {rooms.map((room, index) => (
+          <FlatList
+            key={room.id}
+            data={roomPlants[index]}
+            renderItem={renderPlantItem}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={styles.listContentContainer}
+          />
+        ))}
+      </Swiper>
+      <Text style={styles.roomNameText}>
         {rooms[currentRoomIndex]
           ? rooms[currentRoomIndex].name
           : "Add a room to get started!"}
       </Text>
-    <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
+      <RoomIndicator rooms={rooms} currentRoomIndex={currentRoomIndex} />
 
       <View style={styles.addPlantContainer}>
         <TouchableOpacity
@@ -161,7 +157,7 @@ const styles = StyleSheet.create({
     paddingRight: 16,
     right: 25,
     marginHorizontal: 16,
-    width: '90%', // Consider using a percentage or fixed width
+    width: "90%", // Consider using a percentage or fixed width
     minHeight: 120, // Adjust the minimum height as needed
     justifyContent: "space-between", // This will space out your image, text container, and chevron icon
   },
@@ -179,14 +175,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center", // Center the text vertically
     marginLeft: 16, // Add some space between the image and the text
-  },
-  chevronIcon: {
-    // Adjustments for the chevron icon to ensure it's aligned properly
-    left: 35, // Ensure there's some space between the text and the icon
-    color: colors.primary,
-    backgroundColor: "#E3E3E3",
-    padding: 3,
-    borderRadius: 50,
   },
   supportText: {
     fontSize: fontSize.medium,
@@ -312,6 +300,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingTop: defaultStyles.padding / 2,
+  },
+  chevronIcon: {
+    color: colors.primary,
+    backgroundColor: "#E3E3E3",
+    padding: 3,
+    borderRadius: 50,
+  },
+  requiringSupportButton: {
+    left: 35,
+
+    color: colors.primary,
+    backgroundColor: colors.background,
+    width: 40,
+    height: 40,
+    borderColor: "#E3E3E3",
+    borderRadius: 20,
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   plantLastWatered: {
     fontFamily: fonts.regular,

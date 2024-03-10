@@ -1,6 +1,7 @@
 # Plantiful
 
 ## Links
+
 - Bunch of react native examples, really useful - [link](https://reactnativeexample.com/)
 - Google drive folder - [link](https://drive.google.com/drive/folders/1Sp9AiDdHx-pm55fWUR_0IheVuXPDPiJ_?usp=drive_link)
 - Figma project - [link](https://www.figma.com/files/team/1223656016002077883)
@@ -138,3 +139,4 @@ yarn add <package-name>
 - [ ] Add plant disease recognition - health assessment
 - [x] Update database structure in readme
 - [ ] Edit back button design on PlantDetailScreen
+- [ ] TODO in plantdetailscreen
