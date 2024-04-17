@@ -255,6 +255,28 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             plantSynonyms = topSuggestion.details.synonyms[0];
           }
 
+          var healthData = JSON.stringify({
+            images: [`data:image/jpg;base64,${image.base64}`],
+            plant_id: topSuggestion.id,
+            language: language,
+          });
+  
+          const healthConfig = {
+            method: "post",
+            url: "https://plant.id/api/v3/health_assessment",
+            headers: {
+              "Content-Type": "application/json",
+              "Api-Key": "3ZMZIOX4tONgD1hL5lsHtYv22LlAuExACIAVkpHHZOBby4qzRw",
+            },
+            data: data,
+          };
+  
+          const healthResponse = await axios(healthConfig);
+          console.log("Health Assessment Response:", healthResponse.data);
+          const healthResults = healthResponse.data.diseases ? healthResponse.data.diseases : 'No diseases found';
+  
+          console.log("Health Assessment:", healthResults);
+
           const plant: PlantInfo = {
             photo: imageUrl,
             nickname: "",
