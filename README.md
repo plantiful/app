@@ -66,17 +66,8 @@ yarn add <package-name>
             }
           }
         }
-      },
-      "wateringEvents": {
-        "eventId": {
-          "date": "number",
-          "amount": "number" // how many plants were watered
-          "plants": {
-            "plantId": "boolean" // if the plant was watered
-          }
-        },
       }
-    }
+   }
   }
 }
 ```
@@ -140,3 +131,4 @@ yarn add <package-name>
 - [x] Update database structure in readme
 - [ ] Edit back button design on PlantDetailScreen
 - [ ] TODO in plantdetailscreen
+- [ ] Terms of use, privacy policy

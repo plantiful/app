@@ -1,20 +1,20 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
-  Text,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
+  Animated,
+  Image,
   Keyboard,
   Modal,
   ScrollView,
-  Animated,
-  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 
 // Firebase
 import {
@@ -27,18 +27,18 @@ import {
 } from "../firebase";
 
 // Components
-import ModalConfirm from "../components/ModalConfirm";
-import ButtonIcon from "../components/ButtonIcon";
-import { HomeScreenProps } from "../utils/types";
-import { useLanguage } from "../utils/LanguageContext";
-import { AnimatedCircularProgress } from "react-native-circular-progress";
+import { Ionicons } from "@expo/vector-icons";
 import {
   Calendar,
   CalendarProvider,
   WeekCalendar,
 } from "react-native-calendars";
-import { Ionicons } from "@expo/vector-icons";
+import { AnimatedCircularProgress } from "react-native-circular-progress";
+import ButtonIcon from "../components/ButtonIcon";
 import ButtonText from "../components/ButtonText";
+import ModalConfirm from "../components/ModalConfirm";
+import { useLanguage } from "../utils/LanguageContext";
+import { HomeScreenProps } from "../utils/types";
 import PlantContext from "./PlantContext";
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
@@ -224,7 +224,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         />
         <View style={{ flex: 1, paddingLeft: defaultStyles.padding }}>
           <Text style={styles.requiringSupportPlantName}>
-            {plant.nickname.length ? plant.nickname : plant.commonName}
+            {/* {plant.nickname.length ? plant.nickname : plant.commonName} */}
+            {plant.commonName}
           </Text>
           <Text style={styles.requiringSupportPlantRoom}>{plant.roomName}</Text>
           <Text style={styles.requiringSupportPlantWatering}>

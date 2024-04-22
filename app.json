@@ -2,7 +2,10 @@
   "expo": {
     "name": "Plantiful",
     "slug": "Plantiful",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "0.0.1",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -12,7 +15,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false
     },
@@ -20,8 +25,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.devkarlos.Plantiful"
     },
-    "plugins": ["expo-localization"]
+    "plugins": [
+      "expo-localization"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2c09fd1e-edc9-4326-b2ec-2a58554a60e9"
+      }
+    }
   }
 }

@@ -1,54 +1,48 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, ReactNode, useEffect, useState } from "react";
 import {
-  getCurrentUserId,
-  getRooms as fetchRooms,
+  addPlantt as createPlant,
   addRoom as createRoom,
   getPlantsInRoom as fetchPlantsInRoom,
-  addPlantt as createPlant,
+  getRooms as fetchRooms,
+  getCurrentUserId,
   PlantInfo,
 } from "../firebase";
 
-// Define the Room interface
 export interface Room {
   id: string;
   name: string;
 }
 
-// Define the shape of the context data
 interface PlantContextType {
   plants: PlantInfo[];
   rooms: Room[];
   currentRoomIndex: number;
-  setPlants: React.Dispatch<React.SetStateAction<PlantInfo[]>>; // Add this line
-  addPlant: (newPlant: PlantInfo, roomId: string) => void; // Update the type of addPlant
+  setPlants: React.Dispatch<React.SetStateAction<PlantInfo[]>>;
+  addPlant: (newPlant: PlantInfo, roomId: string) => void;
   setCurrentRoomIndex: (index: number) => void;
   addRoom: (room: Room) => void;
-  updateRooms: React.Dispatch<React.SetStateAction<Room[]>>; // Add this line
+  updateRooms: React.Dispatch<React.SetStateAction<Room[]>>;
 }
 
-// Create an initial value
 const initialValue: PlantContextType = {
-  plants: [], // This will be an array of PlantInfo objects
+  plants: [],
   rooms: [],
   currentRoomIndex: 0,
-  setPlants: () => {}, // Add this line
+  setPlants: () => {},
   addPlant: () => {},
   setCurrentRoomIndex: () => {},
   addRoom: () => {},
-  updateRooms: () => {}, // Add this line
+  updateRooms: () => {},
 };
 
-// Create the context
 export const PlantContext = createContext<PlantContextType>(initialValue);
 
-// Define the type for the PlantProvider props
 interface PlantProviderProps {
   children: ReactNode;
 }
 
-// Create the PlantProvider component
 export const PlantProvider = ({ children }: PlantProviderProps) => {
-  const [plants, setPlants] = useState<PlantInfo[]>([]); // Using PlantInfo here
+  const [plants, setPlants] = useState<PlantInfo[]>([]);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [currentRoomIndex, setCurrentRoomIndex] = useState<number>(0);
 
@@ -76,7 +70,6 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
     const userId = getCurrentUserId();
     if (userId) {
       await createPlant(userId, roomId, newPlant);
-      // Refetch plants for the current room
       const updatedPlants = await fetchPlantsInRoom(userId, roomId);
       setPlants(updatedPlants);
     }
@@ -86,8 +79,6 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
     const userId = getCurrentUserId();
     if (userId) {
       await createRoom(userId, newRoom.name);
-      // Refetch rooms or update state optimistically
-      // fetchRooms(userId).then(updatedRooms => setRooms(updatedRooms));
       const updatedRooms = await fetchRooms(userId);
       setRooms(updatedRooms);
     }
@@ -103,7 +94,7 @@ export const PlantProvider = ({ children }: PlantProviderProps) => {
         setCurrentRoomIndex,
         addPlant,
         addRoom,
-        updateRooms: setRooms, // Expose setRooms as updateRooms for clarity
+        updateRooms: setRooms,
       }}
     >
       {children}
