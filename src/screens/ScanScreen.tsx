@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+import { Camera, CameraType, FlashMode } from "expo-camera";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  Image,
   StyleSheet,
   View,
-  Alert,
-  Image,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Camera, CameraType, FlashMode } from "expo-camera";
-import axios from "axios";
-import { Dimensions } from "react-native";
-import { PlantContext } from "./PlantContext";
 import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
-import { useFocusEffect } from "@react-navigation/native";
+import { PlantContext } from "./PlantContext";
 
 import i18n from "../../assets/translations/i18n";
-import { addRoom, addPlantt, PlantInfo, getCurrentUserId } from "../firebase";
+import { PlantInfo } from "../firebase";
 import { useLanguage } from "../utils/LanguageContext";
 
 // Components
@@ -260,7 +260,7 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             plant_id: topSuggestion.id,
             language: language,
           });
-  
+
           const healthConfig = {
             method: "post",
             url: "https://plant.id/api/v3/health_assessment",
@@ -270,11 +270,13 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             },
             data: data,
           };
-  
+
           const healthResponse = await axios(healthConfig);
           console.log("Health Assessment Response:", healthResponse.data);
-          const healthResults = healthResponse.data.diseases ? healthResponse.data.diseases : 'No diseases found';
-  
+          const healthResults = healthResponse.data.diseases
+            ? healthResponse.data.diseases
+            : "No diseases found";
+
           console.log("Health Assessment:", healthResults);
 
           const plant: PlantInfo = {
@@ -302,23 +304,23 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
             navigation.navigate("PlantScanScreen", {
               plant: plant,
               onDecision: (decision) => {
-                if (decision) {
-                  const userId = getCurrentUserId();
-                  if (userId) {
-                    addRoom(userId, "Livin Room")
-                      .then((roomId) => {
-                        return addPlantt(userId, roomId, plant);
-                      })
-                      .catch((error) => {
-                        console.error("Error:", error);
-                      });
-                  } else {
-                    console.log("No user is currently logged in");
-                  }
-                  console.log("Add plant");
-                } else {
-                  console.log("Discard plant");
-                }
+                // if (decision) {
+                //   const userId = getCurrentUserId();
+                //   if (userId) {
+                //     addRoom(userId, "Livin Room")
+                //       .then((roomId) => {
+                //         return addPlantt(userId, roomId, plant);
+                //       })
+                //       .catch((error) => {
+                //         console.error("Error:", error);
+                //       });
+                //   } else {
+                //     console.log("No user is currently logged in");
+                //   }
+                //   console.log("Add plant");
+                // } else {
+                //   console.log("Discard plant");
+                // }
               },
             });
           } catch (error) {
