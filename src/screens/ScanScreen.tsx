@@ -1,24 +1,25 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+import { Camera, CameraView } from "expo-camera";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
-  StyleSheet,
-  View,
-  Alert,
-  Image,
   ActivityIndicator,
+  Alert,
+  Dimensions,
+  Image,
+  StyleSheet,
   Switch,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Camera, CameraType, FlashMode } from "expo-camera";
-import axios from "axios";
-import { Dimensions } from "react-native";
-import { PlantContext } from "./PlantContext";
-import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
-import { useFocusEffect } from "@react-navigation/native";
 import i18n from "../../assets/translations/i18n";
-import { addRoom, addPlantt, PlantInfo, getCurrentUserId } from "../firebase";
+import { PlantInfo, addPlantt, addRoom, getCurrentUserId } from "../firebase";
+import { colors, defaultStyles, fontSize, fonts } from "../utils/colors";
 import { useLanguage } from "../utils/LanguageContext";
+import { PlantContext } from "./PlantContext";
 
 // Components
+import { CameraType, FlashMode } from "expo-camera/build/legacy/Camera.types";
 import ButtonIcon from "../components/ButtonIcon";
 import ButtonWide from "../components/ButtonWide";
 import { ScanScreenProps } from "../utils/types";
@@ -328,10 +329,10 @@ export const ScanScreen: React.FC<ScanScreenProps> = ({ navigation }) => {
           value={useHealthAssessment}
         />
       </View>
-      <Camera
+      <CameraView
         style={{ flex: 1 }}
-        type={type}
-        flashMode={flash}
+        facing={type}
+        // flashMode={flash}
         ref={setCamera}
         onCameraReady={() => setIsCameraReady(true)}
         key={key}
