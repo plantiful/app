@@ -1,32 +1,32 @@
+import Checkbox from "expo-checkbox";
 import React, { useRef, useState } from "react";
 import {
-  View,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
-  Alert,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Checkbox from "expo-checkbox";
 
 // Firebase
-import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../firebase";
 
-import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import i18n from "../../assets/translations/i18n";
+import { colors, defaultStyles, fonts, fontSize } from "../utils/colors";
 import { SignUpScreenProps } from "../utils/types";
 
 // Components
-import ModalConfirm from "../components/ModalConfirm";
-import InputBox from "../components/InputBox";
+import ButtonBack from "../components/ButtonBack";
 import ButtonShowPassword from "../components/ButtonShowPassword";
 import ButtonText from "../components/ButtonText";
 import ButtonWide from "../components/ButtonWide";
-import ButtonBack from "../components/ButtonBack";
+import InputBox from "../components/InputBox";
+import ModalConfirm from "../components/ModalConfirm";
 
 export const SignUpScreen: React.FC<SignUpScreenProps> = ({
   navigation,
@@ -167,28 +167,32 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({
               onValueChange={setAgreenmentChecked}
             />
 
-            <Text style={styles.agreenmentText}>{t("terms_text1")}</Text>
+            <View style={styles.agreenmentTextContainer}>
+              <Text style={styles.agreenmentText}>{t("terms_text1")}</Text>
 
-            <ButtonText
-              text={t("terms_of_use")}
-              fontFamily={fonts.extraBold}
-              fontSize={fontSize.medium}
-              onPress={openTerms}
-            />
-            <Text style={styles.agreenmentText}>{t("terms_text2")}</Text>
-            <ButtonText
-              text={t("privacy_policy")}
-              fontFamily={fonts.extraBold}
-              fontSize={fontSize.medium}
-              onPress={openPrivacyPolicy}
-            />
+              <ButtonText
+                text={t("terms_of_use")}
+                fontFamily={fonts.extraBold}
+                fontSize={fontSize.medium}
+                onPress={openTerms}
+              />
+              <Text style={styles.agreenmentText}>{t("terms_text2")}</Text>
+              <ButtonText
+                text={t("privacy_policy")}
+                fontFamily={fonts.extraBold}
+                fontSize={fontSize.medium}
+                onPress={openPrivacyPolicy}
+              />
+            </View>
           </View>
 
-          <ButtonWide
-            text={t("sign_up")}
-            onPress={handleSignUp}
-            disabledTrigger={!isAgreenmentChecked}
-          />
+          <View style={{ paddingTop: 30 }}>
+            <ButtonWide
+              text={t("sign_up")}
+              onPress={handleSignUp}
+              disabledTrigger={!isAgreenmentChecked}
+            />
+          </View>
         </KeyboardAvoidingView>
 
         <ModalConfirm
@@ -232,6 +236,7 @@ const styles = StyleSheet.create({
   },
   agreenmentContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     paddingTop: defaultStyles.padding,
   },
   agreenmentCheckbox: {
@@ -240,11 +245,15 @@ const styles = StyleSheet.create({
     borderColor: colors.primary,
     marginRight: 10,
   },
+  agreenmentTextContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
   agreenmentText: {
     fontFamily: fonts.semiBold,
     fontSize: fontSize.medium,
     color: colors.textGrey,
-    paddingBottom: 30,
   },
 });
 

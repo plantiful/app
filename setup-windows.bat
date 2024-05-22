@@ -16,7 +16,7 @@ if %errorlevel% neq 0 (
 
 echo Updating Winget and Install Node.js, Yarn, and Expo CLI...
 ::winget upgrade --all
-winget install -e --id OpenJS.NodeJS
+winget install -e --id OpenJS.NodeJS.LTS
 winget install -e --id Yarn.Yarn
 
 echo Installing Expo CLI...

@@ -29,7 +29,8 @@
       "package": "com.devkarlos.Plantiful"
     },
     "plugins": [
-      "expo-localization"
+      "expo-localization",
+      "expo-font"
     ],
     "extra": {
       "eas": {

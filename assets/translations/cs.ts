@@ -92,6 +92,10 @@ export default {
   HomeScreen_email_confirmation_text:
     "Prosím, potvrďte svou e-mailovou adresu.",
 
+  HomeScreen_requiring_support: "Vyžaduje podporu",
+  HomeScreen_requiring_support_view_all: "Zobrazit vše",
+  HomeScreen_requiring_support_no_plants: "Žádné rostliny vyžadující podporu",
+
   // ProfileScreen
   ProfileScreen_edit_profile_button_text: "Upravit profil",
   ProfileScreen_stats_plants_text: "Rostliny",
