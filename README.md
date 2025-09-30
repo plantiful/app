@@ -5,7 +5,7 @@
 <h2 align="center">Plantiful</h2>
 
 <p align="center">
-  A cross-platform mobile application designed to help users take care of their plants utilizing AI, image recognition APIs and algorithmization. Our features offer flower recognition through AI, watering reminders, and all the important information about the user's plants. We won Best Business Pitch and placed second in Best STEM Project at JA Expo, earning us a spot in the national finals. Completely open-source, written in React native.
+  A cross-platform mobile application designed to help users take care of their plants utilizing AI, image recognition APIs and algorithmization. Our features offer flower recognition through AI, watering reminders, and all the important information about the user's plants. We won Best Business Pitch and placed second in Best STEM Project at <a href="https://jaczech.org/ja-expo/">JA Expo</a>, earning us a spot in the national finals. Completely open-source, written in React native.
   <br />
   <em>Built with Expo (React Native), React Navigation, Firebase, i18next, Plant.id API</em>
 </p>
@@ -18,7 +18,6 @@
 </p>
 
 <p align="center">
-  <a href="#about">About</a> •
   <a href="#project-structure">Project Structure</a> •
   <a href="#setup">Setup</a> •
   <a href="#tech-stack">Tech Stack</a> •
@@ -27,10 +26,6 @@
   <a href="#database-structure">Database</a> •
   <a href="#license">License</a>
 </p>
-
-## About
-
-A cross-platform mobile application designed to help users take care of their plants utilizing AI, image recognition APIs and algorithmization. Our features offer flower recognition through AI, watering reminders, and all the important information about the user's plants. We won Best Business Pitch and placed second in Best STEM Project at [JA Expo](https://jaczech.org/ja-expo/), earning us a spot in the national finals.
 
 ## Project Structure
 
